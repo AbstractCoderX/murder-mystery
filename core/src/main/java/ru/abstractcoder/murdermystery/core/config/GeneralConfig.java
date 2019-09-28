@@ -7,11 +7,11 @@ import org.bukkit.World;
 import ru.abstractcoder.benioapi.board.sidebar.SidebarTemplate;
 import ru.abstractcoder.benioapi.config.BenioConfig;
 import ru.abstractcoder.benioapi.database.MySqlConnectionPool;
+import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.setting.GameGeneralSettings;
 import ru.abstractcoder.murdermystery.core.game.setting.RewardSettings;
-import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
 import ru.abstractcoder.murdermystery.core.slotbar.SlotBarItemResolver;
 import ru.abstractcoder.murdermystery.core.starting.StartingSettings;
 

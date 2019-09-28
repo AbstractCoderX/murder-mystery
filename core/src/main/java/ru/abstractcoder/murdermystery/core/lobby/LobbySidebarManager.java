@@ -8,7 +8,6 @@ import ru.abstractcoder.benioapi.board.sidebar.SidebarTemplate;
 import ru.abstractcoder.benioapi.board.text.updater.PlaceholderTextUpdater;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
-import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 

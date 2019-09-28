@@ -3,17 +3,12 @@ package ru.abstractcoder.murdermystery.core.game.role.classed.template;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
-import net.citizensnpcs.api.ai.tree.Precondition;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.abstractcoder.benioapi.util.CollectionGeneraliser;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class RoleClassTemplateResolver {
 

@@ -2,7 +2,6 @@ package ru.abstractcoder.murdermystery.core.game.corpse;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 
 import java.util.UUID;

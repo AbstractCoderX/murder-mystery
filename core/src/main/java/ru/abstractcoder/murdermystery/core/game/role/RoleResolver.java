@@ -1,7 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.role;
 
 import org.jetbrains.annotations.NotNull;
-import ru.abstractcoder.benioapi.util.CollectionGeneraliser;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
@@ -54,13 +53,7 @@ public class RoleResolver {
 
     @NotNull
     public GameRole resolveClassedRole(RoleClass.Type classType, RoleTemplate roleTemplate) {
-        GameRole gameRole = classedRoles.get(classType);
-        if (gameRole == null) {
-            gameRole = roleFactory.createClassedRole(classType, roleTemplate);
-            classedRoles.put(classType, gameRole);
-        }
-
-        return gameRole;
+        return classedRoles.computeIfAbsent(classType, ct -> roleFactory.createClassedRole(ct, roleTemplate));
     }
 
     @NotNull
@@ -70,13 +63,7 @@ public class RoleResolver {
 
     @NotNull
     public GameRole resolveCivilianRole(Profession.Type professionType, RoleTemplate roleTemplate) {
-        GameRole gameRole = civilianRoles.get(professionType);
-        if (gameRole == null) {
-            gameRole = roleFactory.createCivilianRole(professionType, roleTemplate);
-            civilianRoles.put(professionType, gameRole);
-        }
-
-        return gameRole;
+        return civilianRoles.computeIfAbsent(professionType, pt -> roleFactory.createCivilianRole(pt, roleTemplate));
     }
 
     @NotNull
@@ -91,20 +78,14 @@ public class RoleResolver {
 
     public <T extends Responsible> Collection<T> getResponsibleLogics(Class<? extends T> clazz,
             Supplier<Collection<GamePlayer>> targetPlayers) {
-        @SuppressWarnings("unchecked")
-        Collection<T> responsibles = (Collection<T>) responsibleRoleLogics.get(clazz);
-
-        if (responsibles == null) {
-            responsibles = targetPlayers.get().stream()
+        //noinspection unchecked
+        return (Collection<T>) responsibleRoleLogics.computeIfAbsent(clazz, (__) -> {
+            return targetPlayers.get().stream()
                     .map(GamePlayer::getRoleLogic)
                     .filter(clazz::isInstance)
                     .map(clazz::cast)
                     .collect(Collectors.toList());
-
-            responsibleRoleLogics.put(clazz, CollectionGeneraliser.generaliseCollection(responsibles));
-        }
-
-        return responsibles;
+        });
     }
 
 }

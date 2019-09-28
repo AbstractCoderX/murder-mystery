@@ -5,8 +5,8 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
 import ru.abstractcoder.murdermystery.core.game.skin.SkinContainable;
+import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
 
 import java.util.UUID;
 

@@ -10,7 +10,6 @@ import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
-import ru.abstractcoder.murdermystery.core.game.player.GamePlayerData;
 import ru.abstractcoder.murdermystery.core.game.role.logic.SurvivorLogic;
 
 public class CivilianLogic extends SurvivorLogic {

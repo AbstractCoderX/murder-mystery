@@ -1,6 +1,5 @@
 package ru.abstractcoder.murdermystery.core.game.role.civilian.professions;
 
-import org.bukkit.event.block.Action;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.cooldown.CooldownBuilder;
@@ -48,7 +47,7 @@ public class DoctorProfession extends AbstractProfession {
         }
 
         @Override
-        public void onCorpseClick(Corpse corpse, int slot, Action action) {
+        public void onCorpseClick(Corpse corpse, int slot) {
             if (slot != TOTEM_SLOT) {
                 return;
             }

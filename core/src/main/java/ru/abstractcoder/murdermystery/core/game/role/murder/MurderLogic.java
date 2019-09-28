@@ -10,9 +10,9 @@ import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
-import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.CivilianRole;
 import ru.abstractcoder.murdermystery.core.game.role.logic.AbstractRoleLogic;
+import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 
 public class MurderLogic extends AbstractRoleLogic {
 

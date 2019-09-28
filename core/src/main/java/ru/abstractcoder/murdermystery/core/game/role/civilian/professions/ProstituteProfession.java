@@ -9,7 +9,6 @@ import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
-import ru.abstractcoder.murdermystery.core.game.player.GamePlayerData;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.CivilianLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.PlayerClickResponsible;

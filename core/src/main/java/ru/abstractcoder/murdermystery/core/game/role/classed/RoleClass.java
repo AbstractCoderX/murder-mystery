@@ -3,7 +3,6 @@ package ru.abstractcoder.murdermystery.core.game.role.classed;
 import com.google.common.base.Preconditions;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplate;
-import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogicCreator;
 
 import java.util.HashMap;

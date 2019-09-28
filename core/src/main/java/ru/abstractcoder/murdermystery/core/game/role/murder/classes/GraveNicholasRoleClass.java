@@ -1,8 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.role.murder.classes;
 
-import org.bukkit.event.block.Action;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.benioapi.util.EventHelper;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
@@ -44,7 +42,11 @@ public class GraveNicholasRoleClass extends MurderRoleClass {
             boolean isClickSaved = currentTimeMillis - lastClickTime < 250;
             lastClickTime = currentTimeMillis;
 
-            return isClickSaved && ++amountOfClicks >= 5 * 3;
+            if (isClickSaved && ++amountOfClicks >= 5 * 3) {
+                amountOfClicks = 0;
+                return true;
+            }
+            return false;
         }
 
         private boolean isClickProcessing() {
@@ -58,8 +60,8 @@ public class GraveNicholasRoleClass extends MurderRoleClass {
         }
 
         @Override
-        public void onCorpseClick(Corpse corpse, int slot, Action action) {
-            if (!EventHelper.isRightClick(action) || slot != SharedConstants.WEAPON_SLOT) {
+        public void onCorpseClick(Corpse corpse, int slot) {
+            if (slot != SharedConstants.WEAPON_SLOT) {
                 return;
             }
 

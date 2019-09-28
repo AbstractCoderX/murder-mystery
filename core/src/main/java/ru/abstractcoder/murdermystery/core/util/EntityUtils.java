@@ -1,6 +1,5 @@
 package ru.abstractcoder.murdermystery.core.util;
 
-import org.jetbrains.annotations.Contract;
 import ru.abstractcoder.benioapi.nms.PackageType;
 import ru.abstractcoder.benioapi.util.reflect.TrustedLookup;
 

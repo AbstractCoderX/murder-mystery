@@ -1,7 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.role.chance;
 
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
-import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer.RoleData;
 
 import java.util.Map;

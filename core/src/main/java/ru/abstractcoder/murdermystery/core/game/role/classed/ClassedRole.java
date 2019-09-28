@@ -3,7 +3,6 @@ package ru.abstractcoder.murdermystery.core.game.role.classed;
 import ru.abstractcoder.murdermystery.core.game.role.AbstractRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.equipper.ClassedEquipper;
-import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogicCreator;
 
 public class ClassedRole extends AbstractRole {

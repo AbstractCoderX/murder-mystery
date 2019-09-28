@@ -3,7 +3,6 @@ package ru.abstractcoder.murdermystery.core.game.role.chance;
 import ru.abstractcoder.benioapi.database.util.QueryFactory;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
-import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer.RoleData;
 
 import java.util.EnumMap;
