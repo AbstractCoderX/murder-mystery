@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.lobby;
 
 import com.google.common.base.Preconditions;
+import dagger.Reusable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.abstractcoder.benioapi.board.SidebarService;
@@ -11,8 +12,10 @@ import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
+import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
+@Reusable
 public class LobbySidebarManager {
 
     private SidebarTemplate sidebarTemplate;
@@ -20,9 +23,9 @@ public class LobbySidebarManager {
     private final EconomyService economyService;
     private final MsgConfig<Messages> msgConfig;
 
-    public LobbySidebarManager(SidebarTemplate sidebarTemplate, SidebarService sidebarService,
+    @Inject
+    public LobbySidebarManager(SidebarService sidebarService,
             EconomyService economyService, MsgConfig<Messages> msgConfig) {
-        this.sidebarTemplate = sidebarTemplate;
         this.sidebarService = sidebarService;
         this.economyService = economyService;
         this.msgConfig = msgConfig;

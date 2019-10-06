@@ -1,18 +1,22 @@
 package ru.abstractcoder.murdermystery.core.game.role.chance;
 
+import dagger.Reusable;
 import ru.abstractcoder.benioapi.database.util.QueryFactory;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer.RoleData;
 
+import javax.inject.Inject;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+@Reusable
 public class MysqlRoleDataRepository implements RoleDataRepository {
 
     private final QueryFactory queryFactory;
 
+    @Inject
     public MysqlRoleDataRepository(QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }

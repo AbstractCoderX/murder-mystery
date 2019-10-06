@@ -12,10 +12,28 @@ import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
 
-public class PacketListener {
+import javax.inject.Inject;
 
+public class PacketListener implements RegistrableListener {
+
+    private final Plugin plugin;
+    private final ProtocolManager protocolManager;
+    private final GeneralConfig generalConfig;
+    private final NPCRegistry npcRegistry;
+    private final CorpseService corpseService;
+
+    @Inject
     public PacketListener(Plugin plugin, ProtocolManager protocolManager, GeneralConfig generalConfig,
-                          NPCRegistry npcRegistry, CorpseService corpseService) {
+            NPCRegistry npcRegistry, CorpseService corpseService) {
+        this.plugin = plugin;
+        this.protocolManager = protocolManager;
+        this.generalConfig = generalConfig;
+        this.npcRegistry = npcRegistry;
+        this.corpseService = corpseService;
+    }
+
+    @Override
+    public void register() {
         protocolManager.addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.NAMED_ENTITY_SPAWN) {
             @Override
             public void onPacketSending(PacketEvent event) {

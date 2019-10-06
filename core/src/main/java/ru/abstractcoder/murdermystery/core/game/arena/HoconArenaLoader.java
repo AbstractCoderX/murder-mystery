@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.abstractcoder.benioapi.config.HoconConfig;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 
 public class HoconArenaLoader implements ArenaLoader {
@@ -13,7 +15,8 @@ public class HoconArenaLoader implements ArenaLoader {
     private final GeneralConfig generalConfig;
     private final ObjectMapper objectMapper;
 
-    public HoconArenaLoader(HoconConfig arenaCfg, GeneralConfig generalConfig, ObjectMapper objectMapper) {
+    @Inject
+    public HoconArenaLoader(@Named("arena") HoconConfig arenaCfg, GeneralConfig generalConfig, ObjectMapper objectMapper) {
         this.arenaCfg = arenaCfg;
         this.generalConfig = generalConfig;
         this.objectMapper = objectMapper;

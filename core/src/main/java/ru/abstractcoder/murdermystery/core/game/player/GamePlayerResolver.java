@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.game.player;
 
 import com.google.common.base.Preconditions;
+import dagger.Reusable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,8 +9,10 @@ import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableRepository;
 
+import javax.inject.Inject;
 import java.util.*;
 
+@Reusable
 public class GamePlayerResolver {
 
     private final SkinContainableRepository skinContainableRepository;
@@ -21,6 +24,7 @@ public class GamePlayerResolver {
     private final Collection<GamePlayer> survivors = new ArrayList<>(16);
     private final Collection<GamePlayer> civilians = new ArrayList<>(16);
 
+    @Inject
     public GamePlayerResolver(SkinContainableRepository skinContainableRepository) {
         this.skinContainableRepository = skinContainableRepository;
     }

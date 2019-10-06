@@ -4,19 +4,16 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
-import ru.abstractcoder.murdermystery.core.game.GameEngine;
+import org.bukkit.plugin.Plugin;
 
-public class GameGeneralListener implements Listener {
+public class GameGeneralListener extends AbstractBukkitListener {
 
-    private final GameEngine gameEngine;
-
-    public GameGeneralListener(GameEngine gameEngine) {
-        this.gameEngine = gameEngine;
+    public GameGeneralListener(Plugin plugin) {
+        super(plugin);
     }
 
     @EventHandler

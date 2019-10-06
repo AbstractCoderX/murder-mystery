@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.role.profession.template;
 
+import dagger.Reusable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
@@ -10,15 +11,23 @@ import ru.abstractcoder.murdermystery.core.game.role.civilian.professions.Prosti
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession.Type;
 
+import javax.inject.Inject;
 import java.util.EnumMap;
 import java.util.Map;
 
+@Reusable
 public class ProfessionResolver {
 
     private final Map<Type, Profession> professionMap;
+    private final MsgConfig<Messages> msgConfig;
 
-    public ProfessionResolver(GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    @Inject
+    public ProfessionResolver(MsgConfig<Messages> msgConfig) {
+        this.msgConfig = msgConfig;
         professionMap = new EnumMap<>(Type.class);
+    }
+
+    public void init(GameEngine gameEngine) {
         ProfessionTemplateResolver templateResolver = gameEngine.settings().getProfessionTemplateResolver();
 
         put(new DoctorProfession(templateResolver.resolve(Type.DOCTOR), gameEngine, msgConfig));

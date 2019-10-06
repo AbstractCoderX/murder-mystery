@@ -36,6 +36,12 @@
             <groupId>ru.abstractcoder</groupId>
             <artifactId>benio-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.dagger</groupId>
+            <artifactId>dagger</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,11 +1,14 @@
 package ru.abstractcoder.murdermystery.core.game.action;
 
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
+import ru.abstractcoder.benioapi.util.timer.DefinedTimerBuilderFactory;
+import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
-import ru.abstractcoder.murdermystery.core.game.GameEngine;
-import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
-import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
+import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
+import ru.abstractcoder.murdermystery.core.game.role.GameRole;
+import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,38 +17,39 @@ public class RoleSelectingAnimationAction implements GameAction {
 
     private static final Random random = new Random();
 
-    private final GameEngine gameEngine;
     private final MsgConfig<Messages> msgConfig;
-    private final List<String> animationRoleNames;
+    private final DefinedTimerBuilderFactory definedTimerBuilderFactory;
+    private final GamePlayerResolver playerResolver;
 
-    public RoleSelectingAnimationAction(GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
-        this.gameEngine = gameEngine;
+    private final List<String> animationRoleNames = new ArrayList<>();
+
+    @Inject
+    public RoleSelectingAnimationAction(
+            GeneralConfig generalConfig,
+            MsgConfig<Messages> msgConfig, DefinedTimerBuilderFactory definedTimerBuilderFactory, GamePlayerResolver playerResolver) {
         this.msgConfig = msgConfig;
+        this.definedTimerBuilderFactory = definedTimerBuilderFactory;
+        this.playerResolver = playerResolver;
 
-        animationRoleNames = new ArrayList<>();
+        generalConfig.game().getProfessionTemplateResolver().getAll()
+                .forEach(template -> animationRoleNames.add(template.getName()));
 
-        ProfessionResolver professionResolver = gameEngine.getProfessionResolver();
-        gameEngine.settings().getProfessionTemplateResolver().getAll()
-                .forEach(tmplt -> animationRoleNames.add(tmplt.getName()));
-
-        gameEngine.settings().getRoleClassTemplateResolver().getRoleTypes()
-                .stream()
-                .map(gameEngine.settings().getRoleTemplateResolver()::getByType)
-                .map(RoleTemplate::getName)
-                .forEach(animationRoleNames::add);
+        RoleTemplateResolver roleTemplateResolver = generalConfig.game().getRoleTemplateResolver();
+        animationRoleNames.add(roleTemplateResolver.getByType(GameRole.Type.MURDER).getName());
+        animationRoleNames.add(roleTemplateResolver.getByType(GameRole.Type.DETECTIVE).getName());
     }
 
     @Override
     public void execute() {
-        gameEngine.benio().definedTimerBuilder()
+        definedTimerBuilderFactory
                 .tickTimerBuilder(20)
                 .setPeriodTicks(3)
-                .setAction(() -> gameEngine.getPlayerResolver().getAll().forEach(gamePlayer -> {
+                .setAction(() -> playerResolver.getAll().forEach(gamePlayer -> {
                     String roleName = animationRoleNames.get(random.nextInt(animationRoleNames.size()));
                     msgConfig.get(Messages.game__role_selecting_animation, roleName).sendActionBar(gamePlayer);
                 }))
                 .setLastAction(() -> {
-                    gameEngine.getPlayerResolver().getAll().forEach(gamePlayer -> {
+                    playerResolver.getAll().forEach(gamePlayer -> {
                         gamePlayer.setRoleShowed(true);
                         msgConfig.get(Messages.game__role_animation_end, gamePlayer.getRole().getDisplayName())
                                 .sendTitle(gamePlayer);

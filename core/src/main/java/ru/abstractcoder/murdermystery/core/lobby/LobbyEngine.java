@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.lobby;
 
+import dagger.Reusable;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -14,11 +15,13 @@ import ru.abstractcoder.murdermystery.core.game.role.chance.RoleDataRepository;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.statistic.StatisticRepository;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+@Reusable
 public class LobbyEngine {
 
     private final GeneralConfig.Lobby settings;
@@ -35,9 +38,10 @@ public class LobbyEngine {
     private boolean isActive = true;
     private UncheckedRunnable shutdownAction;
 
-    public LobbyEngine(GeneralConfig.Lobby settings, Arena arena, LobbySidebarManager lobbySidebarManager,
+    @Inject
+    public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbySidebarManager lobbySidebarManager,
             MsgConfig<Messages> msgConfig, RoleDataRepository roleDataRepository, StatisticRepository statisticRepository) {
-        this.settings = settings;
+        this.settings = generalConfig.lobby();
         this.arena = arena;
         this.lobbySidebarManager = lobbySidebarManager;
         this.msgConfig = msgConfig;

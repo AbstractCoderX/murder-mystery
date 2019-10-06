@@ -4,21 +4,24 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.benioapi.util.LocationUtils;
-import ru.abstractcoder.murdermystery.core.game.GameEngine;
+import ru.abstractcoder.murdermystery.core.game.arena.Arena;
+
+import javax.inject.Inject;
 
 public class GoldDroppingAction implements GameAction {
 
     private static final ItemStack GOLD_ITEM = new ItemStack(Material.GOLD_INGOT);
 
-    private final GameEngine gameEngine;
+    private final Arena arena;
 
-    public GoldDroppingAction(GameEngine gameEngine) {
-        this.gameEngine = gameEngine;
+    @Inject
+    public GoldDroppingAction(Arena arena) {
+        this.arena = arena;
     }
 
     @Override
     public void execute() {
-        gameEngine.getArena().getSpawnPoints().forEach(spawnPoint -> {
+        arena.getSpawnPoints().forEach(spawnPoint -> {
             Location loc = LocationUtils.getSurfaceRandomNearLocation(spawnPoint, 7);
             loc.getWorld().dropItemNaturally(loc, GOLD_ITEM);
         });

@@ -2,11 +2,18 @@ package ru.abstractcoder.murdermystery.core.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
-public class CommonListener implements Listener {
+import javax.inject.Inject;
+
+public class CommonListener extends AbstractBukkitListener {
+
+    @Inject
+    public CommonListener(Plugin plugin) {
+        super(plugin);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {

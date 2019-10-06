@@ -1,12 +1,11 @@
 package ru.abstractcoder.murdermystery.core.game;
 
 import com.google.common.base.Preconditions;
+import dagger.Reusable;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
-import ru.abstractcoder.benioapi.BenioApiInstance;
-import ru.abstractcoder.benioapi.config.msg.MsgConfig;
+import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.game.bow.BowDropProcessor;
@@ -16,7 +15,6 @@ import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.player.PlayerController;
 import ru.abstractcoder.murdermystery.core.game.player.PlayerFactory;
-import ru.abstractcoder.murdermystery.core.game.role.RoleFactory;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClassFactory;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
@@ -26,9 +24,11 @@ import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.scheduler.Scheduler;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
 
+@Reusable
 public class GameEngine {
 
     private GameState state;
@@ -40,8 +40,7 @@ public class GameEngine {
     private final GoldManager goldManager;
     private final GameActionService gameActionService;
     private final Scheduler scheduler;
-    private final BenioApiInstance benio;
-    private final Plugin plugin;
+    private final TickingService tickingService;
     private final CorpseService corpseService;
     private final CitizensNpcService npcService;
 
@@ -53,32 +52,41 @@ public class GameEngine {
 
     private final ProfessionResolver professionResolver;
     private final RoleResolver roleResolver;
+    private final Plugin plugin;
 
-    public GameEngine(Arena arena, GeneralConfig.Game settings, PlayerFactory playerFactory,
-            EconomyService economyService, GoldManager goldManager, BenioApiInstance benio,
-            Plugin plugin, CorpseService corpseService, CitizensNpcService npcService,
-            MsgConfig<Messages> msgConfig) {
-        gameTime = new GameTime(settings.general().getGameDuration());
+    @Inject
+    public GameEngine(Arena arena, GeneralConfig generalConfig, GameActionService gameActionService,
+            PlayerFactory playerFactory,
+            EconomyService economyService, GoldManager goldManager,
+            Scheduler scheduler, TickingService tickingService, CorpseService corpseService,
+            CitizensNpcService npcService, SkinContainableRepository skinContainableRepository,
+            GamePlayerResolver playerResolver, RoleResolver roleResolver, Plugin plugin,
+            BowDropProcessor bowDropProcessor, ProfessionResolver professionResolver,
+            RoleClassFactory roleClassFactory, PlayerController playerController) {
         this.arena = arena;
-        this.settings = settings;
         this.playerFactory = playerFactory;
         this.economyService = economyService;
         this.goldManager = goldManager;
-        this.benio = benio;
-        this.plugin = plugin;
+        this.tickingService = tickingService;
+        this.scheduler = scheduler;
         this.corpseService = corpseService;
         this.npcService = npcService;
+        this.skinContainableRepository = skinContainableRepository;
+        this.playerResolver = playerResolver;
+        this.roleResolver = roleResolver;
+        this.plugin = plugin;
+        this.bowDropProcessor = bowDropProcessor;
+        this.professionResolver = professionResolver;
+        this.gameActionService = gameActionService;
+
+        settings = generalConfig.game();
+        this.playerController = playerController;
+        gameTime = new GameTime(settings.general().getGameDuration());
+
+        professionResolver.init(this);
+        roleClassFactory.init(this);
 
         state = GameState.WAITING;
-        gameActionService = new GameActionService();
-        skinContainableRepository = new SkinContainableRepository();
-        scheduler = new Scheduler(plugin);
-        bowDropProcessor = new BowDropProcessor(this, msgConfig);
-
-        professionResolver = new ProfessionResolver(this, msgConfig);
-        RoleClassFactory roleClassFactory = new RoleClassFactory(this, msgConfig);
-        RoleFactory roleFactory = new RoleFactory(roleClassFactory, professionResolver);
-        roleResolver = new RoleResolver(this, roleFactory);
     }
 
     public GameState getState() {
@@ -168,8 +176,8 @@ public class GameEngine {
         return plugin;
     }
 
-    public BenioApiInstance benio() {
-        return benio;
+    public TickingService getTickingService() {
+        return tickingService;
     }
 
     public GoldManager getGoldManager() {

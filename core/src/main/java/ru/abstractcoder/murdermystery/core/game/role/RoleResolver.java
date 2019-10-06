@@ -1,7 +1,8 @@
 package ru.abstractcoder.murdermystery.core.game.role;
 
+import dagger.Reusable;
 import org.jetbrains.annotations.NotNull;
-import ru.abstractcoder.murdermystery.core.game.GameEngine;
+import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
@@ -10,6 +11,7 @@ import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassT
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.Responsible;
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@Reusable
 public class RoleResolver {
 
     private final RoleTemplateResolver roleTemplateResolver;
@@ -29,11 +32,13 @@ public class RoleResolver {
 
     private final Map<Class<? extends Responsible>, Collection<Responsible>> responsibleRoleLogics = new HashMap<>();
 
-    public RoleResolver(GameEngine gameEngine, RoleFactory roleFactory) {
-        this.roleTemplateResolver = gameEngine.settings().getRoleTemplateResolver();
+    @Inject
+    public RoleResolver(GeneralConfig generalConfig,
+            RoleFactory roleFactory, GamePlayerResolver playerResolver) {
+        this.roleTemplateResolver = generalConfig.game().getRoleTemplateResolver();
+        this.roleClassTemplateResolver = generalConfig.game().getRoleClassTemplateResolver();
         this.roleFactory = roleFactory;
-        this.roleClassTemplateResolver = gameEngine.settings().getRoleClassTemplateResolver();
-        this.playerResolver = gameEngine.getPlayerResolver();
+        this.playerResolver = playerResolver;
     }
 
     //    public GameRole resolvePreparedRole(LobbyPlayer lobbyPlayer) {

@@ -49,8 +49,16 @@ public class GameSidebarManager {
         sidebarService.createBukkitSidebar(player, sidebarTemplate);
     }
 
+    public void showForAll() {
+        Bukkit.getOnlinePlayers().forEach(this::showFor);
+    }
+
     public void unshowForAll() {
-        Bukkit.getOnlinePlayers().forEach(sidebarService::removeSidebar);
+        Bukkit.getOnlinePlayers().forEach(this::unshowFor);
+    }
+
+    public void unshowFor(Player player) {
+        sidebarService.removeSidebar(player);
     }
 
 }

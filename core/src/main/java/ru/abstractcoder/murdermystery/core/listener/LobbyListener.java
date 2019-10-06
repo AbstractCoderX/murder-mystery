@@ -4,27 +4,28 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
 import ru.abstractcoder.murdermystery.core.slotbar.SlotBarItem;
 
-public class LobbyListener implements Listener {
+import javax.inject.Inject;
 
-    private final GeneralConfig generalConfig;
+public class LobbyListener extends AbstractBukkitListener {
+
     private final LobbyEngine lobbyEngine;
     private final MsgConfig<Messages> msgConfig;
 
-    public LobbyListener(GeneralConfig generalConfig, LobbyEngine lobbyEngine, MsgConfig<Messages> msgConfig) {
-        this.generalConfig = generalConfig;
+    @Inject
+    public LobbyListener(Plugin plugin, LobbyEngine lobbyEngine, MsgConfig<Messages> msgConfig) {
+        super(plugin);
         this.lobbyEngine = lobbyEngine;
         this.msgConfig = msgConfig;
 
@@ -56,7 +57,7 @@ public class LobbyListener implements Listener {
         player.setWalkSpeed(0.2F);
 
         player.setGameMode(GameMode.ADVENTURE);
-        player.teleport(generalConfig.lobby().getSpawnLocation());
+        player.teleport(lobbyEngine.settings().getSpawnLocation());
 
         lobbyEngine.loadPlayer(player).thenAccept(lobbyPlayer -> {
             msgConfig.get(Messages.general__joined_broadcast,
@@ -76,7 +77,7 @@ public class LobbyListener implements Listener {
     public void onItemClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         int slot = event.getHand() == EquipmentSlot.OFF_HAND ? 40 : player.getInventory().getHeldItemSlot();
-        generalConfig.lobby().getSlotBarItemResolver()
+        lobbyEngine.settings().getSlotBarItemResolver()
                 .resolve(slot)
                 .map(SlotBarItem::getClickHandler)
                 .ifPresent(clickHandler -> clickHandler.handleInteract(event))
@@ -93,7 +94,7 @@ public class LobbyListener implements Listener {
         if (event.getTo().getY() <= 0) {
             Player player = event.getPlayer();
             player.setFallDistance(0);
-            player.teleport(generalConfig.lobby().getSpawnLocation());
+            player.teleport(lobbyEngine.settings().getSpawnLocation());
         }
     }
 

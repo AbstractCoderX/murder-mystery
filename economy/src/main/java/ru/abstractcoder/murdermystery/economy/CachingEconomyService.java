@@ -3,6 +3,7 @@ package ru.abstractcoder.murdermystery.economy;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import dagger.Reusable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -11,13 +12,16 @@ import ru.abstractcoder.benioapi.util.PlayerUtils;
 import ru.abstractcoder.benioapi.util.listener.QuickListener;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 
+import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
 
+@Reusable
 public class CachingEconomyService implements EconomyService {
 
     private final EconomyRepository economyRepository;
     private final Cache<Player, Integer> balanceCache;
 
+    @Inject
     public CachingEconomyService(EconomyRepository economyRepository, Plugin plugin) {
         this.economyRepository = economyRepository;
         this.balanceCache = CacheBuilder.newBuilder()

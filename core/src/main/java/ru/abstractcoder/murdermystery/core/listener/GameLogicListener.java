@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -22,13 +21,16 @@ import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.*;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
-public class GameLogicListener implements Listener {
+public class GameLogicListener extends AbstractBukkitListener {
 
     private final GameEngine gameEngine;
 
+    @Inject
     public GameLogicListener(GameEngine gameEngine) {
+        super(gameEngine.getPlugin());
         this.gameEngine = gameEngine;
     }
 

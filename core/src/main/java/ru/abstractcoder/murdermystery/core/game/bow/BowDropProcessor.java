@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.bow;
 
+import dagger.Reusable;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -10,31 +11,41 @@ import org.bukkit.util.Vector;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
+import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.Messages;
-import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
+import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
+import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 
+import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.Objects;
 
+@Reusable
 public class BowDropProcessor {
 
     private static final EulerAngle ARM_DEF_POSE = new EulerAngle(0, 0, Math.PI / 2);
     private static final ItemStack BOW_ITEM = new ItemStack(Material.BOW);
     public static final int COMPASS_SLOT = 4;
 
-    private final GameEngine gameEngine;
     private final MsgConfig<Messages> msgConfig;
     private final ItemStack compassItem;
+    private final GamePlayerResolver playerResolver;
+    private final TickingService tickingService;
+    private final RoleResolver roleResolver;
 
-    public BowDropProcessor(GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
-        this.gameEngine = gameEngine;
+    @Inject
+    public BowDropProcessor(MsgConfig<Messages> msgConfig, GamePlayerResolver playerResolver,
+            TickingService tickingService, RoleResolver roleResolver) {
         compassItem = ItemBuilder.fromMaterial(Material.COMPASS)
                 .withItemMeta()
                 .setName(msgConfig.get(Messages.misc__bow_detector_compass).asSingleLine())
                 .and().build();
         this.msgConfig = msgConfig;
+        this.playerResolver = playerResolver;
+        this.tickingService = tickingService;
+        this.roleResolver = roleResolver;
     }
 
     public void dropBow(Location location) {
@@ -47,22 +58,22 @@ public class BowDropProcessor {
         armorStand.setArms(true);
         armorStand.setRightArmPose(ARM_DEF_POSE);
         armorStand.getEquipment().setItemInMainHand(BOW_ITEM);
-        gameEngine.benio().getTickingService().register(new DroppedBowTicking(armorStand));
+        tickingService.register(new DroppedBowTicking(armorStand));
 
-        gameEngine.getPlayerResolver().getSurvivors().forEach(gp -> {
+        playerResolver.getSurvivors().forEach(gp -> {
             Player player = gp.getHandle();
             player.setCompassTarget(location);
             player.getInventory().setItem(COMPASS_SLOT, compassItem);
         });
 
         msgConfig.get(Messages.game__detective_die_chat).broadcastSession()
-                .setPlayerIssuers(gameEngine.getPlayerResolver().getAll())
+                .setPlayerIssuers(playerResolver.getAll())
                 .broadcastChat();
         msgConfig.get(Messages.game__detective_die_title_survivors).broadcastSession()
-                .setPlayerIssuers(gameEngine.getPlayerResolver().getSurvivors())
+                .setPlayerIssuers(playerResolver.getSurvivors())
                 .broadcastTitle();
         msgConfig.get(Messages.game__detective_die_title_murder)
-                .sendTitle(gameEngine.getPlayerResolver().getMurder());
+                .sendTitle(playerResolver.getMurder());
     }
 
     private class DroppedBowTicking implements Ticking {
@@ -88,12 +99,12 @@ public class BowDropProcessor {
             Location bowLoc = standLoc.clone().add(vector);
 
             if (bowLoc.getNearbyPlayers(1).stream()
-                    .map(gameEngine.getPlayerResolver()::resolve)
+                    .map(playerResolver::resolve)
                     .filter(Objects::nonNull)
                     .filter(gamePlayer -> gamePlayer.getRole().getType() == GameRole.Type.CIVILIAN)
                     .min(Comparator.comparing(gp -> bowLoc.distanceSquared(gp.getHandle().getLocation())))
                     .map(gamePlayer -> {
-                        gamePlayer.setRole(gameEngine.getRoleResolver().getDefaultClassedRole(GameRole.Type.DETECTIVE));
+                        gamePlayer.setRole(roleResolver.getDefaultClassedRole(GameRole.Type.DETECTIVE));
                         gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, BOW_ITEM);
                         armorStand.remove();
                         return true;

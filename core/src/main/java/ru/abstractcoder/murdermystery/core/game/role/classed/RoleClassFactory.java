@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.game.role.classed;
 
 import com.google.common.base.Preconditions;
+import dagger.Reusable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
@@ -10,19 +11,25 @@ import ru.abstractcoder.murdermystery.core.game.role.detective.classes.*;
 import ru.abstractcoder.murdermystery.core.game.role.murder.MurderRoleClass;
 import ru.abstractcoder.murdermystery.core.game.role.murder.classes.*;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
+@Reusable
 public class RoleClassFactory {
 
-    private final GameEngine gameEngine;
+    private GameEngine gameEngine;
     private final MsgConfig<Messages> msgConfig;
     private final Map<RoleClass.Type, RoleClassCreator> creatorsMap;
 
-    public RoleClassFactory(GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
-        this.gameEngine = gameEngine;
+    @Inject
+    public RoleClassFactory(MsgConfig<Messages> msgConfig) {
         this.msgConfig = msgConfig;
         creatorsMap = new HashMap<>(MurderRoleClass.Type.values().length + DetectiveRoleClass.Type.values().length);
+    }
+
+    public void init(GameEngine gameEngine) {
+        this.gameEngine = gameEngine;
 
         creatorsMap.put(MurderRoleClass.Type.JACK, JackRoleClass::new);
         creatorsMap.put(MurderRoleClass.Type.AUGUST_MUSIR, AugustMusirRoleClass::new);
@@ -38,10 +45,12 @@ public class RoleClassFactory {
     }
 
     public RoleClass create(RoleClass.Type type) {
+        Preconditions.checkState(gameEngine != null, "Not initialized yet!");
+
         RoleClassCreator creator = creatorsMap.get(type);
         Preconditions.checkState(creator != null, "Unknown RoleClass type %s", type);
-        RoleClassTemplate template = gameEngine.settings().getRoleClassTemplateResolver().getByClassType(type);
 
+        RoleClassTemplate template = gameEngine.settings().getRoleClassTemplateResolver().getByClassType(type);
         return creator.create(template, gameEngine, msgConfig);
     }
 

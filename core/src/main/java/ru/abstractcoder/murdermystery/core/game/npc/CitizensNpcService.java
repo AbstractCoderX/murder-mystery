@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.npc;
 
+import dagger.Reusable;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Location;
@@ -8,10 +9,12 @@ import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableRepository;
 import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Reusable
 public class CitizensNpcService {
 
     private final NPCRegistry npcRegistry;
@@ -19,6 +22,7 @@ public class CitizensNpcService {
 
     private final Map<UUID, Npc> npcMap = new HashMap<>();
 
+    @Inject
     public CitizensNpcService(NPCRegistry npcRegistry, SkinContainableRepository skinContainableRepository) {
         this.npcRegistry = npcRegistry;
         this.skinContainableRepository = skinContainableRepository;

@@ -1,13 +1,17 @@
 package ru.abstractcoder.murdermystery.core.statistic;
 
+import dagger.Reusable;
 import ru.abstractcoder.benioapi.database.util.QueryFactory;
 
+import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
 
+@Reusable
 public class StatisticRepository {
 
     private final QueryFactory queryFactory;
 
+    @Inject
     public StatisticRepository(QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }

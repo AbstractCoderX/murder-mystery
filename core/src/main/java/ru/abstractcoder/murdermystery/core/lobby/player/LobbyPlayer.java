@@ -33,13 +33,7 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
     }
 
     public RoleData getRoleData(GameRole.Type type) {
-        RoleData roleData = roleDataMap.get(type);
-        if (roleData == null) {
-            roleData = new RoleData();
-            roleDataMap.put(type, roleData);
-        }
-
-        return roleData;
+        return roleDataMap.computeIfAbsent(type, (__) -> new RoleData());
     }
 
     public GameRole getBalancedRole() {

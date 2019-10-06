@@ -3,6 +3,7 @@ package ru.abstractcoder.murdermystery.core.game.corpse;
 import com.comphenix.packetwrapper.WrapperPlayServerBed;
 import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import dagger.Reusable;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.trait.Gravity;
@@ -16,12 +17,14 @@ import ru.abstractcoder.murdermystery.core.game.corpse.bed.BedFacade;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.util.SkinUtils;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@Reusable
 public class CitizensCorpseService implements CorpseService {
 
     private final NPCRegistry npcRegistry;
@@ -29,6 +32,7 @@ public class CitizensCorpseService implements CorpseService {
     private final Map<UUID, Corpse> byCorpseIdMap = new HashMap<>();
     private final Map<UUID, Corpse> byPlayerIdMap = new HashMap<>();
 
+    @Inject
     public CitizensCorpseService(NPCRegistry npcRegistry, Plugin plugin) {
         this.npcRegistry = npcRegistry;
         this.plugin = plugin;

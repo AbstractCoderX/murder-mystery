@@ -1,12 +1,17 @@
 package ru.abstractcoder.murdermystery.core.scheduler;
 
+import dagger.Reusable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import javax.inject.Inject;
+
+@Reusable
 public class Scheduler {
 
     private final Plugin plugin;
 
+    @Inject
     public Scheduler(Plugin plugin) {
         this.plugin = plugin;
     }

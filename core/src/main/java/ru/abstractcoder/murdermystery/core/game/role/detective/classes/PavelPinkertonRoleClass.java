@@ -46,7 +46,7 @@ public class PavelPinkertonRoleClass extends DetectiveRoleClass {
             }
 
             Set<Vector3> particlePositions = new HashSet<>();
-            gameEngine.benio().getTickingService().register(new Ticking() {
+            gameEngine.getTickingService().register(new Ticking() {
                 int i = 0;
 
                 @Override
@@ -62,7 +62,7 @@ public class PavelPinkertonRoleClass extends DetectiveRoleClass {
                 }
             });
 
-            gameEngine.benio().getTickingService().register(new Ticking() {
+            gameEngine.getTickingService().register(new Ticking() {
                 @Override
                 public boolean doTick() {
                     if (corpse.isRemoved()) {

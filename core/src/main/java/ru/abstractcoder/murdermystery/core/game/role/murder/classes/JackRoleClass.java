@@ -51,7 +51,7 @@ public class JackRoleClass extends MurderRoleClass {
 
             gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, null);
             swordThrown = true;
-            gameEngine.benio().getTickingService().register(new ThrownSword(gamePlayer));
+            gameEngine.getTickingService().register(new ThrownSword(gamePlayer));
         }
 
         private class ThrownSword implements Ticking {

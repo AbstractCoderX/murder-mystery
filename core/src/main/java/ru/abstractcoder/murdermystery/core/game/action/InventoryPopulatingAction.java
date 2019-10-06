@@ -1,18 +1,21 @@
 package ru.abstractcoder.murdermystery.core.game.action;
 
-import ru.abstractcoder.murdermystery.core.game.GameEngine;
+import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
+
+import javax.inject.Inject;
 
 public class InventoryPopulatingAction implements GameAction {
 
-    private final GameEngine gameEngine;
+    private final GamePlayerResolver playerResolver;
 
-    public InventoryPopulatingAction(GameEngine gameEngine) {
-        this.gameEngine = gameEngine;
+    @Inject
+    public InventoryPopulatingAction(GamePlayerResolver playerResolver) {
+        this.playerResolver = playerResolver;
     }
 
     @Override
     public void execute() {
-        gameEngine.getPlayerResolver().getAll().forEach(gamePlayer -> {
+        playerResolver.getAll().forEach(gamePlayer -> {
             gamePlayer.getRole().getEquipper().equip(gamePlayer.getHandle());
         });
     }

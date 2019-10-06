@@ -1,13 +1,17 @@
 package ru.abstractcoder.murdermystery.economy;
 
+import dagger.Reusable;
 import ru.abstractcoder.benioapi.database.util.QueryFactory;
 
+import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
 
+@Reusable
 public class MysqlEconomyRepository implements EconomyRepository {
 
     private final QueryFactory queryFactory;
 
+    @Inject
     public MysqlEconomyRepository(QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
@@ -30,8 +34,7 @@ public class MysqlEconomyRepository implements EconomyRepository {
         //language=MySQL
         String sql = "insert into economy(username, balance) values (?, ?) on duplicate key update balance=?";
 
-        return queryFactory.completableQuery().update(sql, playerName.toLowerCase(), balance, balance)
-                .thenApply((__) -> null);
+        return queryFactory.completableQuery().execute(sql, playerName.toLowerCase(), balance, balance);
     }
 
 }

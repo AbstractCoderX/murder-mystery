@@ -4,6 +4,6 @@ import org.bukkit.entity.Player;
 
 public interface PlayerEquipper {
 
-    void equip(Player gamePlayer);
+    void equip(Player player);
 
 }
