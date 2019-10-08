@@ -11,8 +11,6 @@ import java.util.Random;
 
 public class Skin {
 
-    private static final Random random = new Random();
-
     private final String texture;
     private final String signature;
     private final Property property;
@@ -20,13 +18,11 @@ public class Skin {
 
     private ItemStack skull = null;
 
-    private final List<String> proofs;
 
     @JsonCreator
-    public Skin(String texture, String signature, List<String> proofs) {
+    public Skin(String texture, String signature) {
         this.texture = texture;
         this.signature = signature;
-        this.proofs = proofs;
 
         property = new Property("textures", texture, signature);
         wrappedProperty = WrappedSignedProperty.fromHandle(property);
@@ -53,10 +49,6 @@ public class Skin {
             skull = ItemUtils.createSkull(property);
         }
         return skull;
-    }
-
-    public String getRandomProof() {
-        return proofs.get(random.nextInt(proofs.size()));
     }
 
 }

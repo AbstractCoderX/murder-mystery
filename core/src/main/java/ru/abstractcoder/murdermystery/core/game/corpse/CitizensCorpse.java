@@ -21,7 +21,8 @@ import java.util.UUID;
 
 public class CitizensCorpse implements Corpse {
 
-    private static final MethodHandle DATAWATCHER_MAP_GETTER, DATAWATCHER_MAP_SETTER;
+    private static final MethodHandle DATAWATCHER_MAP_GETTER;
+    private static final MethodHandle DATAWATCHER_MAP_SETTER;
 
     static {
         DATAWATCHER_MAP_GETTER = TrustedLookup.apply(lookup -> lookup.findGetter(DataWatcher.class, "d", Map.class));
