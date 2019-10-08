@@ -33,6 +33,7 @@ public enum Messages implements MsgKey {
     game__detective_die_chat("Детектив умер. Лук утерян."),
     game__detective_die_title_survivors("&6Детектив умер", "&eНайдите лук и остановите убийцу!"),
     game__detective_die_title_murder("&6Детектив умер"),
+    game__detective_bow_picked_up("&fЛук детектива был поднят."),
     game__doctor_revive_cooldown("&fСледующий труп Вы сможете оживить только через &a{time}"),
     game__doctor_spectator_leaved("&cЭтот игрок уже вышел из игры"),
     game__prostitute_sex_cooldown("&fСекс будет доступен через &a{time}"),

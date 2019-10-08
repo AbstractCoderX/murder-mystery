@@ -3,7 +3,9 @@ package ru.abstractcoder.murdermystery.core.game;
 import com.google.common.base.Preconditions;
 import dagger.Reusable;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import ru.abstractcoder.benioapi.board.BoardApi;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
@@ -47,7 +49,8 @@ public class GameEngine {
     private final SkinContainableRepository skinContainableRepository;
     private final GamePlayerResolver playerResolver;
     private final PlayerController playerController;
-//    private final GameSidebarManager gameSidebarManager;
+    private final BoardApi boardApi;
+    //    private final GameSidebarManager gameSidebarManager;
     private final BowDropProcessor bowDropProcessor;
 
     private final ProfessionResolver professionResolver;
@@ -62,7 +65,8 @@ public class GameEngine {
             CitizensNpcService npcService, SkinContainableRepository skinContainableRepository,
             GamePlayerResolver playerResolver, RoleResolver roleResolver, Plugin plugin,
             BowDropProcessor bowDropProcessor, ProfessionResolver professionResolver,
-            RoleClassFactory roleClassFactory, PlayerController playerController) {
+            RoleClassFactory roleClassFactory, PlayerController playerController,
+            BoardApi boardApi) {
         this.arena = arena;
         this.playerFactory = playerFactory;
         this.economyService = economyService;
@@ -81,6 +85,7 @@ public class GameEngine {
 
         settings = generalConfig.game();
         this.playerController = playerController;
+        this.boardApi = boardApi;
         gameTime = new GameTime(settings.general().getGameDuration());
 
         professionResolver.init(this);
@@ -154,7 +159,10 @@ public class GameEngine {
 
         Iterator<Location> spawnPointIterator = arena.getSpawnPoints().iterator();
         lobbyPlayers.forEach(lobbyPlayer -> {
-            lobbyPlayer.getPlayer().teleport(spawnPointIterator.next());
+            Player player = lobbyPlayer.getPlayer();
+            player.teleport(spawnPointIterator.next());
+            boardApi.getNameTagService().setNameTagHidden(player, true);
+            //TODO set skin name for tab
             GamePlayer gamePlayer = playerFactory.fromLobbyPlayer(lobbyPlayer);
             gamePlayer.getRoleLogic().load();
         });

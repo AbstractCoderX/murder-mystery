@@ -104,6 +104,7 @@ public class BowDropProcessor {
                     .filter(gamePlayer -> gamePlayer.getRole().getType() == GameRole.Type.CIVILIAN)
                     .min(Comparator.comparing(gp -> bowLoc.distanceSquared(gp.getHandle().getLocation())))
                     .map(gamePlayer -> {
+                        msgConfig.get(Messages.game__detective_bow_picked_up).broadcastSession().broadcastChat();
                         gamePlayer.setRole(roleResolver.getDefaultClassedRole(GameRole.Type.DETECTIVE));
                         gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, BOW_ITEM);
                         armorStand.remove();
