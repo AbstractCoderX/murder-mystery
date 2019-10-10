@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.reflect.TrustedLookup;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.util.SkinUtils;
@@ -40,6 +41,8 @@ public class CitizensCorpse implements Corpse {
     private final AbstractPacket bedPacket;
     private Packet<?> glowingPacket;
 
+    private final Lazy<String> proof;
+
     public CitizensCorpse(Plugin plugin, NPC npc, UUID playerId, Skin skin, AbstractPacket blockChangePacket, AbstractPacket bedPacket) {
         this.plugin = plugin;
         this.npc = npc;
@@ -47,6 +50,8 @@ public class CitizensCorpse implements Corpse {
         this.skin = skin;
         this.blockChangePacket = blockChangePacket;
         this.bedPacket = bedPacket;
+
+        proof = Lazy.create(() -> skin.data().getRandomProof());
     }
 
     @Override
@@ -93,6 +98,11 @@ public class CitizensCorpse implements Corpse {
     public void setSkin(Skin skin) {
         this.skin = skin;
         SkinUtils.setSkinAndNotify(npc, skin);
+    }
+
+    @Override
+    public String getProof() {
+        return proof.get();
     }
 
     @Override

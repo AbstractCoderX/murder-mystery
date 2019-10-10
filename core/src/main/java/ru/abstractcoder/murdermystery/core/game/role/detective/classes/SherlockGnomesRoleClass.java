@@ -71,7 +71,7 @@ public class SherlockGnomesRoleClass extends DetectiveRoleClass {
                     .findFirst()
                     .ifPresent(corpse -> {
                         if (PROOF_COLLECT_PROBABILITY.checkLuck()) {
-                            String proof = corpse.getSkin().getRandomProof();
+                            String proof = corpse.getProof();
                             addCollectedProof(proof);
 
                             //TODO format proof

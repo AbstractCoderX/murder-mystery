@@ -5,27 +5,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.benioapi.item.ItemUtils;
-
-import java.util.List;
-import java.util.Random;
+import ru.abstractcoder.benioapi.util.Lazy;
 
 public class Skin {
 
     private final String texture;
     private final String signature;
-    private final Property property;
-    private final WrappedSignedProperty wrappedProperty;
+    private final SkinData data;
 
-    private ItemStack skull = null;
-
+    private final Lazy<Property> property;
+    private final Lazy<WrappedSignedProperty> wrappedProperty;
+    private final Lazy<ItemStack> skull;
 
     @JsonCreator
-    public Skin(String texture, String signature) {
+    public Skin(String texture, String signature, SkinData data) {
         this.texture = texture;
         this.signature = signature;
+        this.data = data;
 
-        property = new Property("textures", texture, signature);
-        wrappedProperty = WrappedSignedProperty.fromHandle(property);
+        property = Lazy.create(() -> new Property("textures", texture, signature));
+        wrappedProperty = Lazy.create(() -> WrappedSignedProperty.fromHandle(property.get()));
+        skull = Lazy.create(() -> ItemUtils.createSkull(property.get()));
     }
 
     public String getTexture() {
@@ -36,19 +36,20 @@ public class Skin {
         return signature;
     }
 
+    public SkinData data() {
+        return data;
+    }
+
     public Property getProperty() {
-        return property;
+        return property.get();
     }
 
     public WrappedSignedProperty getWrappedProperty() {
-        return wrappedProperty;
+        return wrappedProperty.get();
     }
 
     public ItemStack getSkull() {
-        if (skull == null) {
-            skull = ItemUtils.createSkull(property);
-        }
-        return skull;
+        return skull.get();
     }
 
 }

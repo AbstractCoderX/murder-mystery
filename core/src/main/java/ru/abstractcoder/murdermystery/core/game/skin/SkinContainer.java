@@ -32,6 +32,10 @@ public class SkinContainer {
         displayedSkinMap.put(ownerId, ownSkin);
     }
 
+    public void setDisplayedSkinForAll(Skin skin) {
+        displayedSkinMap.entrySet().forEach(entry -> entry.setValue(skin));
+    }
+
     public void setDisplayedSkinFor(UUID playerId, Skin skin) {
         displayedSkinMap.put(playerId, skin);
     }
