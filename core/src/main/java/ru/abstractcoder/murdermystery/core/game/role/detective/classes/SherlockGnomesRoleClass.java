@@ -25,13 +25,23 @@ import java.util.Set;
 
 public class SherlockGnomesRoleClass extends DetectiveRoleClass {
 
+    private boolean firstLogicInitialized = false;
+
     public SherlockGnomesRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
     @Override
     public RoleLogic createLogic(GamePlayer gamePlayer) {
-        return new Logic(gamePlayer, gameEngine, msgConfig);
+        Logic logic = new Logic(gamePlayer, gameEngine, msgConfig);
+
+        if (firstLogicInitialized) {
+            logic.secondary = true;
+        } else {
+            firstLogicInitialized = true;
+        }
+
+        return logic;
     }
 
     private static class Logic extends DetectiveLogic implements AnyOwnMoveResponsible {
@@ -40,13 +50,9 @@ public class SherlockGnomesRoleClass extends DetectiveRoleClass {
         private static final Probability PROOF_COLLECT_PROBABILITY = Probability.fromPercent(25);
         private static final int PROOFS_PER_PAGE = 2;
 
-        private final Set<Corpse> proofCollectedCorpses = new HashSet<>();
         private final List<String> proofPages = new ArrayList<>();
         private int proofCounter = 0;
-
-        private boolean addProofCollectedCorpse(Corpse corpse) {
-            return proofCollectedCorpses.add(corpse);
-        }
+        private boolean secondary = false;
 
         private void addCollectedProof(String proof) {
             int pageIndex = ((++proofCounter + PROOFS_PER_PAGE - 1) / PROOFS_PER_PAGE) - 1;
@@ -67,23 +73,25 @@ public class SherlockGnomesRoleClass extends DetectiveRoleClass {
         @Override
         public void onAnyMove(Location from, Location to, Cancellable event) {
             gameEngine.getCorpseService().nearbyCorpsesStream(to, 3)
-                    .filter(this::addProofCollectedCorpse)
+                    .map(Corpse::proof)
                     .findFirst()
-                    .ifPresent(corpse -> {
-                        if (PROOF_COLLECT_PROBABILITY.checkLuck()) {
-                            String proof = corpse.getProof();
-                            addCollectedProof(proof);
-
-                            //TODO format proof
-
-                            gamePlayer.sendMessage(proof);
-
-                            ItemStack notebook = ItemBuilder.fromMaterial(Material.WRITTEN_BOOK)
-                                    .withItemMeta(BookMeta.class)
-                                    .customModifying(bookMeta -> bookMeta.setPages(proofPages))
-                                    .and().build();
-                            gamePlayer.getHandle().getInventory().setItem(NOTEBOOK_SLOT, notebook);
+                    .ifPresent(proof -> {
+                        if ((secondary && !proof.isCollectedByAnyone())
+                                || !PROOF_COLLECT_PROBABILITY.checkLuck()) {
+                            return;
                         }
+
+                        String proofText = proof.collectBy(gamePlayer);
+                        addCollectedProof(proofText);
+
+                        //TODO format proof
+                        gamePlayer.sendMessage(proofText);
+
+                        ItemStack notebook = ItemBuilder.fromMaterial(Material.WRITTEN_BOOK)
+                                .withItemMeta(BookMeta.class)
+                                .customModifying(bookMeta -> bookMeta.setPages(proofPages))
+                                .and().build();
+                        gamePlayer.getHandle().getInventory().setItem(NOTEBOOK_SLOT, notebook);
                     });
         }
 

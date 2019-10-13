@@ -3,10 +3,13 @@ package ru.abstractcoder.murdermystery.core.game.corpse;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import ru.abstractcoder.benioapi.util.Lazy;
+import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.detective.DetectiveLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.game.skin.SkinData;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public interface Corpse {
@@ -27,29 +30,30 @@ public interface Corpse {
 
     void setSkin(Skin skin);
 
-    String getProof();
-
     void enableGlowingFor(Player player);
+
+    Proof proof();
 
     class Proof {
 
         private final Lazy<String> proof;
-        private boolean collected;
+        private final Set<GamePlayer> collectedBy = new HashSet<>();
 
         public Proof(SkinData skinData) {
             proof = Lazy.create(skinData::getRandomProof);
         }
 
-        public boolean isCollected() {
-            return proof.isInitialized();
+        public boolean isCollectedByAnyone() {
+            return !collectedBy.isEmpty();
         }
 
-        public boolean canCollect(DetectiveLogic logic) {
-
-        }
-
-        public String collect() {
+        public String collectBy(GamePlayer gamePlayer) {
+            collectedBy.add(gamePlayer);
             return proof.get();
+        }
+
+        public boolean isCollectedBy(GamePlayer gamePlayer) {
+            return collectedBy.contains(gamePlayer);
         }
 
     }

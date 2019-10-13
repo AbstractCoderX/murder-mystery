@@ -41,9 +41,10 @@ public class CitizensCorpse implements Corpse {
     private final AbstractPacket bedPacket;
     private Packet<?> glowingPacket;
 
-    private final Lazy<String> proof;
+    private final Proof proof;
 
-    public CitizensCorpse(Plugin plugin, NPC npc, UUID playerId, Skin skin, AbstractPacket blockChangePacket, AbstractPacket bedPacket) {
+    public CitizensCorpse(Plugin plugin, NPC npc, UUID playerId, Skin skin,
+            AbstractPacket blockChangePacket, AbstractPacket bedPacket) {
         this.plugin = plugin;
         this.npc = npc;
         this.playerId = playerId;
@@ -51,7 +52,7 @@ public class CitizensCorpse implements Corpse {
         this.blockChangePacket = blockChangePacket;
         this.bedPacket = bedPacket;
 
-        proof = Lazy.create(() -> skin.data().getRandomProof());
+        proof = new Proof(skin.data());
     }
 
     @Override
@@ -101,11 +102,6 @@ public class CitizensCorpse implements Corpse {
     }
 
     @Override
-    public String getProof() {
-        return proof.get();
-    }
-
-    @Override
     public void enableGlowingFor(Player player) {
         if (glowingPacket == null) {
             EntityPlayer entityPlayer = ((CraftPlayer) npc.getEntity()).getHandle();
@@ -141,6 +137,11 @@ public class CitizensCorpse implements Corpse {
             glowingPacket = new PacketPlayOutEntityMetadata(npc.getEntity().getEntityId(), newDataWatcher, true);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(glowingPacket);
         }
+    }
+
+    @Override
+    public Proof proof() {
+        return null;
     }
 
     @Override
