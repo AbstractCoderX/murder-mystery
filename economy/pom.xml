@@ -13,8 +13,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.abstractcoder</groupId>
+            <artifactId>benio-api</artifactId>
         </dependency>
 
         <dependency>
@@ -28,19 +33,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.abstractcoder</groupId>
-            <artifactId>benio-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger</artifactId>
-            <scope>provided</scope>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>plugin-annotations</artifactId>
         </dependency>
     </dependencies>
 

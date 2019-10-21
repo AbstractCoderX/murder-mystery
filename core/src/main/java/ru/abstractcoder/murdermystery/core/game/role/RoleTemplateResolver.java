@@ -25,7 +25,7 @@ public class RoleTemplateResolver {
         return byCategoryMap.get(type);
     }
 
-    public Collection<RoleTemplate> getAllTemplates() {
+    public Collection<RoleTemplate> getAll() {
         return byCategoryMap.values();
     }
 

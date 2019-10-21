@@ -9,20 +9,23 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
+import javax.inject.Inject;
+import java.util.function.Supplier;
+
 public class GameSidebarManager {
 
     private SidebarService sidebarService;
     private final SidebarTemplate sidebarTemplate;
 
+    @Inject
     public GameSidebarManager(SidebarService sidebarService, GameEngine gameEngine,
             MsgConfig<Messages> msgConfig) {
         this.sidebarService = sidebarService;
 
-        int[] timeLeft = {gameEngine.settings().general().getGameDuration()};
         sidebarTemplate = gameEngine.settings().getSidebarTemplate()
                 .withLineUpdater(new PlaceholderTextUpdater()
-                        .add("{role}", player -> {
-                            GamePlayer gamePlayer = gameEngine.getPlayerResolver().resolve(player);
+                        .prepare(GamePlayer.class, gameEngine.getPlayerResolver()::resolve)
+                        .add("{role}", GamePlayer.class, gamePlayer -> {
                             if (gamePlayer == null) {
                                 return msgConfig.get(Messages.misc__spectator).asSingleLine();
                             }
@@ -35,13 +38,18 @@ public class GameSidebarManager {
                         .add("{survivors_amount}", () -> gameEngine.getPlayerResolver()
                                 .getSurvivors().size()
                         )
-                        .add("{detective_state}", () -> msgConfig.get(
-                                gameEngine.getPlayerResolver().getDetective() == null
-                                ? Messages.misc__died
-                                : Messages.misc__alive
-                                ).asSingleLine()
+                        .add("{detective_state}", () -> msgConfig
+                                .get(Messages.lifeState(gameEngine.getPlayerResolver().getDetective() != null))
+                                .asSingleLine()
                         )
-                        .add("{time}", () -> timeLeft[0]--)
+                        .add("{time}", new Supplier<String>() {
+                            int timeLeft = gameEngine.settings().general().getGameDuration();
+
+                            @Override
+                            public String get() {
+                                return String.valueOf(timeLeft--);
+                            }
+                        })
                 );
     }
 

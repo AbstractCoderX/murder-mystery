@@ -56,6 +56,16 @@ public class ConfigModule {
 
     @Provides
     @Reusable
+    @Named("gui")
+    public HoconConfig guiConfig(ConfigBuilderFactory configBuilder, @Named("globalDir") Path globalDir) {
+        return configBuilder
+                .baseConfig()
+                .setCustomPath(globalDir)
+                .setFileName("gui").buildHocon();
+    }
+
+    @Provides
+    @Reusable
     @Named("arena")
     public HoconConfig arenaConfig(ConfigBuilderFactory configBuilder, GeneralConfig generalConfig) {
         return configBuilder

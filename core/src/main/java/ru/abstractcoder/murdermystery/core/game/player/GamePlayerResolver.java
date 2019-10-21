@@ -60,7 +60,7 @@ public class GamePlayerResolver {
                 result.addAll(civilians);
                 result.add(murder);
                 return result;
-            default:
+            case CIVILIAN:
                 result = new ArrayList<>(gamePlayerMap.size() - 1);
                 result.add(murder);
                 result.add(detective);
@@ -71,6 +71,8 @@ public class GamePlayerResolver {
                     result.add(player);
                 }
                 return result;
+            default:
+                throw new AssertionError();
         }
     }
 

@@ -38,7 +38,7 @@ public class ComputingRoleBalancer {
         onePartChance = 1.0 / lobbyEngine.getPlayerCount();
 
         commonChance = 1.0;
-        roleTemplateResolver.getAllTemplates().stream()
+        roleTemplateResolver.getAll().stream()
                 .filter(RoleTemplate::isExtraPointable)
                 .forEach(roleTemplate -> lobbyEngine.getPlayers().forEach(lobbyPlayer -> {
                     int chancePoints = lobbyPlayer.getRoleData(roleTemplate.getType()).getChancePoints();
@@ -60,7 +60,7 @@ public class ComputingRoleBalancer {
         this.recompute();
         List<LobbyPlayer> players = new ArrayList<>(lobbyEngine.getPlayers());
 
-        roleTemplateResolver.getAllTemplates().stream()
+        roleTemplateResolver.getAll().stream()
                 .filter(RoleTemplate::isExtraPointable)
                 .map(RoleTemplate::getType)
                 .forEach(type -> {

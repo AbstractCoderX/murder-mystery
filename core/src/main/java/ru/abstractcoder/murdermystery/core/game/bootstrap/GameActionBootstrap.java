@@ -1,12 +1,22 @@
-package ru.abstractcoder.murdermystery.core.game;
+package ru.abstractcoder.murdermystery.core.game.bootstrap;
 
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
+import ru.abstractcoder.murdermystery.core.game.GameSidebarManager;
 import ru.abstractcoder.murdermystery.core.game.action.*;
 
 import javax.inject.Inject;
 
 //TODO run this
-public class GameActionBootstrap {
+public class GameActionBootstrap implements GameBootstrap {
+
+    private final GameSidebarManager sidebarManager;
+    private final GameActionService gameActionService;
+    private final GeneralConfig generalConfig;
+    private final SurvivorMoneyGivingAction survivorMoneyGivingAction;
+    private final SurvivorDetectorAction survivorDetectorAction;
+    private final GoldDroppingAction goldDroppingAction;
+    private final RoleSelectingAnimationAction roleSelectingAnimationAction;
+    private final InventoryPopulatingAction inventoryPopulatingAction;
 
     @Inject
     public GameActionBootstrap(
@@ -18,6 +28,18 @@ public class GameActionBootstrap {
             GoldDroppingAction goldDroppingAction,
             RoleSelectingAnimationAction roleSelectingAnimationAction,
             InventoryPopulatingAction inventoryPopulatingAction) {
+        this.sidebarManager = sidebarManager;
+        this.gameActionService = gameActionService;
+        this.generalConfig = generalConfig;
+        this.survivorMoneyGivingAction = survivorMoneyGivingAction;
+        this.survivorDetectorAction = survivorDetectorAction;
+        this.goldDroppingAction = goldDroppingAction;
+        this.roleSelectingAnimationAction = roleSelectingAnimationAction;
+        this.inventoryPopulatingAction = inventoryPopulatingAction;
+    }
+
+    @Override
+    public void boot() {
         gameActionService.addStartingAction(sidebarManager::showForAll);
 
         GeneralConfig.Game settings = generalConfig.game();

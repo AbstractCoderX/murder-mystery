@@ -44,7 +44,7 @@ public enum Messages implements MsgKey {
 //    game__,
 
     misc__alive("Жив"),
-    misc__died("Мёртв"),
+    misc__dead("Мёртв"),
     misc__spectator("Наблюдатель"),
     misc__survivor_detector_compass("&eДетектор выживших"),
     misc__bow_detector_compass("&eДетектор лука"),
@@ -64,6 +64,10 @@ public enum Messages implements MsgKey {
     @Override
     public MsgProperties getProperties() {
         return properties;
+    }
+
+    public static Messages lifeState(boolean alive) {
+        return alive ? misc__alive : misc__dead;
     }
 
 }

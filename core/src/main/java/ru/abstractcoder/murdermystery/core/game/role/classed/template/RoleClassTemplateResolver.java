@@ -17,7 +17,7 @@ public class RoleClassTemplateResolver {
 
     @JsonCreator
     public RoleClassTemplateResolver(@JsonDeserialize(as = EnumMap.class)
-                                             Map<GameRole.Type, TemplateSettings> templateSettingsMap) {
+            Map<GameRole.Type, TemplateSettings> templateSettingsMap) {
         byGameRoleTypeMap = templateSettingsMap;
         byRoleClassTypeMap = new HashMap<>();
 
@@ -31,8 +31,6 @@ public class RoleClassTemplateResolver {
         return byRoleClassTypeMap.get(type);
     }
 
-
-
     public RoleClassTemplate getDefaultTemplate(GameRole.Type roleType) {
         return getTemplateSettings(roleType).defaultTemplate;
     }
@@ -45,11 +43,16 @@ public class RoleClassTemplateResolver {
         return byGameRoleTypeMap.keySet();
     }
 
-//    public Collection<RoleClassTemplate> getAllDefaultTemplates() {
-//        return byGameRoleTypeMap.values().stream()
-//                .map(templateSettings -> templateSettings.defaultTemplate)
-//                .collect(Collectors.toList());
-//    }
+    //    public Collection<RoleClassTemplate> getAllDefaultTemplates() {
+    //        return byGameRoleTypeMap.values().stream()
+    //                .map(templateSettings -> templateSettings.defaultTemplate)
+    //                .collect(Collectors.toList());
+    //    }
+
+    public Collection<RoleClassTemplate> getAll() {
+        return byRoleClassTypeMap.values();
+    }
+
 
     @NotNull
     private TemplateSettings getTemplateSettings(GameRole.Type roleType) {
@@ -60,11 +63,11 @@ public class RoleClassTemplateResolver {
 
     private static class TemplateSettings {
 
-        private final DefaultRoleClassTemplate defaultTemplate;
+        private final SimpleRoleClassTemplate defaultTemplate;
         private final List<PurchasableRoleClassTemplateImpl> purchasableTemplates;
 
         @JsonCreator
-        public TemplateSettings(DefaultRoleClassTemplate defaultTemplate, List<PurchasableRoleClassTemplateImpl> purchasableTemplates) {
+        public TemplateSettings(SimpleRoleClassTemplate defaultTemplate, List<PurchasableRoleClassTemplateImpl> purchasableTemplates) {
             this.defaultTemplate = defaultTemplate;
             this.purchasableTemplates = purchasableTemplates;
         }

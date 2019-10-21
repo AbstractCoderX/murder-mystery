@@ -23,9 +23,19 @@ public interface GameRole {
     PlayerEquipper getEquipper();
 
     enum Type {
-        MURDER,
-        DETECTIVE,
-        CIVILIAN
+        MURDER('m'),
+        DETECTIVE('d'),
+        CIVILIAN('c');
+
+        private final char guiChar;
+
+        Type(char guiChar) {
+            this.guiChar = guiChar;
+        }
+
+        public char getGuiChar() {
+            return guiChar;
+        }
     }
 
 }

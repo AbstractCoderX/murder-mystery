@@ -1,18 +1,19 @@
 package ru.abstractcoder.murdermystery.core.game.role;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import ru.abstractcoder.benioapi.util.ColorUtils;
+import ru.abstractcoder.murdermystery.core.game.role.icon.IconableTemplate;
+import ru.abstractcoder.murdermystery.core.game.role.icon.TemplateIcon;
 
-public class RoleTemplate {
+public class RoleTemplate implements IconableTemplate {
 
     private final GameRole.Type type;
-    private final String name;
+    private final TemplateIcon icon;
     private final boolean extraPointable;
 
     @JsonCreator
-    public RoleTemplate(GameRole.Type type, String name, boolean extraPointable) {
+    public RoleTemplate(GameRole.Type type, TemplateIcon icon, boolean extraPointable) {
         this.type = type;
-        this.name = ColorUtils.color(name);
+        this.icon = icon;
         this.extraPointable = extraPointable;
     }
 
@@ -20,8 +21,9 @@ public class RoleTemplate {
         return type;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public TemplateIcon getIcon() {
+        return icon;
     }
 
     public boolean isExtraPointable() {
