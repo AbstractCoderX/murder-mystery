@@ -23,19 +23,28 @@ public interface GameRole {
     PlayerEquipper getEquipper();
 
     enum Type {
-        MURDER('m'),
-        DETECTIVE('d'),
-        CIVILIAN('c');
+        MURDER('m', true),
+        DETECTIVE('d', true),
+        CIVILIAN('c', false);
 
         private final char guiChar;
+        private final boolean classed;
 
-        Type(char guiChar) {
+        public static final Type[] VALUES = values();
+
+        Type(char guiChar, boolean classed) {
             this.guiChar = guiChar;
+            this.classed = classed;
         }
 
         public char getGuiChar() {
             return guiChar;
         }
+
+        public boolean isClassed() {
+            return classed;
+        }
+
     }
 
 }

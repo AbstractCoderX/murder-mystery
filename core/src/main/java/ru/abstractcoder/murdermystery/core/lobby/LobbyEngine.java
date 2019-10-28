@@ -11,9 +11,8 @@ import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
-import ru.abstractcoder.murdermystery.core.game.role.chance.RoleDataRepository;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
-import ru.abstractcoder.murdermystery.core.statistic.StatisticRepository;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayerService;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -29,8 +28,7 @@ public class LobbyEngine {
     private final LobbySidebarManager lobbySidebarManager;
     private final SlotBarItemProcessor slotBarItemProcessor;
     private final MsgConfig<Messages> msgConfig;
-    private final RoleDataRepository roleDataRepository;
-    private final StatisticRepository statisticRepository;
+    private final LobbyPlayerService lobbyPlayerService;
 
     private final Map<Player, LobbyPlayer> waitingPlayerMap = new HashMap<>();
     private final BossBar bossBar;
@@ -40,14 +38,13 @@ public class LobbyEngine {
 
     @Inject
     public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbySidebarManager lobbySidebarManager,
-            MsgConfig<Messages> msgConfig, RoleDataRepository roleDataRepository, StatisticRepository statisticRepository) {
+            MsgConfig<Messages> msgConfig, LobbyPlayerService lobbyPlayerService) {
         this.settings = generalConfig.lobby();
         this.arena = arena;
         this.lobbySidebarManager = lobbySidebarManager;
         this.msgConfig = msgConfig;
+        this.lobbyPlayerService = lobbyPlayerService;
         slotBarItemProcessor = new SlotBarItemProcessor(settings.getSlotBarItemResolver());
-        this.roleDataRepository = roleDataRepository;
-        this.statisticRepository = statisticRepository;
 
         lobbySidebarManager.init(this);
         bossBar = Bukkit.createBossBar(
@@ -106,10 +103,7 @@ public class LobbyEngine {
         bossBar.addPlayer(player);
         checkIncrementedPlayerCount();
 
-        return roleDataRepository.load(player.getName()).thenCombine(
-                statisticRepository.loadStatistic(player.getName()),
-                (roleDataMap, statistic) -> new LobbyPlayer(player, roleDataMap, statistic)
-        );
+        return lobbyPlayerService.loadAsync(player);
     }
 
     private void checkIncrementedPlayerCount() {

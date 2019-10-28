@@ -9,6 +9,7 @@ public class SkinContainer {
     private final UUID ownerId;
     private final Skin realSkin;
     private final Map<UUID, Skin> displayedSkinMap;
+    private boolean displayRealSkin = false;
 
     public SkinContainer(UUID ownerId, Skin realSkin, Map<UUID, Skin> displayedSkinMap) {
         this.ownerId = ownerId;
@@ -17,6 +18,9 @@ public class SkinContainer {
     }
 
     public Skin resolveSkinFor(UUID playerId) {
+        if (isDisplayRealSkin()) {
+            return realSkin;
+        }
         return displayedSkinMap.get(playerId);
     }
 
@@ -38,6 +42,14 @@ public class SkinContainer {
 
     public void setDisplayedSkinFor(UUID playerId, Skin skin) {
         displayedSkinMap.put(playerId, skin);
+    }
+
+    public boolean isDisplayRealSkin() {
+        return displayRealSkin;
+    }
+
+    public void setDisplayRealSkin(boolean displayRealSkin) {
+        this.displayRealSkin = displayRealSkin;
     }
 
 }

@@ -25,7 +25,7 @@ public class PreferredRoleSelectingMenu {
 
     @Inject
     public PreferredRoleSelectingMenu(MenuApi menuApi, @Named("gui") HoconConfig guiConfig, ObjectMapper objectMapper,
-                                      GeneralConfig generalConfig) {
+            GeneralConfig generalConfig) {
         this.menuApi = menuApi;
 
         guiConfig.addOnReloadAction(() -> {
@@ -35,21 +35,12 @@ public class PreferredRoleSelectingMenu {
 
             generalConfig.game().getRoleTemplateResolver().getAll().forEach(roleTemplate -> {
                 menuLoader.setItem(roleTemplate.getType().getGuiChar(), (slot, itemData) -> {
-                    FixedMenuIcon unselectedIcon = new FixedMenuIcon(slot, itemData.toItemStack());
-                    FixedMenuIcon selectedIcon = new FixedMenuIcon(slot, itemData.toItemBuilder()
-                            .withItemMeta()
-                            .blankEnchantment()
-                            .and().build()
-                    );
-
                     return MenuItemFactory.create(builder -> builder
-                            .perSessionIcon(session -> {
-                                if (session.getOwner().getPreferredRole().getType() == roleTemplate.getType()) {
-                                    return selectedIcon;
-                                }
-                                return unselectedIcon;
-                            })
-                            .onClick(click -> click.getIssuer().setPrederredRole(roleTemplate))
+                            .cachedIcon(new FixedMenuIcon(slot, itemData.copy()
+                                    .impose(roleTemplate.getIcon())
+                                    .toItemStack()
+                            ))
+                            .onClick(click -> click.getIssuer().setPreferredRole(roleTemplate))
                     );
                 });
             });

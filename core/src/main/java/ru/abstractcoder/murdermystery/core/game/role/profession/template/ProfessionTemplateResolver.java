@@ -1,12 +1,12 @@
 package ru.abstractcoder.murdermystery.core.game.role.profession.template;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 
 import java.util.Collection;
-import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProfessionTemplateResolver {
@@ -15,8 +15,9 @@ public class ProfessionTemplateResolver {
 
     @JsonCreator
     public ProfessionTemplateResolver(
-            @JsonDeserialize(as = EnumMap.class) Map<Profession.Type, ProfessionTemplate> professionTemplateMap) {
-        this.professionTemplateMap = professionTemplateMap;
+            List<ProfessionTemplate> professionTemplates) {
+        professionTemplateMap = Maps.newHashMapWithExpectedSize(professionTemplates.size());
+        professionTemplates.forEach(temlpate -> professionTemplateMap.put(temlpate.getType(), temlpate));
     }
 
     public ProfessionTemplate resolve(Profession.Type type) {

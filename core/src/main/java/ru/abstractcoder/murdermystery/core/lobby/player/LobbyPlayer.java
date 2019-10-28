@@ -1,10 +1,11 @@
 package ru.abstractcoder.murdermystery.core.lobby.player;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
+import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
+import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
@@ -13,14 +14,25 @@ import java.util.Map;
 public class LobbyPlayer extends AbstractWrappedPlayer {
 
     private RoleTemplate preferredRole;
-    private final Map<GameRole.Type, RoleData> roleDataMap;
-    private final PlayerStatistic statistic;
+    private Map<GameRole.Type, ClassedRoleData> classedRoleDataMap;
+    private Map<RoleComponent.Type, Skin> selectedSkinMap;
+    private PlayerStatistic statistic;
 
     private GameRole balancedRole;
 
-    public LobbyPlayer(Player handle, Map<GameRole.Type, RoleData> roleDataMap, PlayerStatistic statistic) {
+    public LobbyPlayer(Player handle) {
         super(handle);
-        this.roleDataMap = roleDataMap;
+    }
+
+    public void setClassedRoleDataMap(Map<GameRole.Type, ClassedRoleData> classedRoleDataMap) {
+        this.classedRoleDataMap = classedRoleDataMap;
+    }
+
+    public void setSelectedSkinMap(Map<RoleComponent.Type, Skin> selectedSkinMap) {
+        this.selectedSkinMap = selectedSkinMap;
+    }
+
+    public void setStatistic(PlayerStatistic statistic) {
         this.statistic = statistic;
     }
 
@@ -28,12 +40,12 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
         return preferredRole;
     }
 
-    public void setPrederredRole(RoleTemplate prederredRole) {
-        this.preferredRole = prederredRole;
+    public void setPreferredRole(RoleTemplate preferredRole) {
+        this.preferredRole = preferredRole;
     }
 
-    public RoleData getRoleData(GameRole.Type type) {
-        return roleDataMap.computeIfAbsent(type, (__) -> new RoleData());
+    public ClassedRoleData getClassedRoleData(GameRole.Type type) {
+        return classedRoleDataMap.computeIfAbsent(type, (__) -> new ClassedRoleData());
     }
 
     public GameRole getBalancedRole() {
@@ -48,18 +60,25 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
         return statistic;
     }
 
-    public static class RoleData {
+    public Skin getSelectedSkin(RoleComponent.Type componentType, Skin defaultSkin) {
+        return selectedSkinMap.getOrDefault(componentType, defaultSkin);
+    }
+
+    public void setSelectedSkin(RoleComponent.Type componentType, Skin selectedSkin) {
+        selectedSkinMap.put(componentType, selectedSkin);
+    }
+
+    public static class ClassedRoleData {
 
         private int chancePoints;
-        @Nullable
         private RoleClass.Type selectedClassType;
 
-        public RoleData(int chancePoints, @Nullable RoleClass.Type selectedClassType) {
+        public ClassedRoleData(int chancePoints, RoleClass.Type selectedClassType) {
             this.chancePoints = chancePoints;
             this.selectedClassType = selectedClassType;
         }
 
-        public RoleData() {
+        public ClassedRoleData() {
         }
 
         public int getChancePoints() {
@@ -78,7 +97,6 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
             return selectedClassType != null;
         }
 
-        @Nullable
         public RoleClass.Type getSelectedClassType() {
             return selectedClassType;
         }

@@ -4,7 +4,7 @@ import dagger.Reusable;
 import ru.abstractcoder.benioapi.database.util.QueryFactory;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
-import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer.RoleData;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer.ClassedRoleData;
 
 import javax.inject.Inject;
 import java.util.EnumMap;
@@ -12,21 +12,21 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Reusable
-public class MysqlRoleDataRepository implements RoleDataRepository {
+public class MysqlClassedRoleDataRepository implements ClassedRoleDataRepository {
 
     private final QueryFactory queryFactory;
 
     @Inject
-    public MysqlRoleDataRepository(QueryFactory queryFactory) {
+    public MysqlClassedRoleDataRepository(QueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 
     @Override
-    public CompletableFuture<Map<GameRole.Type, RoleData>> load(String name) {
+    public CompletableFuture<Map<GameRole.Type, ClassedRoleData>> load(String name) {
         //language=MySQL
-        String sql = "select chance_points from role_data where username = ?";
+        String sql = "select chance_points from classed_role_player_data where username = ?";
         return queryFactory.completableQuery().query(sql, rs -> {
-            Map<GameRole.Type, RoleData> result = new EnumMap<>(GameRole.Type.class);
+            Map<GameRole.Type, ClassedRoleData> result = new EnumMap<>(GameRole.Type.class);
             while (rs.next()) {
                 GameRole.Type roleType = GameRole.Type.valueOf(rs.getString("role"));
                 int chancePoints = rs.getInt("chance_points");
@@ -34,20 +34,20 @@ public class MysqlRoleDataRepository implements RoleDataRepository {
                 RoleClass.Type selectedClass = selectedClassKey != null
                         ? RoleClass.TypeResolver.resolve(roleType, selectedClassKey)
                         : null;
-                result.put(roleType, new RoleData(chancePoints, selectedClass));
+                result.put(roleType, new ClassedRoleData(chancePoints, selectedClass));
             }
             return result;
         }, name.toLowerCase());
     }
 
     @Override
-    public CompletableFuture<Void> save(String name, GameRole.Type roleType, RoleData roleData) {
+    public CompletableFuture<Void> save(String name, GameRole.Type roleType, ClassedRoleData classedRoleData) {
         //language=MySQL
-        String sql = "insert into role_data values (?, ?, ?, ?)";
-        return queryFactory.completableQuery().update(sql,
+        String sql = "insert into classed_role_player_data values (?, ?, ?, ?)";
+        return queryFactory.completableQuery().execute(sql,
                 name.toLowerCase(), roleType,
-                roleData.getChancePoints(), roleData.getSelectedClassType()
-        ).thenRun(() -> {});
+                classedRoleData.getChancePoints(), classedRoleData.getSelectedClassType()
+        );
     }
 
     //    @Override

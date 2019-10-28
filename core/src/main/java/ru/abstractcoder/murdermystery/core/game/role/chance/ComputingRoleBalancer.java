@@ -41,13 +41,13 @@ public class ComputingRoleBalancer {
         roleTemplateResolver.getAll().stream()
                 .filter(RoleTemplate::isExtraPointable)
                 .forEach(roleTemplate -> lobbyEngine.getPlayers().forEach(lobbyPlayer -> {
-                    int chancePoints = lobbyPlayer.getRoleData(roleTemplate.getType()).getChancePoints();
+                    int chancePoints = lobbyPlayer.getClassedRoleData(roleTemplate.getType()).getChancePoints();
                     commonChance += probabilityFromPoints(chancePoints);
                 }));
     }
 
     public double getRoleChance(LobbyPlayer lobbyPlayer, GameRole.Type roleType) {
-        int roleChancePoints = lobbyPlayer.getRoleData(roleType).getChancePoints();
+        int roleChancePoints = lobbyPlayer.getClassedRoleData(roleType).getChancePoints();
         double probability = onePartChance + probabilityFromPoints(roleChancePoints);
         return probability / commonChance;
     }
@@ -56,11 +56,13 @@ public class ComputingRoleBalancer {
         return (points * 2) / 100.0;
     }
 
+    //TODO invoke this
     public void applyRoles() {
         this.recompute();
         List<LobbyPlayer> players = new ArrayList<>(lobbyEngine.getPlayers());
 
-        roleTemplateResolver.getAll().stream()
+        roleTemplateResolver.getAll()
+                .stream()
                 .filter(RoleTemplate::isExtraPointable)
                 .map(RoleTemplate::getType)
                 .forEach(type -> {
@@ -73,9 +75,9 @@ public class ComputingRoleBalancer {
 
                     LobbyPlayer selectedPlayer = playerProbables.getRandomly().getLobbyPlayer();
 
-                    LobbyPlayer.RoleData roleData = selectedPlayer.getRoleData(type);
-                    RoleClass.Type classType = roleData.isClassTypeSelected()
-                                               ? roleData.getSelectedClassType()
+                    LobbyPlayer.ClassedRoleData classedRoleData = selectedPlayer.getClassedRoleData(type);
+                    RoleClass.Type classType = classedRoleData.isClassTypeSelected()
+                                               ? classedRoleData.getSelectedClassType()
                                                : roleClassTemplateResolver.getDefaultTemplate(type).getType();
 
                     RoleTemplate roleTemplate = roleTemplateResolver.getByType(type);

@@ -14,11 +14,11 @@ public class PurchasableRoleClassTemplateImpl extends SimpleRoleClassTemplate im
 
     @JsonCreator
     public PurchasableRoleClassTemplateImpl(
-            String type,
+            @JsonProperty("type") String typeKey,
             @JsonProperty("items") Map<Integer, ItemData> itemDataMap,
             TemplateIcon icon,
             int price, SkinResolver skinResolver) {
-        super(type, itemDataMap, icon, skinResolver);
+        super(typeKey, itemDataMap, icon, skinResolver);
         this.price = price;
     }
 

@@ -3,12 +3,9 @@ package ru.abstractcoder.murdermystery.core.game.role.classed;
 import com.google.common.base.Preconditions;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplate;
-import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogicCreator;
+import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public interface RoleClass extends RoleLogicCreator {
+public interface RoleClass extends RoleComponent {
 
     default Type getType() {
         return template().getType();
@@ -16,30 +13,15 @@ public interface RoleClass extends RoleLogicCreator {
 
     RoleClassTemplate template();
 
-    interface Type {
-
-        GameRole.Type roleType();
-
-        String key();
-
-    }
+    //Marker interface
+    interface Type extends RoleComponent.Type {}
 
     class TypeResolver {
 
-        private static final Map<String, Type> REGISTRY = new HashMap<>();
-
-        public static void register(Type type) {
-            REGISTRY.put(type.roleType() + "_" + type.key(), type);
-        }
-
-        public static Type resolve(String s) {
-            Type type = REGISTRY.get(s);
-            Preconditions.checkArgument(type != null, "Unknown key %s", s);
-            return type;
-        }
-
-        public static Type resolve(GameRole.Type roleType, String key) {
-            return resolve(roleType + "_" + key);
+        public static Type resolve(GameRole.Type roleType, String typeName) {
+            Preconditions.checkArgument(roleType.isClassed(), "roleType must be classed type");
+            RoleComponent.Type componentType = RoleComponent.TypeResolver.resolve(roleType + "_" + typeName);
+            return (Type) componentType;
         }
 
     }

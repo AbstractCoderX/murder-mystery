@@ -30,19 +30,11 @@ public abstract class DetectiveRoleClass extends AbstractRoleClass {
 
         ;
 
-        Type() {
-            TypeResolver.register(this);
-        }
-
         @Override
-        public GameRole.Type roleType() {
+        public GameRole.Type getRoleType() {
             return GameRole.Type.DETECTIVE;
         }
 
-        @Override
-        public String key() {
-            return name();
-        }
     }
 
 }

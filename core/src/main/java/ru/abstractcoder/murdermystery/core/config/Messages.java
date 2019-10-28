@@ -48,6 +48,7 @@ public enum Messages implements MsgKey {
     misc__spectator("Наблюдатель"),
     misc__survivor_detector_compass("&eДетектор выживших"),
     misc__bow_detector_compass("&eДетектор лука"),
+    misc__slowing_snowballs("&fСнежки замедления"),
 //    misc__,
 
 

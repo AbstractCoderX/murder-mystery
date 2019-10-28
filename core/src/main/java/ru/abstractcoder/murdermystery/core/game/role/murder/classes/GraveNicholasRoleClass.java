@@ -54,12 +54,6 @@ public class GraveNicholasRoleClass extends MurderRoleClass {
         }
 
         @Override
-        public void load() {
-            super.load();
-
-        }
-
-        @Override
         public void onCorpseClick(Corpse corpse, int slot) {
             if (slot != SharedConstants.WEAPON_SLOT) {
                 return;

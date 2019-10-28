@@ -29,6 +29,11 @@ public class MurderLogic extends AbstractRoleLogic {
 
     @Override
     public void kill(GamePlayer victim, DeathState deathState) {
+        if (victim.getMurderProtectionPoints() > 0) {
+            victim.decrementMurderProtectionPoints();
+            return;
+        }
+
         super.kill(victim, deathState);
 
         victim.getHandle().addPotionEffect(BLINDESS_EFFECT);

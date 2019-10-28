@@ -8,6 +8,7 @@ import dagger.Reusable;
 import ru.abstractcoder.benioapi.config.ConfigBuilderFactory;
 import ru.abstractcoder.benioapi.config.HoconConfig;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
+import ru.abstractcoder.benioapi.database.DataSourceOwner;
 import ru.abstractcoder.benioapi.jackson.BenioAdaptedObjectMapperService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
@@ -72,6 +73,11 @@ public class ConfigModule {
                 .baseConfig()
                 .setCustomPath(generalConfig.game().getWorld().getWorldFolder().toPath())
                 .setFileName("arena").buildHocon();
+    }
+
+    @Provides
+    public DataSourceOwner dataSourceOwner(GeneralConfig generalConfig) {
+        return generalConfig.mysql().getConnectionPool();
     }
 
 }

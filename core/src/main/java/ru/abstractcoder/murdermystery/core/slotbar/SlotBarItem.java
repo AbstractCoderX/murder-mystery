@@ -24,7 +24,7 @@ public class SlotBarItem {
         this.clickHandler = clickHandler;
     }
 
-    public void loadToInventory(Inventory inventory) {
+    public void addToInventory(Inventory inventory) {
         inventory.setItem(slot, icon);
     }
 

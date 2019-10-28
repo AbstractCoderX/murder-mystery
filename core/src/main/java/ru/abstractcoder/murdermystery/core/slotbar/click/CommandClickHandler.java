@@ -1,8 +1,8 @@
 package ru.abstractcoder.murdermystery.core.slotbar.click;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class CommandClickHandler extends AbstractClickHandler {
     }
 
     @Override
-    protected void onClick(Player player) {
-        player.chat(cmd);
+    protected void onClick(LobbyPlayer player) {
+        player.getHandle().chat(cmd);
     }
 
 }

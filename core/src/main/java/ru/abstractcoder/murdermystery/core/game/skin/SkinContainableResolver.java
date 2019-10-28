@@ -9,19 +9,19 @@ import java.util.Map;
 import java.util.UUID;
 
 @Reusable
-public class SkinContainableRepository {
+public class SkinContainableResolver {
 
     private final Map<UUID, SkinContainable> holderMap = new HashMap<>();
 
     @Inject
-    public SkinContainableRepository() {
+    public SkinContainableResolver() {
     }
 
     public void add(SkinContainable holder) {
         holderMap.put(holder.getUniqueId(), holder);
     }
 
-    public BeniOptional<SkinContainable> findById(UUID holderId) {
+    public BeniOptional<SkinContainable> getById(UUID holderId) {
         return BeniOptional.ofNullable(holderMap.get(holderId));
     }
 

@@ -1,14 +1,19 @@
 package ru.abstractcoder.murdermystery.core.game.role.logic;
 
+import org.bukkit.Location;
+import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.Nullable;
+import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
+import ru.abstractcoder.murdermystery.core.game.player.PlayerController;
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.AnyKillResponsible;
+import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.AnyOwnMoveResponsible;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
-public abstract class AbstractRoleLogic implements RoleLogic {
+public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsible {
 
     protected final GamePlayer gamePlayer;
     protected final GameEngine gameEngine;
@@ -35,9 +40,17 @@ public abstract class AbstractRoleLogic implements RoleLogic {
 
     @Override
     public void death(@Nullable GamePlayer killer, DeathState deathState) {
-        SpectatingPlayer spectatingPlayer = gameEngine.getPlayerController()
-                .makeSpectating(gamePlayer, deathState.isNeedCorpse());
+        PlayerController playerController = gameEngine.getPlayerController();
+        SpectatingPlayer spectatingPlayer = playerController.makeSpectating(gamePlayer, deathState.isNeedCorpse());
         deathState.setSpectatingPlayer(spectatingPlayer);
+
+        Sidebar cachedSidebar = gamePlayer.getCachedSidebar();
+        if (cachedSidebar != null) {
+            gameEngine.getSidebarService().setSidebar(gamePlayer.getHandle(), cachedSidebar);
+        }
+
+        gamePlayer.setMuted(false);
+        gamePlayer.setUnmovedDamageEnabled(false);
     }
 
     @Override
@@ -48,6 +61,19 @@ public abstract class AbstractRoleLogic implements RoleLogic {
     @Override
     public void onGoldPickup(int amount) {
         gameEngine.getGoldManager().giveGold(gamePlayer, amount);
+    }
+
+    @Override
+    public void onAnyMove(Location from, Location to, Cancellable event) {
+        if (!gamePlayer.isUnmovedDamageEnabled()) {
+            return;
+        }
+
+        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
+            return;
+        }
+
+        gamePlayer.resetUnmovedSeconds();
     }
 
 }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import dagger.Reusable;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.HoconConfig;
-import ru.abstractcoder.benioapi.database.MySqlConnectionPool;
 import ru.abstractcoder.murdermystery.core.slotbar.click.StandartActionResolver;
 
 import javax.inject.Inject;
@@ -31,14 +30,14 @@ public class HoconGeneralConfig extends HoconConfig implements GeneralConfig {
 
         addOnReloadAction(() -> {
             if (dto.mysql != null) {
-                dto.mysql.close();
+                dto.mysql.getConnectionPool().close();
             }
             dto = objectReader.readValue(handle.root().render(JSON_WRITE_DEFAULT));
         });
     }
 
     @Override
-    public MySqlConnectionPool mysql() {
+    public Mysql mysql() {
         return dto.mysql;
     }
 
@@ -54,12 +53,12 @@ public class HoconGeneralConfig extends HoconConfig implements GeneralConfig {
 
     private static final class Dto {
 
-        private final MySqlConnectionPool mysql;
+        private final Mysql mysql;
         private final Lobby lobby;
         private final Game game;
 
         @JsonCreator
-        public Dto(MySqlConnectionPool mysql, Lobby lobby, Game game) {
+        public Dto(Mysql mysql, Lobby lobby, Game game) {
             this.mysql = mysql;
             this.lobby = lobby;
             this.game = game;

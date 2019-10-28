@@ -1,9 +1,9 @@
 package ru.abstractcoder.murdermystery.core.slotbar.click;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +24,13 @@ public abstract class AbstractClickHandler implements ClickHandler {
     }
 
     @Override
-    public void handleInteract(PlayerInteractEvent event) {
+    public void handleInteract(PlayerInteractEvent event, LobbyPlayer player) {
         if (allowedActions.contains(event.getAction())) {
-            onClick(event.getPlayer());
+            onClick(player);
             event.setUseItemInHand(Event.Result.DENY);
         }
     }
 
-    protected abstract void onClick(Player player);
+    protected abstract void onClick(LobbyPlayer player);
 
 }

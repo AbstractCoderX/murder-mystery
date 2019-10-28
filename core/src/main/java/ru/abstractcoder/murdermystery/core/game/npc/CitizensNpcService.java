@@ -6,7 +6,7 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableRepository;
+import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableResolver;
 import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
 
 import javax.inject.Inject;
@@ -18,14 +18,14 @@ import java.util.UUID;
 public class CitizensNpcService {
 
     private final NPCRegistry npcRegistry;
-    private final SkinContainableRepository skinContainableRepository;
+    private final SkinContainableResolver skinContainableResolver;
 
     private final Map<UUID, Npc> npcMap = new HashMap<>();
 
     @Inject
-    public CitizensNpcService(NPCRegistry npcRegistry, SkinContainableRepository skinContainableRepository) {
+    public CitizensNpcService(NPCRegistry npcRegistry, SkinContainableResolver skinContainableResolver) {
         this.npcRegistry = npcRegistry;
-        this.skinContainableRepository = skinContainableRepository;
+        this.skinContainableResolver = skinContainableResolver;
     }
 
     public Npc spawnNpc(Location location, SkinContainer skinContainer) {
@@ -33,7 +33,7 @@ public class CitizensNpcService {
         Npc wrappedNpc = new Npc(npc, skinContainer, location);
 
         npcMap.put(npc.getUniqueId(), wrappedNpc);
-        skinContainableRepository.add(wrappedNpc);
+        skinContainableResolver.add(wrappedNpc);
 
         return wrappedNpc;
     }

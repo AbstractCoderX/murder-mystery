@@ -2,8 +2,8 @@ package ru.abstractcoder.murdermystery.core.game.role.civilian;
 
 import ru.abstractcoder.murdermystery.core.game.role.AbstractRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
+import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.equipper.CivilianEquipper;
-import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogicCreator;
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 
 public class CivilianRole extends AbstractRole {
@@ -30,7 +30,7 @@ public class CivilianRole extends AbstractRole {
     }
 
     @Override
-    protected RoleLogicCreator getRoleLogicCreator() {
+    protected RoleComponent getComponent() {
         return profession;
     }
 

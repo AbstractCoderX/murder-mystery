@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.board.BoardApi;
+import ru.abstractcoder.benioapi.board.SidebarService;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
@@ -20,7 +21,7 @@ import ru.abstractcoder.murdermystery.core.game.player.PlayerFactory;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClassFactory;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableRepository;
+import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableResolver;
 import ru.abstractcoder.murdermystery.core.game.time.GameTime;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.scheduler.Scheduler;
@@ -46,10 +47,11 @@ public class GameEngine {
     private final CorpseService corpseService;
     private final CitizensNpcService npcService;
 
-    private final SkinContainableRepository skinContainableRepository;
+    private final SkinContainableResolver skinContainableResolver;
     private final GamePlayerResolver playerResolver;
     private final PlayerController playerController;
     private final BoardApi boardApi;
+    private final SidebarService sidebarService;
     //    private final GameSidebarManager gameSidebarManager;
     private final BowDropProcessor bowDropProcessor;
 
@@ -62,11 +64,11 @@ public class GameEngine {
             PlayerFactory playerFactory,
             EconomyService economyService, GoldManager goldManager,
             Scheduler scheduler, TickingService tickingService, CorpseService corpseService,
-            CitizensNpcService npcService, SkinContainableRepository skinContainableRepository,
+            CitizensNpcService npcService, SkinContainableResolver skinContainableResolver,
             GamePlayerResolver playerResolver, RoleResolver roleResolver, Plugin plugin,
             BowDropProcessor bowDropProcessor, ProfessionResolver professionResolver,
             RoleClassFactory roleClassFactory, PlayerController playerController,
-            BoardApi boardApi) {
+            BoardApi boardApi, SidebarService sidebarService) {
         this.arena = arena;
         this.playerFactory = playerFactory;
         this.economyService = economyService;
@@ -75,7 +77,7 @@ public class GameEngine {
         this.scheduler = scheduler;
         this.corpseService = corpseService;
         this.npcService = npcService;
-        this.skinContainableRepository = skinContainableRepository;
+        this.skinContainableResolver = skinContainableResolver;
         this.playerResolver = playerResolver;
         this.roleResolver = roleResolver;
         this.plugin = plugin;
@@ -86,6 +88,7 @@ public class GameEngine {
         settings = generalConfig.game();
         this.playerController = playerController;
         this.boardApi = boardApi;
+        this.sidebarService = sidebarService;
         gameTime = new GameTime(settings.general().getGameDuration());
 
         professionResolver.init(this);
@@ -106,8 +109,8 @@ public class GameEngine {
         return arena;
     }
 
-    public SkinContainableRepository getSkinContainableRepository() {
-        return skinContainableRepository;
+    public SkinContainableResolver getSkinContainableResolver() {
+        return skinContainableResolver;
     }
 
     public GamePlayerResolver getPlayerResolver() {
@@ -190,6 +193,10 @@ public class GameEngine {
 
     public GoldManager getGoldManager() {
         return goldManager;
+    }
+
+    public SidebarService getSidebarService() {
+        return sidebarService;
     }
 
     public enum WinningSide {

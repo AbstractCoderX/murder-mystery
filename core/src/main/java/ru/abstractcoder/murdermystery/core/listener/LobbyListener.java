@@ -80,7 +80,7 @@ public class LobbyListener extends AbstractBukkitListener {
         lobbyEngine.settings().getSlotBarItemResolver()
                 .resolve(slot)
                 .map(SlotBarItem::getClickHandler)
-                .ifPresent(clickHandler -> clickHandler.handleInteract(event))
+                .ifPresent(clickHandler -> clickHandler.handleInteract(event, lobbyEngine.getPlayer(player)))
                 .orElse(() -> event.setCancelled(true));
     }
 

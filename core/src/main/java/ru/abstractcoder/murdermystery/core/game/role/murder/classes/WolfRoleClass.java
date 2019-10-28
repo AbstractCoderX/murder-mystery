@@ -31,13 +31,14 @@ public class WolfRoleClass extends MurderRoleClass {
         return new Logic(gamePlayer, gameEngine, msgConfig);
     }
 
+
+    public static final PotionEffect SLOW = new PotionEffect(PotionEffectType.SLOW, 12 * 20, 0);
+    public static final PotionEffect CONFUSION = new PotionEffect(PotionEffectType.CONFUSION, 12 * 20, 0);
+    public static final PotionEffect UNLUCK = new PotionEffect(PotionEffectType.UNLUCK, 20 * 20, 0);
+
     private static class Logic extends MurderLogic implements AnyOtherMoveResponsible {
 
         private static final Random random = new Random();
-
-        private static final PotionEffect SLOW = new PotionEffect(PotionEffectType.SLOW, 12 * 20, 0);
-        private static final PotionEffect CONFUSION = new PotionEffect(PotionEffectType.CONFUSION, 12 * 20, 0);
-        private static final PotionEffect UNLUCK = new PotionEffect(PotionEffectType.UNLUCK, 20 * 20, 0);
 
         private final Multimap<Player, Corpse> visitedCorps = HashMultimap.create();
 

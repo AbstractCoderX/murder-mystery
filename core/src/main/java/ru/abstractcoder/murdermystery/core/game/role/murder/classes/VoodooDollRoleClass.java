@@ -24,8 +24,8 @@ import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
 public class VoodooDollRoleClass extends MurderRoleClass {
 
-    private static final ItemStack VOODOO_SKULL = new ItemStack(Material.SKULL);
-    private static final ItemStack WOOD_SWORD = new ItemStack(Material.WOOD_SWORD);
+    private static final ItemStack VOODOO_SKULL = new ItemStack(Material.SKELETON_SKULL);
+    private static final ItemStack WOODEN_SWORD = new ItemStack(Material.WOODEN_SWORD);
 
     public VoodooDollRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
         super(template, gameEngine, msgConfig);
@@ -97,7 +97,7 @@ public class VoodooDollRoleClass extends MurderRoleClass {
             gamePlayer.setSkinContainer(npcSkinContainer);
             gamePlayer.getHandle().teleport(npcLocation);
 
-            gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, WOOD_SWORD);
+            gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, WOODEN_SWORD);
         }
 
         @Override

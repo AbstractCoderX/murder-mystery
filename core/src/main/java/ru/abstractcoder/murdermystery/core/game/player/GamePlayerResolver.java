@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableRepository;
+import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableResolver;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -15,7 +15,7 @@ import java.util.*;
 @Reusable
 public class GamePlayerResolver {
 
-    private final SkinContainableRepository skinContainableRepository;
+    private final SkinContainableResolver skinContainableResolver;
 
     private final Map<UUID, GamePlayer> gamePlayerMap = new HashMap<>();
 
@@ -25,8 +25,8 @@ public class GamePlayerResolver {
     private final Collection<GamePlayer> civilians = new ArrayList<>(16);
 
     @Inject
-    public GamePlayerResolver(SkinContainableRepository skinContainableRepository) {
-        this.skinContainableRepository = skinContainableRepository;
+    public GamePlayerResolver(SkinContainableResolver skinContainableResolver) {
+        this.skinContainableResolver = skinContainableResolver;
     }
 
     public @Nullable GamePlayer resolve(Player player) {
@@ -146,7 +146,7 @@ public class GamePlayerResolver {
         }
 
         gamePlayerMap.put(handle.getUniqueId(), gamePlayer);
-        skinContainableRepository.add(gamePlayer);
+        skinContainableResolver.add(gamePlayer);
     }
 
     private void checkPlayer(GamePlayer gamePlayer, GameRole.Type expectedType) {

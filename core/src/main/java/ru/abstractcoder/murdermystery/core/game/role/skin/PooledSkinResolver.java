@@ -2,10 +2,10 @@ package ru.abstractcoder.murdermystery.core.game.role.skin;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ru.abstractcoder.murdermystery.core.game.skin.Skin;
-import ru.abstractcoder.murdermystery.core.game.skin.data.PurchasableSkinData;
+import ru.abstractcoder.murdermystery.core.game.skin.data.SkinData;
 
 import java.util.Collection;
+import java.util.List;
 
 public class PooledSkinResolver implements SkinResolver {
 
@@ -27,13 +27,18 @@ public class PooledSkinResolver implements SkinResolver {
     }
 
     @Override
-    public Skin getDefaultSkin() {
+    public SkinData getDefaultSkin() {
         throw new UnsupportedOperationException("Not supported for this implementation");
     }
 
     @Override
-    public Collection<PurchasableSkinData> getPurchasableSkins() {
+    public List<SkinData> getPremiumSkins() {
         throw new UnsupportedOperationException("Not supported for this implementation");
+    }
+
+    @Override
+    public Collection<SkinData> getAllSkins() {
+        return skinPool.asCollection();
     }
 
 }

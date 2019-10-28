@@ -2,15 +2,15 @@ package ru.abstractcoder.murdermystery.core.slotbar.click;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class StandartActionClickHandler extends AbstractClickHandler {
 
-    private final Consumer<Player> actionConsumer;
+    private final Consumer<LobbyPlayer> actionConsumer;
 
     @JsonCreator
     public StandartActionClickHandler(
@@ -23,7 +23,7 @@ public class StandartActionClickHandler extends AbstractClickHandler {
     }
 
     @Override
-    protected void onClick(Player player) {
+    protected void onClick(LobbyPlayer player) {
         actionConsumer.accept(player);
     }
 

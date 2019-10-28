@@ -8,8 +8,8 @@ import ru.abstractcoder.murdermystery.core.game.arena.ArenaLoader;
 import ru.abstractcoder.murdermystery.core.game.arena.HoconArenaLoader;
 import ru.abstractcoder.murdermystery.core.game.corpse.CitizensCorpseService;
 import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
-import ru.abstractcoder.murdermystery.core.game.role.chance.MysqlRoleDataRepository;
-import ru.abstractcoder.murdermystery.core.game.role.chance.RoleDataRepository;
+import ru.abstractcoder.murdermystery.core.game.role.chance.ClassedRoleDataRepository;
+import ru.abstractcoder.murdermystery.core.game.role.chance.MysqlClassedRoleDataRepository;
 
 @Module
 public interface BindsModule {
@@ -21,7 +21,7 @@ public interface BindsModule {
     ArenaLoader arenaLoader(HoconArenaLoader __);
 
     @Binds
-    RoleDataRepository roleDataRepository(MysqlRoleDataRepository __);
+    ClassedRoleDataRepository roleDataRepository(MysqlClassedRoleDataRepository __);
 
     @Binds
     CorpseService corpseService(CitizensCorpseService __);

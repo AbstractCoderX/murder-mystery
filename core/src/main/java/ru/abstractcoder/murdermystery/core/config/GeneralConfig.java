@@ -17,7 +17,7 @@ import ru.abstractcoder.murdermystery.core.starting.StartingSettings;
 
 public interface GeneralConfig extends BenioConfig {
 
-    MySqlConnectionPool mysql();
+    Mysql mysql();
 
     Lobby lobby();
 
@@ -60,6 +60,27 @@ public interface GeneralConfig extends BenioConfig {
 
         public SlotBarItemResolver getSlotBarItemResolver() {
             return slotBarItemResolver;
+        }
+
+    }
+
+    class Mysql {
+
+        private final MySqlConnectionPool connectionPool;
+        private final String caseDatabase;
+
+        @JsonCreator
+        public Mysql(MySqlConnectionPool connectionPool, String caseDatabase) {
+            this.connectionPool = connectionPool;
+            this.caseDatabase = caseDatabase;
+        }
+
+        public MySqlConnectionPool getConnectionPool() {
+            return connectionPool;
+        }
+
+        public String getCaseDatabase() {
+            return caseDatabase;
         }
 
     }

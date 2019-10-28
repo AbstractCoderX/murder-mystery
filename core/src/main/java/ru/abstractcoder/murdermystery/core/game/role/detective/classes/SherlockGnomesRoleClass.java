@@ -19,9 +19,7 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.AnyOwnMoveResponsible;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SherlockGnomesRoleClass extends DetectiveRoleClass {
 
@@ -72,6 +70,8 @@ public class SherlockGnomesRoleClass extends DetectiveRoleClass {
 
         @Override
         public void onAnyMove(Location from, Location to, Cancellable event) {
+            super.onAnyMove(from, to, event);
+
             gameEngine.getCorpseService().nearbyCorpsesStream(to, 3)
                     .map(Corpse::proof)
                     .findFirst()

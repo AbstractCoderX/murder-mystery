@@ -29,19 +29,11 @@ public abstract class MurderRoleClass extends AbstractRoleClass {
 
         ;
 
-        Type() {
-            TypeResolver.register(this);
-        }
-
         @Override
-        public GameRole.Type roleType() {
+        public GameRole.Type getRoleType() {
             return GameRole.Type.MURDER;
         }
 
-        @Override
-        public String key() {
-            return name();
-        }
     }
 
 }

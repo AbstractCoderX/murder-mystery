@@ -28,7 +28,7 @@ public class SkinListener {
                 packet.getData().forEach(data -> {
                     Multimap<String, WrappedSignedProperty> properties = data.getProfile().getProperties();
 
-                    gameEngine.getSkinContainableRepository().findById(data.getProfile().getUUID())
+                    gameEngine.getSkinContainableResolver().getById(data.getProfile().getUUID())
                             .map(SkinContainable::getSkinContainer)
                             .map(skinContainer -> skinContainer.resolveSkinFor(player.getUniqueId()))
                             .ifPresent(skin -> {

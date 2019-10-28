@@ -34,8 +34,8 @@ public class SurvivorMoneyGivingAction implements GameAction {
         String formattedPeriod = SimpleTemporal.of(period, TimeUnit.SECONDS).format();
         Message message = msgConfig.get(Messages.game__survivor_get_money_periodic, money, formattedPeriod);
         playerResolver.getSurvivors().forEach(gamePlayer -> {
-            economyService.incrementBalanceAsync(gamePlayer, money);
-            message.send(gamePlayer);
+            economyService.incrementBalanceAsync(gamePlayer, money)
+                    .thenRun(() -> message.send(gamePlayer));
         });
     }
 

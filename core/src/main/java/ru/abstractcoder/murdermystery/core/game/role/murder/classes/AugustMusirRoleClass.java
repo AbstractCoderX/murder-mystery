@@ -55,7 +55,7 @@ public class AugustMusirRoleClass extends MurderRoleClass {
             super.kill(victim, deathState);
 
             PlayerInventory inventory = gamePlayer.getHandle().getInventory();
-            ItemStack skull = victim.getSkinContainer().getRealSkin().getSkull();
+            ItemStack skull = victim.getSkinContainer().getRealSkin().data().getSkullItem();
             for (int slot = 2; slot < inventory.getSize(); slot++) {
                 ItemStack item = inventory.getItem(slot);
                 if (ItemUtils.nullOrAir(item)) {
@@ -86,7 +86,7 @@ public class AugustMusirRoleClass extends MurderRoleClass {
             }
 
             gameEngine.getScheduler().runSyncLater(20 * 5, () -> {
-                gamePlayer.getSkinContainer().setOwnSkin(targetCorpse.getSkin());
+                gamePlayer.getSkinContainer().setDisplayedSkinForAll(targetCorpse.getSkin());
                 targetCorpse.setSkin(gamePlayer.getSkinContainer().getRealSkin());
             });
             skinSwitchingCooldown.get().redefine();
@@ -94,6 +94,8 @@ public class AugustMusirRoleClass extends MurderRoleClass {
 
         @Override
         public void onAnyMove(Location from, Location to, Cancellable event) {
+            super.onAnyMove(from, to, event);
+
             if (skinSwitchingCooldown.isInitialized() && skinSwitchingCooldown.get().isValid()) {
                 event.setCancelled(true);
                 msgConfig.get(Messages.game__august_muzir_cooldown,

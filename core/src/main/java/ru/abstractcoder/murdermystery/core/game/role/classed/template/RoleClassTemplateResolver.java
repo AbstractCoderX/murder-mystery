@@ -9,6 +9,7 @@ import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class RoleClassTemplateResolver {
 
@@ -53,6 +54,12 @@ public class RoleClassTemplateResolver {
         return byRoleClassTypeMap.values();
     }
 
+    public Stream<PurchasableRoleClassTemplate> allPurchasableTemplates() {
+        return Stream.concat(
+                getPurchasableTemplates(GameRole.Type.DETECTIVE).stream(),
+                getPurchasableTemplates(GameRole.Type.MURDER).stream()
+        );
+    }
 
     @NotNull
     private TemplateSettings getTemplateSettings(GameRole.Type roleType) {

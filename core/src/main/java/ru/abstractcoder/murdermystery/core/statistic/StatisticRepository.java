@@ -16,7 +16,7 @@ public class StatisticRepository {
         this.queryFactory = queryFactory;
     }
 
-    public CompletableFuture<PlayerStatistic> loadStatistic(String name) {
+    public CompletableFuture<PlayerStatistic> load(String name) {
         return queryFactory.completableQuery().query(
                 "select wins, defeats, rating from statistic where username = ?",
                 rs -> {
@@ -29,7 +29,7 @@ public class StatisticRepository {
         );
     }
 
-    public CompletableFuture<Void> saveStatistic(String name, PlayerStatistic statistic) {
+    public CompletableFuture<Void> save(String name, PlayerStatistic statistic) {
         return queryFactory.completableQuery().execute(
                 "insert into statistic values (?, ?, ?, ?)",
                 name, statistic.getWins(), statistic.getDefeats(), statistic.getRating()

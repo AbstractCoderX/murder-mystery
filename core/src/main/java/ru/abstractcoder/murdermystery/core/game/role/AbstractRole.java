@@ -2,9 +2,9 @@ package ru.abstractcoder.murdermystery.core.game.role;
 
 import com.google.common.base.Preconditions;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
+import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.equipper.PlayerEquipper;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
-import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogicCreator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +32,10 @@ public abstract class AbstractRole implements GameRole {
 
     @Override
     public void initLogic(GamePlayer gamePlayer) {
-        logicMap.put(gamePlayer, getRoleLogicCreator().createLogic(gamePlayer));
+        logicMap.put(gamePlayer, getComponent().createLogic(gamePlayer));
     }
 
-    protected abstract RoleLogicCreator getRoleLogicCreator();
+    protected abstract RoleComponent getComponent();
 
     @Override
     public RoleLogic getLogic(GamePlayer gamePlayer) {
