@@ -50,7 +50,7 @@ public class RoleClassFactory {
         RoleClassCreator creator = creatorsMap.get(type);
         Preconditions.checkState(creator != null, "Unknown RoleClass type %s", type);
 
-        RoleClassTemplate template = gameEngine.settings().getRoleClassTemplateResolver().getByClassType(type);
+        RoleClassTemplate template = gameEngine.settings().getRoleClassTemplateResolver().getByType(type);
         return creator.create(template, gameEngine, msgConfig);
     }
 

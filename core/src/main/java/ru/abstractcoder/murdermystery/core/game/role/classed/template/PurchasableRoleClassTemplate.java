@@ -4,4 +4,6 @@ public interface PurchasableRoleClassTemplate extends RoleClassTemplate {
 
     int getPrice();
 
+    char getShopMenuChar();
+
 }

@@ -9,26 +9,29 @@ import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class RoleClassTemplateResolver {
 
     private final Map<RoleClass.Type, RoleClassTemplate> byRoleClassTypeMap;
     private final Map<GameRole.Type, TemplateSettings> byGameRoleTypeMap;
+    private final Collection<PurchasableRoleClassTemplate> allPurchasableTemplates;
 
     @JsonCreator
-    public RoleClassTemplateResolver(@JsonDeserialize(as = EnumMap.class)
-            Map<GameRole.Type, TemplateSettings> templateSettingsMap) {
+    public RoleClassTemplateResolver(
+            @JsonDeserialize(as = EnumMap.class) Map<GameRole.Type, TemplateSettings> templateSettingsMap) {
+
         byGameRoleTypeMap = templateSettingsMap;
         byRoleClassTypeMap = new HashMap<>();
+        allPurchasableTemplates = new ArrayList<>();
 
         templateSettingsMap.forEach((roleType, templateSettings) -> {
             templateSettings.initTypes(roleType);
             templateSettings.putToMap(byRoleClassTypeMap);
+            allPurchasableTemplates.addAll(templateSettings.purchasableTemplates);
         });
     }
 
-    public RoleClassTemplate getByClassType(RoleClass.Type type) {
+    public RoleClassTemplate getByType(RoleClass.Type type) {
         return byRoleClassTypeMap.get(type);
     }
 
@@ -54,11 +57,15 @@ public class RoleClassTemplateResolver {
         return byRoleClassTypeMap.values();
     }
 
-    public Stream<PurchasableRoleClassTemplate> allPurchasableTemplates() {
-        return Stream.concat(
-                getPurchasableTemplates(GameRole.Type.DETECTIVE).stream(),
-                getPurchasableTemplates(GameRole.Type.MURDER).stream()
-        );
+//    public Stream<PurchasableRoleClassTemplate> allPurchasableTemplates() {
+//        return Stream.concat(
+//                getPurchasableTemplates(GameRole.Type.DETECTIVE).stream(),
+//                getPurchasableTemplates(GameRole.Type.MURDER).stream()
+//        );
+//    }
+
+    public Collection<PurchasableRoleClassTemplate> getAllPurchasableTemplates() {
+        return allPurchasableTemplates;
     }
 
     @NotNull

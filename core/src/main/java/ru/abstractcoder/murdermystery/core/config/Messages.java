@@ -8,6 +8,7 @@ public enum Messages implements MsgKey {
     general__you_leave_arena("&cВы покинули арену"),
 //    general__leaved,
     general__joined_broadcast("&7{player} &eприсоединился к игре &a({current}/{max})"),
+    general__not_enough_coins("&cНедостаточно монеток для этого!"),
 //    general__,
 
     lobby__waiting_bossbar("&c&lMurderMystery &6&lProstocraft"),
@@ -49,8 +50,10 @@ public enum Messages implements MsgKey {
     misc__survivor_detector_compass("&eДетектор выживших"),
     misc__bow_detector_compass("&eДетектор лука"),
     misc__slowing_snowballs("&fСнежки замедления"),
-//    misc__,
+    //    misc__,
 
+    gui__class_already_purchased("&cЭтот класс уже куплен"),
+    gui__class_succ_purchased("&aВы успешно купили этот класс"),
 
     private final MsgProperties properties;
 
