@@ -2,15 +2,14 @@ package ru.abstractcoder.murdermystery.core.game.corpse;
 
 import com.comphenix.packetwrapper.AbstractPacket;
 import net.citizensnpcs.api.npc.NPC;
-import net.minecraft.server.v1_12_R1.DataWatcher;
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-import net.minecraft.server.v1_12_R1.Packet;
-import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.DataWatcher;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.Packet;
+import net.minecraft.server.PacketPlayOutEntityMetadata;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.reflect.TrustedLookup;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.util.SkinUtils;
@@ -141,7 +140,7 @@ public class CitizensCorpse implements Corpse {
 
     @Override
     public Proof proof() {
-        return null;
+        return proof;
     }
 
     @Override
