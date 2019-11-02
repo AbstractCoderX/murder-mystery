@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.lobby;
 
+import dagger.Reusable;
 import org.bukkit.entity.Player;
 import ru.abstractcoder.benioapi.config.msg.Message;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
@@ -11,12 +12,14 @@ import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.chance.ComputingRoleBalancer;
-import ru.abstractcoder.murdermystery.core.starting.StartingSettings;
+import ru.abstractcoder.murdermystery.core.lobby.settings.StartingSettings;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+@Reusable
 public class LobbyTicking implements Ticking {
 
     private final GeneralConfig.Lobby lobby;
@@ -25,6 +28,7 @@ public class LobbyTicking implements Ticking {
     private final MsgConfig<Messages> msgConfig;
     private final ComputingRoleBalancer roleBalancer;
 
+    @Inject
     public LobbyTicking(
             LobbyEngine lobbyEngine, GameEngine gameEngine,
             GeneralConfig.Lobby lobby, MsgConfig<Messages> msgConfig,

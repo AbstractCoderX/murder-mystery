@@ -1,4 +1,4 @@
-package ru.abstractcoder.murdermystery.core.slotbar;
+package ru.abstractcoder.murdermystery.core.lobby.slotbar;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.item.ItemData;
-import ru.abstractcoder.murdermystery.core.slotbar.click.ClickHandler;
+import ru.abstractcoder.murdermystery.core.lobby.slotbar.click.ClickHandler;
 
 public class SlotBarItem {
 

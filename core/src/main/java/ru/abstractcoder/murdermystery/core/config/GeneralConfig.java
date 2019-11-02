@@ -12,8 +12,9 @@ import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassT
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.setting.GameGeneralSettings;
 import ru.abstractcoder.murdermystery.core.game.setting.RewardSettings;
-import ru.abstractcoder.murdermystery.core.slotbar.SlotBarItemResolver;
-import ru.abstractcoder.murdermystery.core.starting.StartingSettings;
+import ru.abstractcoder.murdermystery.core.lobby.settings.MiscSettings;
+import ru.abstractcoder.murdermystery.core.lobby.settings.StartingSettings;
+import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItemResolver;
 
 public interface GeneralConfig extends BenioConfig {
 
@@ -26,18 +27,29 @@ public interface GeneralConfig extends BenioConfig {
     class Lobby {
 
         private final Location spawnLocation;
+
+        @JsonProperty("starting")
         private final StartingSettings startingSettings;
+
+        @JsonProperty("misc")
+        private final MiscSettings miscSettings;
+
+        @JsonProperty("sidebar")
         private final SidebarTemplate sidebarTemplate;
+
+        @JsonProperty("slotBarItems")
         private final SlotBarItemResolver slotBarItemResolver;
 
         @JsonCreator
         public Lobby(
                 Location spawnLocation,
-                @JsonProperty("starting") StartingSettings startingSettings,
-                @JsonProperty("sidebar") SidebarTemplate sidebarTemplate,
-                @JsonProperty("slotBarItems") SlotBarItemResolver slotBarItemResolver) {
+                StartingSettings startingSettings,
+                MiscSettings miscSettings,
+                SidebarTemplate sidebarTemplate,
+                SlotBarItemResolver slotBarItemResolver) {
             this.spawnLocation = spawnLocation;
             this.startingSettings = startingSettings;
+            this.miscSettings = miscSettings;
             this.sidebarTemplate = sidebarTemplate;
             this.slotBarItemResolver = slotBarItemResolver;
         }
@@ -60,6 +72,10 @@ public interface GeneralConfig extends BenioConfig {
 
         public SlotBarItemResolver getSlotBarItemResolver() {
             return slotBarItemResolver;
+        }
+
+        public MiscSettings misc() {
+            return miscSettings;
         }
 
     }

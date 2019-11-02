@@ -54,6 +54,7 @@ public enum Messages implements MsgKey {
 
     gui__class_already_purchased("&cЭтот класс уже куплен"),
     gui__class_succ_purchased("&aВы успешно купили этот класс"),
+    gui__cosmetic_case_succ_purchased("&aВы успешно купили кейс с косметикой!"),
 
     private final MsgProperties properties;
 

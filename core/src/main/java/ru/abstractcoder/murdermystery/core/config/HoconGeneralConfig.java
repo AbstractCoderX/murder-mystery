@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import dagger.Reusable;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.HoconConfig;
-import ru.abstractcoder.murdermystery.core.slotbar.click.StandartActionResolver;
+import ru.abstractcoder.murdermystery.core.lobby.slotbar.click.StandartActionResolver;
 
 import javax.inject.Inject;
 import javax.inject.Named;

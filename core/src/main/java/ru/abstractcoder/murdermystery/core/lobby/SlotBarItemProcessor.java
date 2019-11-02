@@ -3,7 +3,7 @@ package ru.abstractcoder.murdermystery.core.lobby;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
-import ru.abstractcoder.murdermystery.core.slotbar.SlotBarItemResolver;
+import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItemResolver;
 
 public class SlotBarItemProcessor {
 

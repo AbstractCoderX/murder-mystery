@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
-import ru.abstractcoder.murdermystery.core.slotbar.SlotBarItem;
+import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItem;
 
 import javax.inject.Inject;
 

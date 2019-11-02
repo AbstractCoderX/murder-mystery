@@ -1,4 +1,4 @@
-package ru.abstractcoder.murdermystery.core.slotbar.click;
+package ru.abstractcoder.murdermystery.core.lobby.slotbar.click;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;

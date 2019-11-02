@@ -1,4 +1,4 @@
-package ru.abstractcoder.murdermystery.core.starting;
+package ru.abstractcoder.murdermystery.core.lobby.settings;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import ru.abstractcoder.benioapi.util.misc.BenioSound;

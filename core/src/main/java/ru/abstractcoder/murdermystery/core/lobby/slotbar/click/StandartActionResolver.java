@@ -1,4 +1,4 @@
-package ru.abstractcoder.murdermystery.core.slotbar.click;
+package ru.abstractcoder.murdermystery.core.lobby.slotbar.click;
 
 import org.jetbrains.annotations.NotNull;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;

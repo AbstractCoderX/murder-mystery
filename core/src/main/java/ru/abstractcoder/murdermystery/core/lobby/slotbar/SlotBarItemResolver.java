@@ -1,4 +1,4 @@
-package ru.abstractcoder.murdermystery.core.slotbar;
+package ru.abstractcoder.murdermystery.core.lobby.slotbar;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
