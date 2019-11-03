@@ -26,6 +26,7 @@ import ru.abstractcoder.benioapi.item.ItemData;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
+import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponentTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.skin.SkinResolver;
@@ -42,7 +43,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 @Reusable
-public class SkinSelectingMenu {
+public class CharacterSelectingMenu {
 
     private final MenuApi menuApi;
     private MenuTemplate<LobbyPlayer, Session> template;
@@ -52,7 +53,7 @@ public class SkinSelectingMenu {
     }
 
     @Inject
-    public SkinSelectingMenu(MenuApi menuApi, @Named("gui") HoconConfig guiConfig, ObjectMapper objectMapper,
+    public CharacterSelectingMenu(MenuApi menuApi, @Named("gui") HoconConfig guiConfig, ObjectMapper objectMapper,
             GeneralConfig generalConfig, SkinnableTemplateRepository skinnableTemplateRepository) {
         this.menuApi = menuApi;
         guiConfig.addOnReloadAction(() -> {
@@ -65,8 +66,9 @@ public class SkinSelectingMenu {
             int[] roleGlassSlots = loader.getSlots('|');
             int[] templateSlots = loader.getSlots('x');
             int[] templateGlassSlots = loader.getSlots('/');
-            for (int i = 0; i < GameRole.Type.VALUES.length; i++) {
-                GameRole.Type roleType = GameRole.Type.VALUES[i];
+
+            int i = 0;
+            for (GameRole.Type roleType : GameRole.Type.VALUES) {
                 RoleTemplate roleTemplate = generalConfig.game().getRoleTemplateResolver().getByType(roleType);
                 loader.setItem(roleType.getGuiChar(), (slot, itemData) -> MenuItemFactory.create(builder -> builder
                         .cachedIcon(new FixedMenuIcon(slot, itemData.copy()
@@ -82,14 +84,14 @@ public class SkinSelectingMenu {
                         })
                 ));
 
-                int roleGlassSlot = roleGlassSlots[i];
+                int roleGlassSlot = roleGlassSlots[i++];
                 templateBuilder.staticItem(MenuItemFactory.create(builder -> builder
                         .conditionalIcon(creator -> prepareGlassItemCreator(creator, roleGlassSlot,
                                 session -> session.getSelectedRole() == roleType
                         ))
                 ));
 
-                var templateIterator = skinnableTemplateRepository.getPurchasableSkinsTemplates(roleType).iterator();
+                var templateIterator = skinnableTemplateRepository.getSkinsTemplates(roleType).iterator();
                 ItemData templateItemData = loader.getItemData('x');
                 for (int j = 0; templateIterator.hasNext(); j++) {
                     RoleComponentTemplate template = templateIterator.next();
@@ -105,6 +107,10 @@ public class SkinSelectingMenu {
                                     .onClick(click -> {
                                         if (click.getSession().getSelectedTemplate() == template) {
                                             return;
+                                        }
+                                        if (roleType.isClassed()) {
+                                            click.getIssuer().getClassedRoleData(roleType)
+                                                    .setSelectedClassType((RoleClass.Type) template.getType());
                                         }
                                         click.getSession().setSelectedTemplate(template);
                                         click.getSession().updateCache();

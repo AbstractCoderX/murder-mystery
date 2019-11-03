@@ -5,10 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
@@ -96,6 +93,11 @@ public class LobbyListener extends AbstractBukkitListener {
             player.setFallDistance(0);
             player.teleport(lobbyEngine.settings().getSpawnLocation());
         }
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        //TODO
     }
 
 //    @EventHandler

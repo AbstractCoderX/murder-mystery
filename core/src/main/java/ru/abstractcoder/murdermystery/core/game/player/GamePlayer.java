@@ -5,8 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainable;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
 import java.util.UUID;

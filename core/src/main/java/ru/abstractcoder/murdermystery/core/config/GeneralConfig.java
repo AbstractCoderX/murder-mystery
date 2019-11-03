@@ -10,6 +10,7 @@ import ru.abstractcoder.benioapi.database.MySqlConnectionPool;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionTemplateResolver;
+import ru.abstractcoder.murdermystery.core.game.role.skin.CivilianSkinPool;
 import ru.abstractcoder.murdermystery.core.game.setting.GameGeneralSettings;
 import ru.abstractcoder.murdermystery.core.game.setting.RewardSettings;
 import ru.abstractcoder.murdermystery.core.lobby.settings.MiscSettings;
@@ -110,6 +111,7 @@ public interface GeneralConfig extends BenioConfig {
         private final RoleTemplateResolver roleTemplateResolver;
         private final RoleClassTemplateResolver roleClassTemplateResolver;
         private final ProfessionTemplateResolver professionTemplateResolver;
+        private final CivilianSkinPool civilianSkinPool;
 
         @JsonCreator
         public Game(
@@ -119,7 +121,8 @@ public interface GeneralConfig extends BenioConfig {
                 @JsonProperty("rewards") RewardSettings rewardSettings,
                 @JsonProperty("roleTemplates") RoleTemplateResolver roleTemplateResolver,
                 @JsonProperty("roleClassTemplates") RoleClassTemplateResolver roleClassTemplateResolver,
-                @JsonProperty("professionTemplates") ProfessionTemplateResolver professionTemplateResolver) {
+                @JsonProperty("professionTemplates") ProfessionTemplateResolver professionTemplateResolver,
+                CivilianSkinPool civilianSkinPool) {
             this.world = world;
             this.generalSettings = generalSettings;
             this.sidebarTemplate = sidebarTemplate;
@@ -127,6 +130,7 @@ public interface GeneralConfig extends BenioConfig {
             this.rewardSettings = rewardSettings;
             this.roleClassTemplateResolver = roleClassTemplateResolver;
             this.professionTemplateResolver = professionTemplateResolver;
+            this.civilianSkinPool = civilianSkinPool;
         }
 
         public World getWorld() {
@@ -155,6 +159,10 @@ public interface GeneralConfig extends BenioConfig {
 
         public ProfessionTemplateResolver getProfessionTemplateResolver() {
             return professionTemplateResolver;
+        }
+
+        public CivilianSkinPool getCivilianSkinPool() {
+            return civilianSkinPool;
         }
 
     }

@@ -21,7 +21,7 @@ import ru.abstractcoder.murdermystery.core.game.player.PlayerFactory;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClassFactory;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableResolver;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
 import ru.abstractcoder.murdermystery.core.game.time.GameTime;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.scheduler.Scheduler;
@@ -163,10 +163,15 @@ public class GameEngine {
         Iterator<Location> spawnPointIterator = arena.getSpawnPoints().iterator();
         lobbyPlayers.forEach(lobbyPlayer -> {
             Player player = lobbyPlayer.getPlayer();
-            player.teleport(spawnPointIterator.next());
+            GamePlayer gamePlayer = playerFactory.createPlayer(lobbyPlayer);
+
+            String skinName = gamePlayer.getSkinContainer().getRealSkin().data().getName();
+            player.setDisplayName(skinName);
+            player.setPlayerListName(skinName);
             boardApi.getNameTagService().setNameTagHidden(player, true);
-            //TODO set skin name for tab
-            GamePlayer gamePlayer = playerFactory.fromLobbyPlayer(lobbyPlayer);
+
+            player.teleport(spawnPointIterator.next());
+
             gamePlayer.getRoleLogic().load();
         });
 

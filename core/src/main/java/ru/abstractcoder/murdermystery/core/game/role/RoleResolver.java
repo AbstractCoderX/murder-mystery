@@ -62,13 +62,10 @@ public class RoleResolver {
     }
 
     @NotNull
-    public GameRole resolveCivilianRole(Profession.Type professionType, GameRole.Type roleType) {
-        return resolveCivilianRole(professionType, roleTemplateResolver.getByType(roleType));
-    }
-
-    @NotNull
-    public GameRole resolveCivilianRole(Profession.Type professionType, RoleTemplate roleTemplate) {
-        return civilianRoles.computeIfAbsent(professionType, pt -> roleFactory.createCivilianRole(pt, roleTemplate));
+    public GameRole resolveCivilianRole(Profession.Type professionType) {
+        return civilianRoles.computeIfAbsent(professionType,
+                pt -> roleFactory.createCivilianRole(pt, roleTemplateResolver.getByType(GameRole.Type.CIVILIAN))
+        );
     }
 
     @NotNull

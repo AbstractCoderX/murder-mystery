@@ -19,7 +19,7 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.InteractR
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.NpcDamageResponsible;
 import ru.abstractcoder.murdermystery.core.game.role.murder.MurderLogic;
 import ru.abstractcoder.murdermystery.core.game.role.murder.MurderRoleClass;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
 public class VoodooDollRoleClass extends MurderRoleClass {

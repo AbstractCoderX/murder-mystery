@@ -61,6 +61,7 @@ public class LobbyTicking implements Ticking {
 
             if (timeLeft == 0) {
                 lobbyEngine.shutdown();
+                roleBalancer.applyRoles();
                 gameEngine.startGame(lobbyEngine.getPlayers());
                 return true;
             }

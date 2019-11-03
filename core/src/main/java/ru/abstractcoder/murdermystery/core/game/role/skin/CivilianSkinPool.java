@@ -6,13 +6,13 @@ import ru.abstractcoder.murdermystery.core.game.skin.data.SkinData;
 
 import java.util.*;
 
-public class SkinPool {
+public class CivilianSkinPool {
 
     private final Queue<SkinData> skinQueue;
     private final Collection<SkinData> initialSkins;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public SkinPool(List<SkinData> skins) {
+    public CivilianSkinPool(List<SkinData> skins) {
         Collections.shuffle(skins);
         skinQueue = new ArrayDeque<>(skins);
         initialSkins = skins;

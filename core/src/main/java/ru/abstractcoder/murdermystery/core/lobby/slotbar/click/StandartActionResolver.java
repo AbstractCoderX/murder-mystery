@@ -3,9 +3,10 @@ package ru.abstractcoder.murdermystery.core.lobby.slotbar.click;
 import org.jetbrains.annotations.NotNull;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
-import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
 import ru.abstractcoder.murdermystery.core.lobby.RuleBook;
+import ru.abstractcoder.murdermystery.core.lobby.gui.CharacterSelectingMenu;
 import ru.abstractcoder.murdermystery.core.lobby.gui.PreferredRoleSelectingMenu;
+import ru.abstractcoder.murdermystery.core.lobby.gui.ShopMenu;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import javax.inject.Inject;
@@ -19,16 +20,17 @@ public class StandartActionResolver {
 
     @Inject
     public StandartActionResolver(MsgConfig<Messages> msgConfig, RuleBook ruleBook,
-            PreferredRoleSelectingMenu preferredRoleSelectingMenu, LobbyEngine lobbyEngine) {
+            PreferredRoleSelectingMenu preferredRoleSelectingMenu, ShopMenu shopMenu,
+            CharacterSelectingMenu characterSelectingMenu) {
         actionConsumerMap = new EnumMap<>(StandartClickAction.class);
         actionConsumerMap.put(StandartClickAction.LEAVE_TO_HUB, player ->
                 msgConfig.get(Messages.general__you_leave_arena).kickWithReason(player)
         );
         actionConsumerMap.put(StandartClickAction.OPEN_RULE_BOOK, ruleBook::openFor);
         actionConsumerMap.put(StandartClickAction.OPEN_ROLE_SELECTING, preferredRoleSelectingMenu::open);
+        actionConsumerMap.put(StandartClickAction.OPEN_CHARACTER_SELECTING, characterSelectingMenu::open);
         actionConsumerMap.put(StandartClickAction.OPEN_COSMETIC, ) //TODO
-        actionConsumerMap.put(StandartClickAction.OPEN_SHOP, ) //TODO
-//        TODO
+        actionConsumerMap.put(StandartClickAction.OPEN_SHOP, shopMenu::open);
     }
 
     public @NotNull Consumer<LobbyPlayer> resolve(StandartClickAction action) {

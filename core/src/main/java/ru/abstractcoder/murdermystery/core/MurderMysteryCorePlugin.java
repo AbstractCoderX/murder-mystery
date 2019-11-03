@@ -81,8 +81,8 @@ public class MurderMysteryCorePlugin extends BenioPlugin {
 
 //        new PacketListener(this, protocolManager, generalConfig, npcRegistry, corpseService);
 
-        registerListener(new LobbyListener(generalConfig, msgConfig));
-        registerListener(new CommonListener());
+        new LobbyListener(this, generalConfig, msgConfig).register();
+        new CommonListener(this).register();
         new MurderMysteryCommand(corpseService).register(this);
     }
 

@@ -6,8 +6,8 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableResolver;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainer;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 
 import javax.inject.Inject;
 import java.util.HashMap;

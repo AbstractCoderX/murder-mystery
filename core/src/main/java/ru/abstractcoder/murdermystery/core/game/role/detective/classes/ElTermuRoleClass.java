@@ -2,10 +2,9 @@ package ru.abstractcoder.murdermystery.core.game.role.detective.classes;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Skull;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.bukkit.util.Vector;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemUtils;
 import ru.abstractcoder.benioapi.util.EventHelper;
+import ru.abstractcoder.benioapi.util.Materials;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.npc.Npc;
@@ -60,12 +60,12 @@ public class ElTermuRoleClass extends DetectiveRoleClass {
 
         @Override
         public void onBlockPlace(Block block, ItemStack itemInHand, Cancellable event) {
-            if (block.getType() != Material.SKULL) {
+            if (Materials.isSkullOrHead(block.getType())) {
                 throw new IllegalStateException(String.format("ElTermu %s placed non-skull block: %s", gamePlayer.getName(), block.getType()));
             }
 
-            Skull skullState = (Skull) block.getState();
-            BlockFace rotation = skullState.getRotation();
+            Rotatable rotatable = (Rotatable) block.getBlockData();
+            BlockFace rotation = rotatable.getRotation();
             if (rotation == BlockFace.UP) {
                 event.setCancelled(true);
                 msgConfig.get(Messages.game__el_termu_camera_can_placed_only_on_wall).send(gamePlayer);

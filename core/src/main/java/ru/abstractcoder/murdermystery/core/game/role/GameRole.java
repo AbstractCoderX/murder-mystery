@@ -1,8 +1,11 @@
 package ru.abstractcoder.murdermystery.core.game.role;
 
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
+import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.equipper.PlayerEquipper;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
+
+import java.util.Set;
 
 public interface GameRole {
 
@@ -18,7 +21,7 @@ public interface GameRole {
 
     RoleLogic getLogic(GamePlayer gamePlayer);
 
-    void removeLogic(GamePlayer gamePlayer);
+    RoleComponent getComponent();
 
     PlayerEquipper getEquipper();
 
@@ -30,7 +33,8 @@ public interface GameRole {
         private final char guiChar;
         private final boolean classed;
 
-        public static final Type[] VALUES = values();
+        public static final Set<Type> VALUES = Set.of(values());
+        public static final Set<Type> CLASSED_TYPES = Set.of(MURDER, DETECTIVE);
 
         Type(char guiChar, boolean classed) {
             this.guiChar = guiChar;

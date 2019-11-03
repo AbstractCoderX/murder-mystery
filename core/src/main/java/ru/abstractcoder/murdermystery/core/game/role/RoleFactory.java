@@ -22,17 +22,6 @@ public class RoleFactory {
         this.professionResolver = professionResolver;
     }
 
-//    public GameRole create(LobbyPlayer lobbyPlayer, RoleTemplate template) {
-//        switch (template.getType()) {
-//            case MURDER:
-//            case DETECTIVE:
-//                RoleClass.Type roleClassType; //TODO get player selected RoleClass type
-//                return new ClassedRole(template, roleClassFactory.create(roleClassType), template.getType());
-//            case CIVILIAN:
-//                //TODO
-//        }
-//    }
-
     public GameRole createClassedRole(RoleClass.Type classType, RoleTemplate roleTemplate) {
         return new ClassedRole(roleTemplate, roleClassFactory.create(classType), roleTemplate.getType());
     }

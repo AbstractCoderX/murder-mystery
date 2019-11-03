@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class SimpleRoleClassTemplate extends AbstractRoleComponentTemplate implements RoleClassTemplate {
 
-    private GameRole.Type roleType;
     private final LazyFunction<GameRole.Type, RoleClass.Type> type;
 
     @JsonCreator
@@ -29,7 +28,6 @@ public class SimpleRoleClassTemplate extends AbstractRoleComponentTemplate imple
 
     public void initType(GameRole.Type roleType) {
         Preconditions.checkState(type.initialize(roleType), "Type already initialized!");
-        this.roleType = roleType;
     }
 
     @Override

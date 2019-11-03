@@ -1,4 +1,4 @@
-package ru.abstractcoder.murdermystery.core.game.skin;
+package ru.abstractcoder.murdermystery.core.game.skin.container;
 
 import dagger.Reusable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;

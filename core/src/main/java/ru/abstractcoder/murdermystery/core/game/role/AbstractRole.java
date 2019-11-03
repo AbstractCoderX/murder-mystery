@@ -2,7 +2,6 @@ package ru.abstractcoder.murdermystery.core.game.role;
 
 import com.google.common.base.Preconditions;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
-import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.equipper.PlayerEquipper;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 
@@ -35,18 +34,11 @@ public abstract class AbstractRole implements GameRole {
         logicMap.put(gamePlayer, getComponent().createLogic(gamePlayer));
     }
 
-    protected abstract RoleComponent getComponent();
-
     @Override
     public RoleLogic getLogic(GamePlayer gamePlayer) {
         RoleLogic roleLogic = logicMap.get(gamePlayer);
         Preconditions.checkState(roleLogic != null, "RoleLogic not initialized for %s", gamePlayer);
         return roleLogic;
-    }
-
-    @Override
-    public void removeLogic(GamePlayer gamePlayer) {
-        logicMap.remove(gamePlayer);
     }
 
 }

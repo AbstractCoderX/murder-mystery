@@ -26,7 +26,7 @@ public class ClassedRole extends AbstractRole {
     }
 
     @Override
-    protected RoleComponent getComponent() {
+    public RoleComponent getComponent() {
         return roleClass;
     }
 

@@ -17,8 +17,7 @@ public class PurchasableRoleClassTemplateImpl extends SimpleRoleClassTemplate im
     public PurchasableRoleClassTemplateImpl(
             @JsonProperty("type") String typeKey,
             @JsonProperty("items") Map<Integer, ItemData> itemDataMap,
-            TemplateIcon icon,
-            SkinResolver skinResolver,
+            TemplateIcon icon, SkinResolver skinResolver,
             int price, char shopMenuChar) {
         super(typeKey, itemDataMap, icon, skinResolver);
         this.price = price;

@@ -36,7 +36,7 @@ public class PlayerController {
             corpse = corpseService.spawnCorpse(gamePlayer, player.getLocation());
         }
 
-        SpectatingPlayer spectatingPlayer = new SpectatingPlayer(gamePlayer, corpse);
+        SpectatingPlayer spectatingPlayer = new SpectatingPlayer(gamePlayer, player.getLocation(), corpse);
         spectatingPlayerMap.put(player.getUniqueId(), spectatingPlayer);
         return spectatingPlayer;
     }
@@ -45,8 +45,8 @@ public class PlayerController {
         return BeniOptional.ofNullable(spectatingPlayerMap.get(playerId));
     }
 
-    public boolean removeSpectating(UUID uuid) {
-        return spectatingPlayerMap.remove(uuid) != null;
+    public SpectatingPlayer removeSpectating(UUID uuid) {
+        return spectatingPlayerMap.remove(uuid);
     }
 
 }

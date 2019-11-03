@@ -1,29 +1,19 @@
 package ru.abstractcoder.murdermystery.core.game.role.skin;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import ru.abstractcoder.murdermystery.core.game.skin.Skin;
+import ru.abstractcoder.murdermystery.core.game.skin.data.PremiumSkinData;
 import ru.abstractcoder.murdermystery.core.game.skin.data.SkinData;
 
 import java.util.Collection;
 import java.util.List;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(name = "simple", value = SimpleSkinResolver.class),
-        @JsonSubTypes.Type(name = "pooled", value = PooledSkinResolver.class)
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, defaultImpl = SimpleSkinResolver.class)
 public interface SkinResolver {
 
-    boolean isPurchasable();
+    Skin getDefaultSkin();
 
-    SkinPool getSkinPool();
-
-    SkinData getDefaultSkin();
-
-    List<SkinData> getPremiumSkins();
+    List<PremiumSkinData> getPremiumSkins();
 
     Collection<SkinData> getAllSkins();
 

@@ -12,7 +12,8 @@ public abstract class AbstractRoleComponentTemplate extends AbstractStoredTempla
     private final TemplateIcon icon;
     private final SkinResolver skinResolver;
 
-    protected AbstractRoleComponentTemplate(Map<Integer, ItemData> itemDataMap, TemplateIcon icon, SkinResolver skinResolver) {
+    protected AbstractRoleComponentTemplate(Map<Integer, ItemData> itemDataMap, TemplateIcon icon,
+            SkinResolver skinResolver) {
         super(itemDataMap);
         this.icon = icon;
         this.skinResolver = skinResolver;

@@ -11,18 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Reusable
-public class SkinRepository {
+public class PremiumSkinRepository {
 
     private final Map<String, Skin> byIdMap = new HashMap<>();
 
     @Inject
-    public SkinRepository(SkinnableTemplateRepository skinnableTemplateRepository) {
+    public PremiumSkinRepository(SkinnableTemplateRepository skinnableTemplateRepository) {
         skinnableTemplateRepository.getAllTemplates()
                 .stream()
                 .map(SkinnableTemplate::getSkinResolver)
-                .map(SkinResolver::getAllSkins)
+                .map(SkinResolver::getPremiumSkins)
                 .flatMap(Collection::stream)
-                .forEach(skin -> byIdMap.put(skin.data().getId(), skin));
+                .forEach(data -> byIdMap.put(data.getId(), data.getSkin()));
     }
 
     @NotNull

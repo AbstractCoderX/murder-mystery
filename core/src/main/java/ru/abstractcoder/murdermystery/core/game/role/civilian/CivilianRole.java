@@ -30,7 +30,7 @@ public class CivilianRole extends AbstractRole {
     }
 
     @Override
-    protected RoleComponent getComponent() {
+    public RoleComponent getComponent() {
         return profession;
     }
 

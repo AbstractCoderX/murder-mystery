@@ -2,7 +2,7 @@ package ru.abstractcoder.murdermystery.core.game.role.skin;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ru.abstractcoder.benioapi.util.CollectionGeneraliser;
+import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.game.skin.data.PremiumSkinData;
 import ru.abstractcoder.murdermystery.core.game.skin.data.SkinData;
 
@@ -13,39 +13,29 @@ import java.util.List;
 public class SimpleSkinResolver implements SkinResolver {
 
     private final Collection<SkinData> allSkins;
-    private final SkinData defaultSkin;
-    private final List<PremiumSkinData> purchasableSkins;
+    private final Skin defaultSkin;
+    private final List<PremiumSkinData> premiumSkins;
 
     @JsonCreator
     public SimpleSkinResolver(
-            @JsonProperty("default") SkinData defaultSkin,
-            @JsonProperty("premium") List<PremiumSkinData> purchasableSkins) {
-        this.defaultSkin = defaultSkin;
-        this.purchasableSkins = purchasableSkins;
+            @JsonProperty("default") SkinData defaultSkinData,
+            @JsonProperty("premium") List<PremiumSkinData> premiumSkins) {
+        this.defaultSkin = defaultSkinData.getSkin();
+        this.premiumSkins = premiumSkins;
 
-        allSkins = new ArrayList<>(purchasableSkins.size() + 1);
-        allSkins.add(defaultSkin);
-        allSkins.addAll(purchasableSkins);
+        allSkins = new ArrayList<>(premiumSkins.size() + 1);
+        allSkins.add(defaultSkinData);
+        allSkins.addAll(premiumSkins);
     }
 
     @Override
-    public boolean isPurchasable() {
-        return true;
-    }
-
-    @Override
-    public SkinPool getSkinPool() {
-        throw new UnsupportedOperationException("Not supported for this implementation");
-    }
-
-    @Override
-    public SkinData getDefaultSkin() {
+    public Skin getDefaultSkin() {
         return defaultSkin;
     }
 
     @Override
-    public List<SkinData> getPremiumSkins() {
-        return CollectionGeneraliser.generaliseList(purchasableSkins);
+    public List<PremiumSkinData> getPremiumSkins() {
+        return premiumSkins;
     }
 
     @Override

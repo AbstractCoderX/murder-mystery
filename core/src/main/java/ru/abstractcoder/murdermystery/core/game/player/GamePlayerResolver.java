@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
-import ru.abstractcoder.murdermystery.core.game.skin.SkinContainableResolver;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
 
 import javax.inject.Inject;
 import java.util.*;

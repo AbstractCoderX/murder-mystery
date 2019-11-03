@@ -14,8 +14,8 @@ import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class ComputingRoleBalancer {
 
@@ -56,52 +56,37 @@ public class ComputingRoleBalancer {
         return (points * 2) / 100.0;
     }
 
-    //TODO invoke this
     public void applyRoles() {
         this.recompute();
-        List<LobbyPlayer> players = new ArrayList<>(lobbyEngine.getPlayers());
+        Deque<LobbyPlayer> playerDeque = new ArrayDeque<>(lobbyEngine.getPlayers());
 
-        roleTemplateResolver.getAll()
-                .stream()
-                .filter(RoleTemplate::isExtraPointable)
-                .map(RoleTemplate::getType)
-                .forEach(type -> {
-                    ProbableList<PlayerProbable> playerProbables = new ProbableList<>();
-                    players.forEach(lobbyPlayer -> {
-                        Probability probability = Probability.fromValue(getRoleChance(lobbyPlayer, type));
-                        PlayerProbable playerProbable = new PlayerProbable(lobbyPlayer, probability);
-                        playerProbables.add(playerProbable);
-                    });
+        GameRole.Type.CLASSED_TYPES.forEach(type -> {
+            ProbableList<PlayerProbable> playerProbables = new ProbableList<>();
+            lobbyEngine.getPlayers().forEach(lobbyPlayer -> {
+                Probability probability = Probability.fromValue(getRoleChance(lobbyPlayer, type));
+                PlayerProbable playerProbable = new PlayerProbable(lobbyPlayer, probability);
+                playerProbables.add(playerProbable);
+            });
 
-                    LobbyPlayer selectedPlayer = playerProbables.getRandomly().getLobbyPlayer();
+            LobbyPlayer selectedPlayer = playerProbables.getRandomly().getLobbyPlayer();
 
-                    LobbyPlayer.ClassedRoleData classedRoleData = selectedPlayer.getClassedRoleData(type);
-                    RoleClass.Type classType = classedRoleData.isClassTypeSelected()
-                                               ? classedRoleData.getSelectedClassType()
-                                               : roleClassTemplateResolver.getDefaultTemplate(type).getType();
+            LobbyPlayer.ClassedRoleData classedRoleData = selectedPlayer.getClassedRoleData(type);
+            RoleClass.Type classType = classedRoleData.isClassTypeSelected()
+                                       ? classedRoleData.getSelectedClassType()
+                                       : roleClassTemplateResolver.getDefaultTemplate(type).getType();
 
-                    RoleTemplate roleTemplate = roleTemplateResolver.getByType(type);
+            RoleTemplate roleTemplate = roleTemplateResolver.getByType(type);
 
-                    GameRole gameRole = roleResolver.resolveClassedRole(classType, roleTemplate);
-                    selectedPlayer.setBalancedRole(gameRole);
-                    players.remove(selectedPlayer);
-                });
+            GameRole gameRole = roleResolver.resolveClassedRole(classType, roleTemplate);
+            selectedPlayer.setBalancedRole(gameRole);
+            playerDeque.remove(selectedPlayer);
+        });
 
         RoleTemplate civilanTemplate = roleTemplateResolver.getByType(GameRole.Type.CIVILIAN);
-        GameRole defaultRole = null;
-        for (Profession.Type type : Profession.Type.values()) {
-            LobbyPlayer lobbyPlayer = players.remove(0);
+        for (Profession.Type type : Profession.Type.VALUES) {
+            LobbyPlayer lobbyPlayer = playerDeque.remove();
 
-            GameRole gameRole;
-            if (type == Profession.Type.DEFAULT) {
-                if (defaultRole == null) {
-                    defaultRole = roleResolver.resolveCivilianRole(type, civilanTemplate);
-                }
-                gameRole = defaultRole;
-            } else {
-                gameRole = roleResolver.resolveCivilianRole(type, civilanTemplate);
-            }
-
+            GameRole gameRole = roleResolver.resolveCivilianRole(type);
             lobbyPlayer.setBalancedRole(gameRole);
         }
     }

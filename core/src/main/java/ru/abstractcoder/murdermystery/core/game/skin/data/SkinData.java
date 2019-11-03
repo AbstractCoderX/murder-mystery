@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.benioapi.gui.template.issuer.GuiAndCommandUserMixin;
 import ru.abstractcoder.benioapi.item.ItemUtils;
+import ru.abstractcoder.benioapi.util.ColorUtils;
 import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 
@@ -16,7 +17,6 @@ public class SkinData {
 
     private static final Random random = new Random();
 
-    private final String id;
     private final String name;
     private final List<String> proofs;
 
@@ -26,18 +26,13 @@ public class SkinData {
     private final Lazy<ItemStack> skullItem;
 
     @JsonCreator
-    public SkinData(String id, String name, List<String> proofs, Skin skin) {
-        this.id = id;
+    public SkinData(String name, List<String> proofs, Skin skin) {
         this.proofs = proofs;
-        this.name = name;
+        this.name = ColorUtils.color(name);
         this.skin = skin;
         skin.setData(this);
 
         skullItem = Lazy.create(() -> ItemUtils.createSkull(getSkin().getProperty()));
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getRandomProof() {
@@ -62,6 +57,10 @@ public class SkinData {
 
     public boolean isAvailableFor(GuiAndCommandUserMixin player) {
         return isAvailableFor(player.getHandle());
+    }
+
+    public String asStringKey() {
+        return "default";
     }
 
 }

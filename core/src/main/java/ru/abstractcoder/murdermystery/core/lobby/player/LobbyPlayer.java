@@ -1,6 +1,8 @@
 package ru.abstractcoder.murdermystery.core.lobby.player;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
@@ -22,6 +24,7 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
     private PlayerStatistic statistic;
     private Set<RoleClass.Type> purchasedRoleClasses;
 
+    @Nullable
     private GameRole balancedRole;
 
     public LobbyPlayer(Player handle) {
@@ -49,15 +52,17 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
     }
 
     public ClassedRoleData getClassedRoleData(GameRole.Type type) {
+        Preconditions.checkArgument(type.isClassed(), "role type must be classed");
         return classedRoleDataMap.computeIfAbsent(type, (__) -> new ClassedRoleData());
     }
 
     public GameRole getBalancedRole() {
+        Preconditions.checkState(balancedRole != null, "Role not balanced yet!");
         return balancedRole;
     }
 
     public void setBalancedRole(GameRole balancedRole) {
-        this.balancedRole = balancedRole;
+        this.balancedRole = Preconditions.checkNotNull(balancedRole, "balancedRole");
     }
 
     public PlayerStatistic getStatistic() {
@@ -123,6 +128,10 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
 
         public RoleClass.Type getSelectedClassType() {
             return selectedClassType;
+        }
+
+        public void setSelectedClassType(RoleClass.Type selectedClassType) {
+            this.selectedClassType = selectedClassType;
         }
 
     }

@@ -15,6 +15,7 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.CorpseClickResponsible;
 import ru.abstractcoder.murdermystery.core.game.role.profession.AbstractProfession;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionTemplate;
+import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -59,16 +60,17 @@ public class DoctorProfession extends AbstractProfession {
             }
 
             PlayerController playerController = gameEngine.getPlayerController();
-            playerController.getSpectating(corpse.getPlayerId()).ifPresent(sp -> {
+            SpectatingPlayer sp = playerController.removeSpectating(corpse.getPlayerId());
+            if (sp != null) {
                 corpse.remove();
-                playerController.removeSpectating(corpse.getPlayerId());
-                GamePlayer gp = gameEngine.getPlayerFactory().createCivilian(sp.getHandle());
+                GamePlayer gp = gameEngine.getPlayerFactory().revivePlayer(sp);
                 //TODO maybe send msg to gp
-//                gameEngine.getPlayerResolver().loadCivilian(gp);
                 if (!reviveCooldown.initialize()) {
                     reviveCooldown.get().redefine();
                 }
-            }).orElse(() -> msgConfig.get(Messages.game__doctor_spectator_leaved).send(gamePlayer));
+            } else {
+                msgConfig.get(Messages.game__doctor_spectator_leaved).send(gamePlayer);
+            }
         }
 
     }

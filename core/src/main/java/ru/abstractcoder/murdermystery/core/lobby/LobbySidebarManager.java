@@ -32,7 +32,6 @@ public class LobbySidebarManager {
     }
 
     public void init(LobbyEngine lobbyEngine) {
-        //TODO placeholders
         sidebarTemplate = lobbyEngine.settings().getSidebarTemplate()
                 .withLineUpdater(new PlaceholderTextUpdater()
                         .add("{desired_role}", player -> lobbyEngine.getPlayer(player)
