@@ -10,6 +10,7 @@ import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +48,14 @@ public class PlayerController {
 
     public SpectatingPlayer removeSpectating(UUID uuid) {
         return spectatingPlayerMap.remove(uuid);
+    }
+
+    public boolean isSpectator(Player player) {
+        return spectatingPlayerMap.containsKey(player.getUniqueId());
+    }
+
+    public Collection<SpectatingPlayer> getAllSpectators() {
+        return spectatingPlayerMap.values();
     }
 
 }

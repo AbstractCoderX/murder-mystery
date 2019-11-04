@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PremiumSkinData extends SkinData {
 
-    public static final String AVAILABILITY_PERMISSION_PARENT_NODE = "MurderMystery.skin.murder";
+    public static final String AVAILABILITY_PERMISSION_PARENT_NODE = "MurderMystery.skin";
 
     private final String id;
     private final String permission;

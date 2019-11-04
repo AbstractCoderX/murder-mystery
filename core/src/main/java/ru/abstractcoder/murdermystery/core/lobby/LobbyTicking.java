@@ -7,7 +7,6 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.NumberUtils;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
-import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
@@ -22,22 +21,23 @@ import java.util.function.Function;
 @Reusable
 public class LobbyTicking implements Ticking {
 
-    private final GeneralConfig.Lobby lobby;
-    private final LobbyEngine lobbyEngine;
+    private LobbyEngine lobbyEngine;
     private final GameEngine gameEngine;
     private final MsgConfig<Messages> msgConfig;
     private final ComputingRoleBalancer roleBalancer;
 
     @Inject
     public LobbyTicking(
-            LobbyEngine lobbyEngine, GameEngine gameEngine,
-            GeneralConfig.Lobby lobby, MsgConfig<Messages> msgConfig,
+            GameEngine gameEngine,
+            MsgConfig<Messages> msgConfig,
             ComputingRoleBalancer roleBalancer) {
-        this.lobby = lobby;
-        this.lobbyEngine = lobbyEngine;
         this.gameEngine = gameEngine;
         this.msgConfig = msgConfig;
         this.roleBalancer = roleBalancer;
+    }
+
+    public void setLobbyEngine(LobbyEngine lobbyEngine) {
+        this.lobbyEngine = lobbyEngine;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LobbyTicking implements Ticking {
             }
             String timeLeftFormatted = SimpleTemporal.of(timeLeft, TimeUnit.SECONDS).format();
             Message startingBossBarMsg = msgConfig.get(Messages.lobby__starting_bossbar, timeLeftFormatted);
-            StartingSettings startingSettings = lobby.starting();
+            StartingSettings startingSettings = lobbyEngine.settings().starting();
 
             lobbyEngine.getBossBar().setTitle(startingBossBarMsg.asSingleLine());
             lobbyEngine.getBossBar().setProgress(((double) timeLeft) / startingSettings.getMinCountStartTime());
@@ -76,7 +76,7 @@ public class LobbyTicking implements Ticking {
             boolean isNotifyingPeriod = timeLeft % startingSettings.getStandartNotifyingPeriod() == 0;
             boolean isPerSecondNotifyingTime = timeLeft <= startingSettings.getPerSecondNotifyingTime();
             if (isNotifyingPeriod || isPerSecondNotifyingTime) {
-                List<Player> players = lobby.getWorld().getPlayers();
+                List<Player> players = lobbyEngine.settings().getWorld().getPlayers();
 
                 startingSettings.getPerSecondNitifyingSound().broadcast(players);
                 msgConfig.get(Messages.lobby__starting_chat, timeLeftFormatted)

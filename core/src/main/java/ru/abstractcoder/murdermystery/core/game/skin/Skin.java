@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.Property;
 import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.murdermystery.core.game.skin.data.SkinData;
 
+//TODO extract interface
 public class Skin {
 
     private final String texture;

@@ -24,12 +24,12 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.*;
 import javax.inject.Inject;
 import java.util.UUID;
 
-public class GameLogicListener extends AbstractBukkitListener {
+public class RoleLogicListener extends AbstractBukkitListener {
 
     private final GameEngine gameEngine;
 
     @Inject
-    public GameLogicListener(GameEngine gameEngine) {
+    public RoleLogicListener(GameEngine gameEngine) {
         super(gameEngine.getPlugin());
         this.gameEngine = gameEngine;
     }
@@ -108,7 +108,7 @@ public class GameLogicListener extends AbstractBukkitListener {
     @EventHandler
     public void onItemPickup(PlayerAttemptPickupItemEvent event) {
         ItemStack itemStack = event.getItem().getItemStack();
-        if (itemStack != null && itemStack.getType() == Material.GOLD_INGOT) {
+        if (itemStack.getType() == Material.GOLD_INGOT) {
             GamePlayer gamePlayer = gameEngine.getPlayerResolver().resolvePresent(event.getPlayer());
             gamePlayer.getRoleLogic().onGoldPickup(itemStack.getAmount());
         }

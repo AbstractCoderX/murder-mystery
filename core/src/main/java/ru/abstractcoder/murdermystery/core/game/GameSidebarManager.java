@@ -10,7 +10,6 @@ import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
 import javax.inject.Inject;
-import java.util.function.Supplier;
 
 public class GameSidebarManager {
 
@@ -42,14 +41,7 @@ public class GameSidebarManager {
                                 .get(Messages.lifeState(gameEngine.getPlayerResolver().getDetective() != null))
                                 .asSingleLine()
                         )
-                        .add("{time}", new Supplier<String>() {
-                            int timeLeft = gameEngine.settings().general().getGameDuration();
-
-                            @Override
-                            public String get() {
-                                return String.valueOf(timeLeft--);
-                            }
-                        })
+                        .add("{time}", gameEngine.getGameTime()::getFormattedTimeLeft)
                 );
     }
 

@@ -8,7 +8,7 @@ import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplateResolver;
-import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.Responsible;
+import ru.abstractcoder.murdermystery.core.game.role.logic.responsible.ResponsibleRoleLogic;
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class RoleResolver {
     private final Map<Profession.Type, GameRole> civilianRoles = new EnumMap<>(Profession.Type.class);
     private final Map<RoleClass.Type, GameRole> classedRoles = new HashMap<>();
 
-    private final Map<Class<? extends Responsible>, Collection<Responsible>> responsibleRoleLogics = new HashMap<>();
+    private final Map<Class<? extends ResponsibleRoleLogic>, Collection<ResponsibleRoleLogic>> responsibleRoleLogics = new HashMap<>();
 
     @Inject
     public RoleResolver(GeneralConfig generalConfig,
@@ -74,11 +74,11 @@ public class RoleResolver {
         return resolveClassedRole(defaultTemplate.getType(), roleType);
     }
 
-    public <T extends Responsible> Collection<T> getResponsibleLogics(Class<? extends T> clazz) {
+    public <T extends ResponsibleRoleLogic> Collection<T> getResponsibleLogics(Class<? extends T> clazz) {
         return getResponsibleLogics(clazz, playerResolver::getAll);
     }
 
-    public <T extends Responsible> Collection<T> getResponsibleLogics(Class<? extends T> clazz,
+    public <T extends ResponsibleRoleLogic> Collection<T> getResponsibleLogics(Class<? extends T> clazz,
             Supplier<Collection<GamePlayer>> targetPlayers) {
         //noinspection unchecked
         return (Collection<T>) responsibleRoleLogics.computeIfAbsent(clazz, (__) -> {

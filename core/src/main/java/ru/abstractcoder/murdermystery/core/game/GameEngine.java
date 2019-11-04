@@ -180,7 +180,7 @@ public class GameEngine {
         gameActionService.handleStarting();
     }
 
-    public void endGame(WinningSide winningSide) {
+    public void endGame() {
         //TODO
     }
 

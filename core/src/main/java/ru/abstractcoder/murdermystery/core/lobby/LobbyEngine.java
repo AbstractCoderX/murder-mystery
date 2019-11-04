@@ -8,6 +8,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.function.UncheckedRunnable;
+import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
@@ -38,7 +39,8 @@ public class LobbyEngine {
 
     @Inject
     public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbySidebarManager lobbySidebarManager,
-            MsgConfig<Messages> msgConfig, LobbyPlayerService lobbyPlayerService) {
+            MsgConfig<Messages> msgConfig, LobbyPlayerService lobbyPlayerService,
+            LobbyTicking lobbyTicking, TickingService tickingService) {
         this.settings = generalConfig.lobby();
         this.arena = arena;
         this.lobbySidebarManager = lobbySidebarManager;
@@ -52,6 +54,9 @@ public class LobbyEngine {
                 BarColor.RED,
                 BarStyle.SOLID
         );
+
+        lobbyTicking.setLobbyEngine(this);
+        tickingService.register(lobbyTicking);
     }
 
     public int getSecondsLeft() {

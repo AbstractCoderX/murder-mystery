@@ -51,6 +51,10 @@ public class GamePlayerResolver {
         return resolveSafe(player.getUniqueId());
     }
 
+    public boolean hasPlayer(Player player) {
+        return gamePlayerMap.containsKey(player.getUniqueId());
+    }
+
     public Collection<GamePlayer> getAllExpectThisOne(GamePlayer gamePlayer) {
         switch (gamePlayer.getRole().getType()) {
             case MURDER:
