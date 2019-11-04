@@ -42,6 +42,7 @@ public enum Messages implements MsgKey {
     game__,
     game__role_selecting_animation("&fВыбор роли: &a{random_role}"),
     game__role_animation_end("&cВы {role}"),
+    game__kill_player("Ты {action} игрока {victim}"),
 //    game__,
 
     misc__alive("Жив"),

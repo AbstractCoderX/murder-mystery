@@ -3,6 +3,7 @@ package ru.abstractcoder.murdermystery.core.game.role.detective.classes;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
+import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.detective.DetectiveLogic;

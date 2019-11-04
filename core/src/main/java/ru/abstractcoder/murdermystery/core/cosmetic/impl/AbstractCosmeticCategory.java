@@ -1,5 +1,8 @@
 package ru.abstractcoder.murdermystery.core.cosmetic.impl;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
+import ru.abstractcoder.benioapi.config.msg.MsgConfig;
+import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.cosmetic.CosmeticCategory;
 
@@ -9,10 +12,15 @@ import static ru.abstractcoder.benioapi.util.CollectionGeneraliser.generaliseLis
 
 public abstract class AbstractCosmeticCategory implements CosmeticCategory {
 
-    private final String id;
-    private final List<Cosmetic> cosmetics;
+    @JacksonInject
+    protected final MsgConfig<Messages> msgConfig;
 
-    protected AbstractCosmeticCategory(String id, List<? extends Cosmetic> cosmetics) {
+    protected final String id;
+    protected final List<Cosmetic> cosmetics;
+
+    protected AbstractCosmeticCategory(MsgConfig<Messages> msgConfig,
+            String id, List<? extends Cosmetic> cosmetics) {
+        this.msgConfig = msgConfig;
         this.id = id;
         this.cosmetics = generaliseList(cosmetics);
     }

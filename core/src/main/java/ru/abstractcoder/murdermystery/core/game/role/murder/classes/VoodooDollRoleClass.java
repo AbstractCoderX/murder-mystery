@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
+import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.npc.Npc;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;

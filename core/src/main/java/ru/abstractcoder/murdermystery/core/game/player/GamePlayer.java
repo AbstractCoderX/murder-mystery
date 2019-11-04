@@ -3,18 +3,22 @@ package ru.abstractcoder.murdermystery.core.game.player;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
+import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable {
 
     private GameRole role;
     private SkinContainer skinContainer;
+    private final List<Cosmetic> cosmetics;
 
     private boolean roleShowed = false;
 
@@ -33,10 +37,11 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     @Nullable
     private Sidebar cachedSidebar;
 
-    public GamePlayer(Player player, GameRole role, SkinContainer skinContainer) {
+    public GamePlayer(Player player, GameRole role, SkinContainer skinContainer, List<Cosmetic> cosmetics) {
         super(player);
         this.role = role;
         this.skinContainer = skinContainer;
+        this.cosmetics = cosmetics;
     }
 
     public GameRole getRole() {
@@ -73,6 +78,12 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
 
     public RoleLogic getRoleLogic() {
         return role.getLogic(this);
+    }
+
+    public <T extends Cosmetic> Stream<T> cosmetics(Class<? extends T> clazz) {
+        return cosmetics.stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast);
     }
 
     public double getGoldMultiplier() {

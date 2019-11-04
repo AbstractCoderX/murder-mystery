@@ -18,6 +18,7 @@ import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
+import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;

@@ -27,7 +27,7 @@ public class PlayerFactory {
 
     public GamePlayer createPlayer(LobbyPlayer lobbyPlayer) {
         SkinContainer skinContainer = skinContainerFactory.createFor(lobbyPlayer);
-        return new GamePlayer(lobbyPlayer.getPlayer(), lobbyPlayer.getBalancedRole(), skinContainer);
+        return new GamePlayer(lobbyPlayer.getPlayer(), lobbyPlayer.getBalancedRole(), skinContainer, cosmetics);
     }
 
     public GamePlayer revivePlayer(SpectatingPlayer sp) {
@@ -38,7 +38,7 @@ public class PlayerFactory {
         GameRole role = roleResolver.resolveCivilianRole(Profession.Type.DEFAULT);
         SkinContainer skinContainer = sp.getCachedSkinContainer().toSimpleCivilianContainer();
 
-        GamePlayer gamePlayer = new GamePlayer(player, role, skinContainer);
+        GamePlayer gamePlayer = new GamePlayer(player, role, skinContainer, cosmetics);
         gamePlayer.getRoleLogic().load();
 
         return gamePlayer;
