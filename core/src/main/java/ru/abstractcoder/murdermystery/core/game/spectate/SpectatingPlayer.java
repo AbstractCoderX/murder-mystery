@@ -2,16 +2,20 @@ package ru.abstractcoder.murdermystery.core.game.spectate;
 
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
+import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
+import java.util.Collection;
+
 public class SpectatingPlayer extends AbstractWrappedPlayer {
 
     private final GameRole cachedRole;
     private final SkinContainer cachedSkinContainer;
+    private final Collection<Cosmetic> cachedCosmetics;
     private final Location deathLocation;
     private Corpse corpse;
 
@@ -19,6 +23,7 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
         super(gamePlayer.getHandle());
         cachedRole = gamePlayer.getRole();
         cachedSkinContainer = gamePlayer.getSkinContainer();
+        this.cachedCosmetics = gamePlayer.getCosmetics();
         this.deathLocation = deathLocation;
         this.corpse = corpse;
     }
@@ -41,6 +46,10 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
 
     public Location getDeathLocation() {
         return deathLocation;
+    }
+
+    public Collection<Cosmetic> getCachedCosmetics() {
+        return cachedCosmetics;
     }
 
 }

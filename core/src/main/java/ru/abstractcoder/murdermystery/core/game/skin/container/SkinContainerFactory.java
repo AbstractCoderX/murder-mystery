@@ -48,8 +48,4 @@ public class SkinContainerFactory {
         return new SkinContainer(realSkin, skinView);
     }
 
-    public SkinContainer createSimpleCivilian() {
-
-    }
-
 }

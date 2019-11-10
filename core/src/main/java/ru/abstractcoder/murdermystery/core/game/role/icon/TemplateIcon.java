@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import org.bukkit.inventory.meta.SkullMeta;
 import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.item.ItemData;
+import ru.abstractcoder.benioapi.item.ItemDataImposible;
 import ru.abstractcoder.benioapi.item.ItemUtils;
 import ru.abstractcoder.benioapi.util.ColorUtils;
 
-public class TemplateIcon implements ItemData.Imposible, ItemBuilder.ItemMetaBuilder.Imposible<SkullMeta> {
+public class TemplateIcon implements ItemDataImposible, ItemBuilder.ItemMetaBuilder.Imposible<SkullMeta> {
 
     private final String name;
     private final String skull;

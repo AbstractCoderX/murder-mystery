@@ -10,7 +10,7 @@ import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -18,7 +18,7 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
 
     private GameRole role;
     private SkinContainer skinContainer;
-    private final List<Cosmetic> cosmetics;
+    private final Collection<Cosmetic> cosmetics;
 
     private boolean roleShowed = false;
 
@@ -37,7 +37,7 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     @Nullable
     private Sidebar cachedSidebar;
 
-    public GamePlayer(Player player, GameRole role, SkinContainer skinContainer, List<Cosmetic> cosmetics) {
+    public GamePlayer(Player player, GameRole role, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
         super(player);
         this.role = role;
         this.skinContainer = skinContainer;
@@ -80,10 +80,15 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
         return role.getLogic(this);
     }
 
-    public <T extends Cosmetic> Stream<T> cosmetics(Class<? extends T> clazz) {
+    public <T extends Cosmetic.Logic> Stream<T> cosmetics(Class<? extends T> clazz) {
         return cosmetics.stream()
+                .map(Cosmetic::getLogic)
                 .filter(clazz::isInstance)
                 .map(clazz::cast);
+    }
+
+    public Collection<Cosmetic> getCosmetics() {
+        return cosmetics;
     }
 
     public double getGoldMultiplier() {

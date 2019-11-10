@@ -7,6 +7,7 @@ import org.bukkit.World;
 import ru.abstractcoder.benioapi.board.sidebar.SidebarTemplate;
 import ru.abstractcoder.benioapi.config.BenioConfig;
 import ru.abstractcoder.benioapi.database.MySqlConnectionPool;
+import ru.abstractcoder.murdermystery.core.cosmetic.resolver.CosmeticCategoryResolver;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionTemplateResolver;
@@ -112,6 +113,7 @@ public interface GeneralConfig extends BenioConfig {
         private final RoleClassTemplateResolver roleClassTemplateResolver;
         private final ProfessionTemplateResolver professionTemplateResolver;
         private final CivilianSkinPool civilianSkinPool;
+        private final CosmeticCategoryResolver cosmeticCategoryResolver;
 
         @JsonCreator
         public Game(
@@ -122,7 +124,8 @@ public interface GeneralConfig extends BenioConfig {
                 @JsonProperty("roleTemplates") RoleTemplateResolver roleTemplateResolver,
                 @JsonProperty("roleClassTemplates") RoleClassTemplateResolver roleClassTemplateResolver,
                 @JsonProperty("professionTemplates") ProfessionTemplateResolver professionTemplateResolver,
-                CivilianSkinPool civilianSkinPool) {
+                @JsonProperty("civilianSkins") CivilianSkinPool civilianSkinPool,
+                @JsonProperty("cosmeticCategories") CosmeticCategoryResolver cosmeticCategoryResolver) {
             this.world = world;
             this.generalSettings = generalSettings;
             this.sidebarTemplate = sidebarTemplate;
@@ -131,6 +134,7 @@ public interface GeneralConfig extends BenioConfig {
             this.roleClassTemplateResolver = roleClassTemplateResolver;
             this.professionTemplateResolver = professionTemplateResolver;
             this.civilianSkinPool = civilianSkinPool;
+            this.cosmeticCategoryResolver = cosmeticCategoryResolver;
         }
 
         public World getWorld() {
@@ -163,6 +167,10 @@ public interface GeneralConfig extends BenioConfig {
 
         public CivilianSkinPool getCivilianSkinPool() {
             return civilianSkinPool;
+        }
+
+        public CosmeticCategoryResolver getCosmeticCategoryResolver() {
+            return cosmeticCategoryResolver;
         }
 
     }

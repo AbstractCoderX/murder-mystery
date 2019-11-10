@@ -3,6 +3,8 @@ package ru.abstractcoder.murdermystery.core.lobby.player;
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
+import ru.abstractcoder.murdermystery.core.cosmetic.CosmeticCategory;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
@@ -23,6 +25,7 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
     private Map<RoleComponent.Type, Skin> selectedSkinMap;
     private PlayerStatistic statistic;
     private Set<RoleClass.Type> purchasedRoleClasses;
+    private Map<CosmeticCategory.Type, String> selectedCosmetics;
 
     @Nullable
     private GameRole balancedRole;
@@ -95,6 +98,35 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
 
     public void setPurchasedRoleClasses(Set<RoleClass.Type> purchasedRoleClasses) {
         this.purchasedRoleClasses = purchasedRoleClasses;
+    }
+
+    public void setSelectedCosmetics(Map<CosmeticCategory.Type, String> selectedCosmetics) {
+        this.selectedCosmetics = selectedCosmetics;
+    }
+
+    public void selectedCosmetic(CosmeticCategory category, Cosmetic cosmetic) {
+        selectedCosmetic(category.getType(), cosmetic);
+    }
+
+    public void selectedCosmetic(CosmeticCategory.Type category, Cosmetic cosmetic) {
+        selectedCosmetics.put(category, cosmetic.getId());
+    }
+
+    public void unselectCosmetic(CosmeticCategory category) {
+        unselectCosmetic(category.getType());
+    }
+
+    public void unselectCosmetic(CosmeticCategory.Type category) {
+        selectedCosmetics.remove(category);
+    }
+
+    public String getSelectedCosmeticId(CosmeticCategory category) {
+        return selectedCosmetics.getOrDefault(category.getType(), category.getDefaultCosmetic().getId());
+    }
+
+    public boolean isCosmeticSelected(CosmeticCategory category, Cosmetic cosmetic) {
+        String selectedId = getSelectedCosmeticId(category);
+        return selectedId != null && cosmetic.getId().equals(selectedId);
     }
 
     public static class ClassedRoleData {

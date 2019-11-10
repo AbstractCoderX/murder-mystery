@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
-import ru.abstractcoder.murdermystery.core.cosmetic.responsible.DeathResponsibleCosmetic;
-import ru.abstractcoder.murdermystery.core.cosmetic.responsible.KillResponsibleCosmetic;
+import ru.abstractcoder.murdermystery.core.cosmetic.responsible.DeathResponsible;
+import ru.abstractcoder.murdermystery.core.cosmetic.responsible.KillResponsible;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -30,7 +30,7 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
 
     @Override
     public void kill(GamePlayer victim, DeathState deathState) {
-        gamePlayer.cosmetics(KillResponsibleCosmetic.class)
+        gamePlayer.cosmetics(KillResponsible.class)
                 .forEach(resp -> resp.onKill(gamePlayer, victim));
 
         victim.getRoleLogic().death(gamePlayer, deathState);
@@ -50,7 +50,7 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
         SpectatingPlayer spectatingPlayer = playerController.makeSpectating(gamePlayer, deathState.isNeedCorpse());
         deathState.setSpectatingPlayer(spectatingPlayer);
 
-        gamePlayer.cosmetics(DeathResponsibleCosmetic.class)
+        gamePlayer.cosmetics(DeathResponsible.class)
                 .forEach(resp -> resp.onDeath(gamePlayer, deathState));
 
         Sidebar cachedSidebar = gamePlayer.getCachedSidebar();

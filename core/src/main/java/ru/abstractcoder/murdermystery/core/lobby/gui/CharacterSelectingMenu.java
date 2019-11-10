@@ -12,7 +12,6 @@ import ru.abstractcoder.benioapi.function.UncheckedPredicate;
 import ru.abstractcoder.benioapi.gui.template.MenuApi;
 import ru.abstractcoder.benioapi.gui.template.MenuTemplate;
 import ru.abstractcoder.benioapi.gui.template.PaginatedMenuTemplate;
-import ru.abstractcoder.benioapi.gui.template.click.Click;
 import ru.abstractcoder.benioapi.gui.template.item.DynamicMenuIcon;
 import ru.abstractcoder.benioapi.gui.template.item.FixedMenuIcon;
 import ru.abstractcoder.benioapi.gui.template.item.MenuItem;
@@ -31,7 +30,6 @@ import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponentTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.skin.SkinResolver;
 import ru.abstractcoder.murdermystery.core.game.role.skin.SkinnableTemplateRepository;
-import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import javax.inject.Inject;
@@ -40,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 @Reusable
 public class CharacterSelectingMenu {
@@ -133,11 +130,6 @@ public class CharacterSelectingMenu {
                         SkinResolver skinResolver = session.getSelectedTemplate().getSkinResolver();
                         List<MenuItem<LobbyPlayer, Session, DynamicMenuIcon>> result = new ArrayList<>();
 
-                        BiConsumer<Skin, Click<LobbyPlayer, Session>> skinSelectingHandler = (skin, click) -> {
-                            RoleComponent.Type componentType = click.getSession().getSelectedTemplate().getType();
-                            click.getIssuer().setSelectedSkin(componentType, skin);
-                        };
-
                         skinResolver.getAllSkins().forEach(data -> result.add(MenuItemFactory.create(b -> b
                                 .conditionalIcon(creator -> creator
                                         .when(s -> data.isAvailableFor(s.getOwner()))
@@ -152,7 +144,9 @@ public class CharacterSelectingMenu {
                                     if (!data.isAvailableFor(click.getIssuer())) {
                                         return;
                                     }
-                                    skinSelectingHandler.accept(data.getSkin(), click);
+
+                                    RoleComponent.Type componentType = click.getSession().getSelectedTemplate().getType();
+                                    click.getIssuer().setSelectedSkin(componentType, data.getSkin());
                                 })
                         )));
 
@@ -166,8 +160,8 @@ public class CharacterSelectingMenu {
     private void prepareGlassItemCreator(
             ConditionalItemCreator<LobbyPlayer, Session, FixedMenuIcon> conditionalItemCreator,
             int slot,
-            UncheckedPredicate<Session> isSelectedPredicate
-    ) {
+            UncheckedPredicate<Session> isSelectedPredicate) {
+
         conditionalItemCreator
                 .withBaseItemConsumer(itemBuilder -> itemBuilder
                         .withItemMeta()
@@ -176,14 +170,10 @@ public class CharacterSelectingMenu {
                 .when(isSelectedPredicate)
                 .then(itemBuilder -> itemBuilder
                         .material(Material.LIME_STAINED_GLASS_PANE)
-                        .withItemMeta()
-                        .setName(" ")
                         .buildMenuIcon(slot)
                 )
                 .otherwise(itemBuilder -> itemBuilder
                         .material(Material.GRAY_STAINED_GLASS_PANE)
-                        .withItemMeta()
-                        .setName(" ")
                         .buildMenuIcon(slot)
                 );
     }

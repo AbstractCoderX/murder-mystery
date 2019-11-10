@@ -1,11 +1,11 @@
 package ru.abstractcoder.murdermystery.core.cosmetic.responsible;
 
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
+import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
-//TODO invoke this
-public interface VictoryResponsibleCosmetic extends Cosmetic {
+public interface DeathResponsible extends Cosmetic.Logic {
 
-    void onVictory(GamePlayer gamePlayer);
+    void onDeath(GamePlayer gamePlayer, DeathState deathState);
 
 }

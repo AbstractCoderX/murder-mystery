@@ -5,6 +5,7 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Messages;
 import ru.abstractcoder.murdermystery.core.lobby.RuleBook;
 import ru.abstractcoder.murdermystery.core.lobby.gui.CharacterSelectingMenu;
+import ru.abstractcoder.murdermystery.core.lobby.gui.CosmeticSelectingMenu;
 import ru.abstractcoder.murdermystery.core.lobby.gui.PreferredRoleSelectingMenu;
 import ru.abstractcoder.murdermystery.core.lobby.gui.ShopMenu;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
@@ -21,7 +22,7 @@ public class StandartActionResolver {
     @Inject
     public StandartActionResolver(MsgConfig<Messages> msgConfig, RuleBook ruleBook,
             PreferredRoleSelectingMenu preferredRoleSelectingMenu, ShopMenu shopMenu,
-            CharacterSelectingMenu characterSelectingMenu) {
+            CharacterSelectingMenu characterSelectingMenu, CosmeticSelectingMenu cosmeticSelectingMenu) {
         actionConsumerMap = new EnumMap<>(StandartClickAction.class);
         actionConsumerMap.put(StandartClickAction.LEAVE_TO_HUB, player ->
                 msgConfig.get(Messages.general__you_leave_arena).kickWithReason(player)
@@ -29,7 +30,7 @@ public class StandartActionResolver {
         actionConsumerMap.put(StandartClickAction.OPEN_RULE_BOOK, ruleBook::openFor);
         actionConsumerMap.put(StandartClickAction.OPEN_ROLE_SELECTING, preferredRoleSelectingMenu::open);
         actionConsumerMap.put(StandartClickAction.OPEN_CHARACTER_SELECTING, characterSelectingMenu::open);
-        actionConsumerMap.put(StandartClickAction.OPEN_COSMETIC, ) //TODO
+        actionConsumerMap.put(StandartClickAction.OPEN_COSMETIC, cosmeticSelectingMenu::open);
         actionConsumerMap.put(StandartClickAction.OPEN_SHOP, shopMenu::open);
     }
 
