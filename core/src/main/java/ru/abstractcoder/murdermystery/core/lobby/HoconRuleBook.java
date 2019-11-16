@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.lobby;
 
+import dagger.Reusable;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,12 +10,15 @@ import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.nms.wrapped.CraftPlayer;
 import ru.abstractcoder.benioapi.util.ColorUtils;
 
+import javax.inject.Inject;
 import java.util.List;
 
+@Reusable
 public class HoconRuleBook implements RuleBook {
 
     private final ItemStack bookItem;
 
+    @Inject
     public HoconRuleBook(HoconConfig bookConfig) {
         List<String> pages = bookConfig.getHandle().getStringList("pages");
         pages.replaceAll(s -> s.replace("\r", ""));

@@ -37,7 +37,7 @@ public class PlayerController {
             corpse = corpseService.spawnCorpse(gamePlayer, player.getLocation());
         }
 
-        SpectatingPlayer spectatingPlayer = new SpectatingPlayer(gamePlayer, cachedCosmetics, player.getLocation(), corpse);
+        SpectatingPlayer spectatingPlayer = new SpectatingPlayer(gamePlayer, player.getLocation(), corpse);
         spectatingPlayerMap.put(player.getUniqueId(), spectatingPlayer);
         return spectatingPlayer;
     }

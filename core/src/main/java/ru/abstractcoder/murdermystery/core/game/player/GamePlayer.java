@@ -8,6 +8,9 @@ import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
+import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
+import ru.abstractcoder.murdermystery.core.rating.StatisticRating;
+import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
 import java.util.Collection;
@@ -16,10 +19,11 @@ import java.util.stream.Stream;
 
 public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable {
 
+    private final PlayerStatistic statistic;
+    private final StatisticRating rating;
+    private final Collection<Cosmetic> cosmetics;
     private GameRole role;
     private SkinContainer skinContainer;
-    private final Collection<Cosmetic> cosmetics;
-
     private boolean roleShowed = false;
 
     private double goldMultiplier = 1.0;
@@ -37,11 +41,30 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     @Nullable
     private Sidebar cachedSidebar;
 
-    public GamePlayer(Player player, GameRole role, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
+    public GamePlayer(Player player, GameRole role, PlayerStatistic statistic,
+            StatisticRating rating, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
         super(player);
+
         this.role = role;
+        getRoleLogic().load();
+
+        this.rating = rating;
+        rating.init(this);
+
         this.skinContainer = skinContainer;
         this.cosmetics = cosmetics;
+        this.statistic = statistic;
+    }
+
+    public static GamePlayer fromSpectatingPlayer(SpectatingPlayer sp, GameRole role) {
+        return new GamePlayer(
+                sp.getHandle(),
+                role,
+                sp.getCachedStatistic(),
+                sp.getCachedRating(),
+                sp.getCachedSkinContainer(),
+                sp.getCachedCosmetics()
+        );
     }
 
     public GameRole getRole() {
@@ -66,6 +89,14 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     @Override
     public void setSkinContainer(SkinContainer skinContainer) {
         this.skinContainer = skinContainer;
+    }
+
+    public PlayerStatistic getStatistic() {
+        return statistic;
+    }
+
+    public StatisticRating getRating() {
+        return rating;
     }
 
     public boolean isRoleShowed() {

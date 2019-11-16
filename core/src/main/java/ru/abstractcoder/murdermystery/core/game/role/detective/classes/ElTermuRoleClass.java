@@ -111,7 +111,7 @@ public class ElTermuRoleClass extends DetectiveRoleClass {
         }
 
         @Override
-        public void onNpcDamage(GamePlayer murder, GamePlayer damager, Npc npc, Cancellable event) {
+        public void onNpcDamage(GamePlayer damager, Npc npc, Cancellable event) {
             if (!spectating || this.npc != npc) {
                 return;
             }

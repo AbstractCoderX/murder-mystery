@@ -102,18 +102,19 @@ public class VoodooDollRoleClass extends MurderRoleClass {
         }
 
         @Override
-        public void onNpcDamage(GamePlayer murder, GamePlayer damager, Npc npc, Cancellable event) {
+        public void onNpcDamage(GamePlayer damager, Npc npc, Cancellable event) {
             if (!skullUsed || this.npc != npc || damager.getRole().getType() == GameRole.Type.MURDER) {
                 return;
             }
 
+            //TODO think about damage
             event.setCancelled(false);
 
-            murder.getHandle().teleport(npc.getLocation());
+            gamePlayer.getHandle().teleport(npc.getLocation());
             npc.destroy();
             this.npc = null;
 
-            murder.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, getWeaponItem());
+            gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, getWeaponItem());
         }
 
     }

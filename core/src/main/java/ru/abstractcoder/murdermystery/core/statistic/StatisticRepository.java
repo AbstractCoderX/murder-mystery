@@ -20,10 +20,18 @@ public class StatisticRepository {
         return queryFactory.completableQuery().query(
                 "select wins, defeats, rating from statistic where username = ?",
                 rs -> {
+                    if (!rs.next()) {
+                        return new PlayerStatistic();
+                    }
+
                     int wins = rs.getInt("wins");
                     int defeats = rs.getInt("defeats");
+                    int kills = rs.getInt("kills");
+                    int deaths = rs.getInt("deaths");
+                    int goldsPickedUp = rs.getInt("goldsPickedUp");
                     int rating = rs.getInt("rating");
-                    return new PlayerStatistic(wins, defeats, rating);
+
+                    return new PlayerStatistic(wins, defeats, kills, deaths, goldsPickedUp, rating);
                 },
                 name.toLowerCase()
         );
@@ -31,8 +39,11 @@ public class StatisticRepository {
 
     public CompletableFuture<Void> save(String name, PlayerStatistic statistic) {
         return queryFactory.completableQuery().execute(
-                "insert into statistic values (?, ?, ?, ?)",
-                name, statistic.getWins(), statistic.getDefeats(), statistic.getRating()
+                //language=MySQL
+                "insert into statistic values (?, ?, ?, ?, ?, ?, ?)",
+                name, statistic.getWins(), statistic.getDefeats(),
+                statistic.getKills(), statistic.getDeaths(),
+                statistic.getGoldsPickedUp(), statistic.getRating()
         );
     }
 

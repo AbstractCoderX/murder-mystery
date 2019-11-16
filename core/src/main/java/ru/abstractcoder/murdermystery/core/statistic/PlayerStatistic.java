@@ -6,40 +6,71 @@ public class PlayerStatistic {
     private int defeats = 0;
     private int kills = 0;
     private int deaths = 0;
-    private int goldPickuped;
+    private int goldsPickedUp = 0;
     private int rating = 0;
 
-    public PlayerStatistic(int wins, int defeats, int rating) {
+    public PlayerStatistic(int wins, int defeats, int kills, int deaths, int goldsPickedUp, int rating) {
         this.wins = wins;
         this.defeats = defeats;
+        this.kills = kills;
+        this.deaths = deaths;
+        this.goldsPickedUp = goldsPickedUp;
         this.rating = rating;
     }
 
     public PlayerStatistic() {
     }
 
-    public int getWins() {
-        return wins;
+    public void incrementWins() {
+        wins++;
     }
 
-    public void setWins(int wins) {
-        this.wins = wins;
+    public void incrementDefeats() {
+        deaths++;
+    }
+
+    public void incrementKills() {
+        kills++;
+    }
+
+    public void incrementDeaths() {
+        deaths++;
+    }
+
+    public void incrementGoldsPickedUp() {
+        goldsPickedUp++;
+    }
+
+    public void incrementRating(int amount) {
+        rating += amount;
+    }
+
+    public void decrementRating(int amount) {
+        rating -= amount;
+    }
+
+    public int getWins() {
+        return wins;
     }
 
     public int getDefeats() {
         return defeats;
     }
 
-    public void setDefeats(int defeats) {
-        this.defeats = defeats;
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getGoldsPickedUp() {
+        return goldsPickedUp;
     }
 
     public int getRating() {
         return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
     }
 
 }

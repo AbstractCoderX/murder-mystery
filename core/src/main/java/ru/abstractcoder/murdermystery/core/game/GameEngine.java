@@ -163,16 +163,14 @@ public class GameEngine {
         Iterator<Location> spawnPointIterator = arena.getSpawnPoints().iterator();
         lobbyPlayers.forEach(lobbyPlayer -> {
             Player player = lobbyPlayer.getPlayer();
+            player.teleport(spawnPointIterator.next());
+
             GamePlayer gamePlayer = playerFactory.createPlayer(lobbyPlayer);
 
             String skinName = gamePlayer.getSkinContainer().getRealSkin().data().getName();
             player.setDisplayName(skinName);
             player.setPlayerListName(skinName);
             boardApi.getNameTagService().setNameTagHidden(player, true);
-
-            player.teleport(spawnPointIterator.next());
-
-            gamePlayer.getRoleLogic().load();
         });
 
         state = GameState.PLAYING;

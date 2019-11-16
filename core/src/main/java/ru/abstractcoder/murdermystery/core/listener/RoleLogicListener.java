@@ -123,11 +123,10 @@ public class RoleLogicListener extends AbstractBukkitListener {
         if (responsibleLogics.isEmpty()) {
             return;
         }
-        EntityUtils.resolvePlayerDamager(event.getDamager()).ifPresent(damager -> {
-            GamePlayer gamePlayer = gameEngine.getPlayerResolver().resolvePresent(damager);
+        EntityUtils.resolvePlayerDamager(event.getDamager()).ifPresent(damagerPlayer -> {
+            GamePlayer damager = gameEngine.getPlayerResolver().resolvePresent(damagerPlayer);
             gameEngine.getNpcService().getNpc(event.getNPC().getUniqueId()).ifPresent(npc -> {
-                GamePlayer murder = gameEngine.getPlayerResolver().getMurder();
-                responsibleLogics.forEach(resp -> resp.onNpcDamage(murder, gamePlayer, npc, event));
+                responsibleLogics.forEach(resp -> resp.onNpcDamage(damager, npc, event));
             });
         });
     }

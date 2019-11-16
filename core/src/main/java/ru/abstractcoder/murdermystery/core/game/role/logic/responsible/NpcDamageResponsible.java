@@ -6,6 +6,6 @@ import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
 public interface NpcDamageResponsible extends ResponsibleRoleLogic {
 
-    void onNpcDamage(GamePlayer murder, GamePlayer damager, Npc npc, Cancellable event);
+    void onNpcDamage(GamePlayer damager, Npc npc, Cancellable event);
 
 }
