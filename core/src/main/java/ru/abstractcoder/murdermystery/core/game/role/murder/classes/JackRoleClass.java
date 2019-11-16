@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.EventHelper;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -22,7 +22,7 @@ import ru.abstractcoder.murdermystery.core.game.role.murder.MurderRoleClass;
 
 public class JackRoleClass extends MurderRoleClass {
 
-    public JackRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public JackRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -35,7 +35,7 @@ public class JackRoleClass extends MurderRoleClass {
 
         private boolean swordThrown;
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

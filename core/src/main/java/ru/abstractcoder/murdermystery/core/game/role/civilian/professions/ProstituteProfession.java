@@ -6,7 +6,7 @@ import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.cooldown.CooldownBuilder;
 import ru.abstractcoder.benioapi.util.cooldown.StartRememberCooldown;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.CivilianLogic;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProstituteProfession extends AbstractProfession {
 
-    public ProstituteProfession(ProfessionTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public ProstituteProfession(ProfessionTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -39,19 +39,19 @@ public class ProstituteProfession extends AbstractProfession {
                 .setDuration(SimpleTemporal.of(1, TimeUnit.SECONDS))
                 .buildStartRemember());
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 
         @Override
         public void onPlayerClick(GamePlayer gamePlayer, GamePlayer target) {
             if (sexCooldown.isInitialized() && sexCooldown.get().isValid()) {
-                msgConfig.get(Messages.game__prostitute_sex_cooldown, sexCooldown.get().getRemainingTime().format())
+                msgConfig.get(Msg.game__prostitute_sex_cooldown, sexCooldown.get().getRemainingTime().format())
                         .send(gamePlayer);
                 return;
             }
 
-            Message message = msgConfig.get(Messages.game__prostitute_role_info, target.getRole().getDisplayName());
+            Message message = msgConfig.get(Msg.game__prostitute_role_info, target.getRole().getDisplayName());
             message.send(gamePlayer);
             gamePlayer.getHandle().sendTitle("", message.asSingleLine(), 10, 70, 20);
 

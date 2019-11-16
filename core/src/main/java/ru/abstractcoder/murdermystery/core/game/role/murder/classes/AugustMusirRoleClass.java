@@ -15,7 +15,7 @@ import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.cooldown.CooldownBuilder;
 import ru.abstractcoder.benioapi.util.cooldown.StartRememberCooldown;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 public class AugustMusirRoleClass extends MurderRoleClass {
 
-    public AugustMusirRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public AugustMusirRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -47,7 +47,7 @@ public class AugustMusirRoleClass extends MurderRoleClass {
                 .setDuration(SimpleTemporal.of(5, TimeUnit.SECONDS))
                 .buildStartRemember());
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 
@@ -99,7 +99,7 @@ public class AugustMusirRoleClass extends MurderRoleClass {
 
             if (skinSwitchingCooldown.isInitialized() && skinSwitchingCooldown.get().isValid()) {
                 event.setCancelled(true);
-                msgConfig.get(Messages.game__august_muzir_cooldown,
+                msgConfig.get(Msg.game__august_muzir_cooldown,
                         skinSwitchingCooldown.get().getRemainingTime().format()
                 ).send(gamePlayer);
             }

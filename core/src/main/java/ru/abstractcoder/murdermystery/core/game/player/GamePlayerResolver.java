@@ -19,6 +19,7 @@ public class GamePlayerResolver {
 
     private final Map<UUID, GamePlayer> gamePlayerMap = new HashMap<>();
 
+    private boolean isMurderAlive = true;
     private GamePlayer murder;
     private GamePlayer detective;
     private final Collection<GamePlayer> survivors = new ArrayList<>(16);
@@ -78,6 +79,14 @@ public class GamePlayerResolver {
             default:
                 throw new AssertionError();
         }
+    }
+
+    public boolean isMurderAlive() {
+        return isMurderAlive;
+    }
+
+    public void setMurderAlive(boolean murderAlive) {
+        isMurderAlive = murderAlive;
     }
 
     public GamePlayer getMurder() {

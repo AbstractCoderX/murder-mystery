@@ -7,7 +7,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemData;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.VictoryResponsible;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class VictoryFireworksCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
-    public VictoryFireworksCosmeticCategory(MsgConfig<Messages> msgConfig,
+    public VictoryFireworksCosmeticCategory(MsgConfig<Msg> msgConfig,
             ItemData icon, List<Cosmetic> premiumCosmetics) {
         super(msgConfig, icon, premiumCosmetics);
     }

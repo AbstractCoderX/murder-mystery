@@ -8,7 +8,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -22,7 +22,7 @@ import java.util.Random;
 
 public class WolfRoleClass extends MurderRoleClass {
 
-    public WolfRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public WolfRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -42,7 +42,7 @@ public class WolfRoleClass extends MurderRoleClass {
 
         private final Multimap<Player, Corpse> visitedCorps = HashMultimap.create();
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

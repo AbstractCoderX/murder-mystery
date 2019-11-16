@@ -3,7 +3,7 @@ package ru.abstractcoder.murdermystery.core.game.role.classed;
 import com.google.common.base.Preconditions;
 import dagger.Reusable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.detective.DetectiveRoleClass;
@@ -19,11 +19,11 @@ import java.util.Map;
 public class RoleClassFactory {
 
     private GameEngine gameEngine;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
     private final Map<RoleClass.Type, RoleClassCreator> creatorsMap;
 
     @Inject
-    public RoleClassFactory(MsgConfig<Messages> msgConfig) {
+    public RoleClassFactory(MsgConfig<Msg> msgConfig) {
         this.msgConfig = msgConfig;
         creatorsMap = new HashMap<>(MurderRoleClass.Type.values().length + DetectiveRoleClass.Type.values().length);
     }
@@ -57,7 +57,7 @@ public class RoleClassFactory {
     @FunctionalInterface
     private interface RoleClassCreator {
 
-        RoleClass create(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig);
+        RoleClass create(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig);
 
     }
 

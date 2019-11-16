@@ -17,7 +17,7 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemUtils;
 import ru.abstractcoder.benioapi.util.EventHelper;
 import ru.abstractcoder.benioapi.util.Materials;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.npc.Npc;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -34,7 +34,7 @@ import java.util.List;
 
 public class ElTermuRoleClass extends DetectiveRoleClass {
 
-    public ElTermuRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public ElTermuRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -54,7 +54,7 @@ public class ElTermuRoleClass extends DetectiveRoleClass {
         private boolean spectating = false;
         private Npc npc;
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 
@@ -68,7 +68,7 @@ public class ElTermuRoleClass extends DetectiveRoleClass {
             BlockFace rotation = rotatable.getRotation();
             if (rotation == BlockFace.UP) {
                 event.setCancelled(true);
-                msgConfig.get(Messages.game__el_termu_camera_can_placed_only_on_wall).send(gamePlayer);
+                msgConfig.get(Msg.game__el_termu_camera_can_placed_only_on_wall).send(gamePlayer);
                 return;
             }
             tabletGived = true;

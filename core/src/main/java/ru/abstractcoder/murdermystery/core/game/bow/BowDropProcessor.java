@@ -12,7 +12,7 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
@@ -29,18 +29,18 @@ public class BowDropProcessor {
     private static final ItemStack BOW_ITEM = new ItemStack(Material.BOW);
     public static final int COMPASS_SLOT = 4;
 
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
     private final ItemStack compassItem;
     private final GamePlayerResolver playerResolver;
     private final TickingService tickingService;
     private final RoleResolver roleResolver;
 
     @Inject
-    public BowDropProcessor(MsgConfig<Messages> msgConfig, GamePlayerResolver playerResolver,
+    public BowDropProcessor(MsgConfig<Msg> msgConfig, GamePlayerResolver playerResolver,
             TickingService tickingService, RoleResolver roleResolver) {
         compassItem = ItemBuilder.fromMaterial(Material.COMPASS)
                 .withItemMeta()
-                .setName(msgConfig.get(Messages.misc__bow_detector_compass).asSingleLine())
+                .setName(msgConfig.get(Msg.misc__bow_detector_compass).asSingleLine())
                 .and().build();
         this.msgConfig = msgConfig;
         this.playerResolver = playerResolver;
@@ -66,13 +66,13 @@ public class BowDropProcessor {
             player.getInventory().setItem(COMPASS_SLOT, compassItem);
         });
 
-        msgConfig.get(Messages.game__detective_die_chat).broadcastSession()
+        msgConfig.get(Msg.game__detective_die_chat).broadcastSession()
                 .setPlayerIssuers(playerResolver.getAll())
                 .broadcastChat();
-        msgConfig.get(Messages.game__detective_die_title_survivors).broadcastSession()
+        msgConfig.get(Msg.game__detective_die_title_survivors).broadcastSession()
                 .setPlayerIssuers(playerResolver.getSurvivors())
                 .broadcastTitle();
-        msgConfig.get(Messages.game__detective_die_title_murder)
+        msgConfig.get(Msg.game__detective_die_title_murder)
                 .sendTitle(playerResolver.getMurder());
     }
 
@@ -104,7 +104,7 @@ public class BowDropProcessor {
                     .filter(gamePlayer -> gamePlayer.getRole().getType() == GameRole.Type.CIVILIAN)
                     .min(Comparator.comparing(gp -> bowLoc.distanceSquared(gp.getHandle().getLocation())))
                     .map(gamePlayer -> {
-                        msgConfig.get(Messages.game__detective_bow_picked_up).broadcastSession().broadcastChat();
+                        msgConfig.get(Msg.game__detective_bow_picked_up).broadcastSession().broadcastChat();
                         gamePlayer.setRole(roleResolver.getDefaultClassedRole(GameRole.Type.DETECTIVE));
                         gamePlayer.getHandle().getInventory().setItem(SharedConstants.WEAPON_SLOT, BOW_ITEM);
                         armorStand.remove();

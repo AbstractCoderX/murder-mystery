@@ -19,7 +19,7 @@ import ru.abstractcoder.benioapi.util.listener.QuickEvent;
 import ru.abstractcoder.benioapi.util.listener.QuickListener;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
@@ -39,7 +39,7 @@ public class VendingMachine {
     private final List<Consumer<GamePlayer>> actions = new ArrayList<>();
 
     @Inject
-    public VendingMachine(GameEngine gameEngine, SidebarService sidebarService, MsgConfig<Messages> msgConfig) {
+    public VendingMachine(GameEngine gameEngine, SidebarService sidebarService, MsgConfig<Msg> msgConfig) {
         actions.add(new EffectAction(PotionEffectType.SPEED));
         actions.add(new EffectAction(PotionEffectType.NIGHT_VISION));
         actions.add(new EffectAction(WolfRoleClass.UNLUCK));
@@ -81,7 +81,7 @@ public class VendingMachine {
                     ItemStack snowball = ItemBuilder.fromMaterial(Material.SNOWBALL)
                             .amount(5)
                             .withItemMeta()
-                            .impose(msgConfig.get(Messages.misc__slowing_snowballs))
+                            .impose(msgConfig.get(Msg.misc__slowing_snowballs))
                             .blankEnchantment()
                             .build();
                     gamePlayer.getHandle().getInventory().setItem(3, snowball);

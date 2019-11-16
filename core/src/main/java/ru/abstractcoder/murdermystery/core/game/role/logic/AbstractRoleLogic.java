@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.DeathResponsible;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.KillResponsible;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
@@ -20,9 +20,9 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
 
     protected final GamePlayer gamePlayer;
     protected final GameEngine gameEngine;
-    protected final MsgConfig<Messages> msgConfig;
+    protected final MsgConfig<Msg> msgConfig;
 
-    protected AbstractRoleLogic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    protected AbstractRoleLogic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         this.gamePlayer = gamePlayer;
         this.gameEngine = gameEngine;
         this.msgConfig = msgConfig;

@@ -11,7 +11,7 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.database.DataSourceOwner;
 import ru.abstractcoder.benioapi.jackson.BenioAdaptedObjectMapperService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 
 import javax.inject.Named;
 import java.nio.file.Path;
@@ -39,9 +39,9 @@ public class ConfigModule {
 
     @Provides
     @Reusable
-    public MsgConfig<Messages> msgConfig(ConfigBuilderFactory configBuilder, @Named("globalDir") Path globalDir) {
+    public MsgConfig<Msg> msgConfig(ConfigBuilderFactory configBuilder, @Named("globalDir") Path globalDir) {
         return configBuilder
-                .msgConfig(Messages.class)
+                .msgConfig(Msg.class)
                 .setCustomPath(globalDir).build();
     }
 

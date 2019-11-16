@@ -3,7 +3,7 @@ package ru.abstractcoder.murdermystery.core.game.role.detective;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -12,7 +12,7 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.SurvivorLogic;
 
 public class DetectiveLogic extends SurvivorLogic {
 
-    protected DetectiveLogic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    protected DetectiveLogic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(gamePlayer, gameEngine, msgConfig);
     }
 

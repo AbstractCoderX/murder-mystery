@@ -42,8 +42,12 @@ public class PlayerController {
         return spectatingPlayer;
     }
 
-    public BeniOptional<SpectatingPlayer> getSpectating(UUID playerId) {
+    public BeniOptional<SpectatingPlayer> getSpectatingSafe(UUID playerId) {
         return BeniOptional.ofNullable(spectatingPlayerMap.get(playerId));
+    }
+
+    public SpectatingPlayer getSpectating(Player player) {
+        return spectatingPlayerMap.get(player.getUniqueId());
     }
 
     public SpectatingPlayer removeSpectating(UUID uuid) {

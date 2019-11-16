@@ -4,7 +4,7 @@ import org.bukkit.Particle;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.math.Vector3;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class PavelPinkertonRoleClass extends DetectiveRoleClass {
 
-    public PavelPinkertonRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public PavelPinkertonRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -32,7 +32,7 @@ public class PavelPinkertonRoleClass extends DetectiveRoleClass {
 
     private static class Logic extends DetectiveLogic implements AnyKillResponsible {
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

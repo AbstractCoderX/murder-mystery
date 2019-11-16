@@ -25,12 +25,7 @@ public class GameActionService {
     }
 
     public void addTimedAction(int time, GameAction gameAction) {
-        GameAction containedAction = gameActionMap.get(time);
-        if (containedAction != null) {
-            gameActionMap.put(time, containedAction.andThen(gameAction));
-        } else {
-            gameActionMap.put(time, gameAction);
-        }
+        gameActionMap.compute(time, (__, action) -> action == null ? gameAction : action.andThen(gameAction));
     }
 
     public void handleStarting() {

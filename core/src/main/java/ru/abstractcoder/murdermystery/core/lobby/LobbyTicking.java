@@ -7,7 +7,7 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.NumberUtils;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.chance.ComputingRoleBalancer;
@@ -23,13 +23,13 @@ public class LobbyTicking implements Ticking {
 
     private LobbyEngine lobbyEngine;
     private final GameEngine gameEngine;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
     private final ComputingRoleBalancer roleBalancer;
 
     @Inject
     public LobbyTicking(
             GameEngine gameEngine,
-            MsgConfig<Messages> msgConfig,
+            MsgConfig<Msg> msgConfig,
             ComputingRoleBalancer roleBalancer) {
         this.gameEngine = gameEngine;
         this.msgConfig = msgConfig;
@@ -49,7 +49,7 @@ public class LobbyTicking implements Ticking {
                     double chancePercent = roleBalancer.getRoleChance(lobbyPlayer, type) * 100;
                     return NumberUtils.formatDouble(chancePercent, 1);
                 };
-                msgConfig.get(Messages.game__murder_and_detective_chance,
+                msgConfig.get(Msg.game__murder_and_detective_chance,
                         chanceResolver.apply(GameRole.Type.MURDER),
                         chanceResolver.apply(GameRole.Type.DETECTIVE)
                 ).sendActionBar(lobbyPlayer);
@@ -66,7 +66,7 @@ public class LobbyTicking implements Ticking {
                 return true;
             }
             String timeLeftFormatted = SimpleTemporal.of(timeLeft, TimeUnit.SECONDS).format();
-            Message startingBossBarMsg = msgConfig.get(Messages.lobby__starting_bossbar, timeLeftFormatted);
+            Message startingBossBarMsg = msgConfig.get(Msg.lobby__starting_bossbar, timeLeftFormatted);
             StartingSettings startingSettings = lobbyEngine.settings().starting();
 
             lobbyEngine.getBossBar().setTitle(startingBossBarMsg.asSingleLine());
@@ -79,11 +79,11 @@ public class LobbyTicking implements Ticking {
                 List<Player> players = lobbyEngine.settings().getWorld().getPlayers();
 
                 startingSettings.getPerSecondNitifyingSound().broadcast(players);
-                msgConfig.get(Messages.lobby__starting_chat, timeLeftFormatted)
+                msgConfig.get(Msg.lobby__starting_chat, timeLeftFormatted)
                         .broadcastSession().setPlayers(players).broadcastChat();
 
                 if (isPerSecondNotifyingTime) {
-                    msgConfig.get(Messages.lobby__starting_title, timeLeftFormatted)
+                    msgConfig.get(Msg.lobby__starting_title, timeLeftFormatted)
                             .broadcastSession().setPlayers(players).broadcastTitle();
                 }
             }

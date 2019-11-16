@@ -5,7 +5,7 @@ import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.cooldown.CooldownBuilder;
 import ru.abstractcoder.benioapi.util.cooldown.StartRememberCooldown;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DoctorProfession extends AbstractProfession {
 
-    public DoctorProfession(ProfessionTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public DoctorProfession(ProfessionTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -43,7 +43,7 @@ public class DoctorProfession extends AbstractProfession {
                 .setDuration(SimpleTemporal.of(1, TimeUnit.MINUTES))
                 .buildStartRemember());
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 
@@ -54,7 +54,7 @@ public class DoctorProfession extends AbstractProfession {
             }
 
             if (reviveCooldown.isInitialized() && reviveCooldown.get().isValid()) {
-                msgConfig.get(Messages.game__doctor_revive_cooldown, reviveCooldown.get().getRemainingTime().format())
+                msgConfig.get(Msg.game__doctor_revive_cooldown, reviveCooldown.get().getRemainingTime().format())
                         .send(gamePlayer);
                 return;
             }
@@ -69,7 +69,7 @@ public class DoctorProfession extends AbstractProfession {
                     reviveCooldown.get().redefine();
                 }
             } else {
-                msgConfig.get(Messages.game__doctor_spectator_leaved).send(gamePlayer);
+                msgConfig.get(Msg.game__doctor_spectator_leaved).send(gamePlayer);
             }
         }
 

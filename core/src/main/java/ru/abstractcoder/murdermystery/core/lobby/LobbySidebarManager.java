@@ -9,7 +9,7 @@ import ru.abstractcoder.benioapi.board.sidebar.SidebarTemplate;
 import ru.abstractcoder.benioapi.board.text.updater.PlaceholderTextUpdater;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
 import javax.inject.Inject;
@@ -21,11 +21,11 @@ public class LobbySidebarManager {
     private SidebarTemplate sidebarTemplate;
     private final SidebarService sidebarService;
     private final EconomyService economyService;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
 
     @Inject
     public LobbySidebarManager(SidebarService sidebarService,
-            EconomyService economyService, MsgConfig<Messages> msgConfig) {
+            EconomyService economyService, MsgConfig<Msg> msgConfig) {
         this.sidebarService = sidebarService;
         this.economyService = economyService;
         this.msgConfig = msgConfig;
@@ -50,9 +50,9 @@ public class LobbySidebarManager {
                             if (lobbyEngine.isStarting()) {
                                 String formattedTimeLeft = SimpleTemporal.of(lobbyEngine.getSecondsLeft(),
                                         TimeUnit.SECONDS).format();
-                                return msgConfig.get(Messages.lobby__starting_sidebar_state, formattedTimeLeft);
+                                return msgConfig.get(Msg.lobby__starting_sidebar_state, formattedTimeLeft);
                             } else {
-                                return msgConfig.get(Messages.lobby__waiting_sidebar_state).asSingleLine();
+                                return msgConfig.get(Msg.lobby__waiting_sidebar_state).asSingleLine();
                             }
                         })
                         .add("{player_count}", lobbyEngine::getPlayerCount)

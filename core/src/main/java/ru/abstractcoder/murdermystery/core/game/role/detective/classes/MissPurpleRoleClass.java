@@ -8,7 +8,7 @@ import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.benioapi.util.cooldown.CooldownBuilder;
 import ru.abstractcoder.benioapi.util.cooldown.StartRememberCooldown;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MissPurpleRoleClass extends DetectiveRoleClass {
 
-    public MissPurpleRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public MissPurpleRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -39,7 +39,7 @@ public class MissPurpleRoleClass extends DetectiveRoleClass {
                 .setDuration(SimpleTemporal.of(30, TimeUnit.SECONDS))
                 .buildStartRemember());
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 
@@ -53,7 +53,7 @@ public class MissPurpleRoleClass extends DetectiveRoleClass {
             }
 
             if (canSendNearMsg()) {
-                Message message = msgConfig.get(Messages.game__miss_purple_murder_near);
+                Message message = msgConfig.get(Msg.game__miss_purple_murder_near);
                 message.send(gamePlayer);
                 message.sendActionBar(gamePlayer);
             }

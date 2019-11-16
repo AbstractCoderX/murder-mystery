@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.util.probable.Probability;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -25,7 +25,7 @@ public class SherlockGnomesRoleClass extends DetectiveRoleClass {
 
     private boolean firstLogicInitialized = false;
 
-    public SherlockGnomesRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public SherlockGnomesRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -64,7 +64,7 @@ public class SherlockGnomesRoleClass extends DetectiveRoleClass {
             }
         }
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

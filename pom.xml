@@ -65,6 +65,13 @@
             </dependency>
 
             <dependency>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+                <version>8.2.2</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>ru.abstractcoder</groupId>
                 <artifactId>benio-api</artifactId>
                 <version>1.0-adapted-1.13</version>

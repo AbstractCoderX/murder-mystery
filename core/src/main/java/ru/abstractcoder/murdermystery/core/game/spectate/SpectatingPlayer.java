@@ -7,7 +7,7 @@ import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
-import ru.abstractcoder.murdermystery.core.rating.StatisticRating;
+import ru.abstractcoder.murdermystery.core.rating.Rating;
 import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
@@ -18,7 +18,7 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
     //TODO redundant field
     private final GameRole cachedRole;
     private final PlayerStatistic cachedStatistic;
-    private final StatisticRating cachedRating;
+    private final Rating cachedRating;
     private final SkinContainer cachedSkinContainer;
     private final Collection<Cosmetic> cachedCosmetics;
     private final Location deathLocation;
@@ -34,6 +34,10 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
         cachedCosmetics = gamePlayer.getCosmetics();
         this.deathLocation = deathLocation;
         this.corpse = corpse;
+    }
+
+    public boolean isOnline() {
+        return handle.isOnline();
     }
 
     public GameRole getCachedRole() {
@@ -64,7 +68,7 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
         return cachedStatistic;
     }
 
-    public StatisticRating getCachedRating() {
+    public Rating getCachedRating() {
         return cachedRating;
     }
 

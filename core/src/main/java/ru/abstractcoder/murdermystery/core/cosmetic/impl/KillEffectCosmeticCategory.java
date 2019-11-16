@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import org.bukkit.Location;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemData;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.VictoryResponsible;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public class KillEffectCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
-    public KillEffectCosmeticCategory(MsgConfig<Messages> msgConfig,
+    public KillEffectCosmeticCategory(MsgConfig<Msg> msgConfig,
             ItemData icon, List<Cosmetic> premiumCosmetics) {
         super(msgConfig, icon, premiumCosmetics);
     }

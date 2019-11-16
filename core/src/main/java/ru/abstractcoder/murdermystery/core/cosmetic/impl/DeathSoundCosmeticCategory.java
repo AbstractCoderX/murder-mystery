@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemData;
 import ru.abstractcoder.benioapi.util.misc.BenioSound;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.DeathResponsible;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -14,7 +14,7 @@ import java.util.List;
 public class DeathSoundCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
-    public DeathSoundCosmeticCategory(MsgConfig<Messages> msgConfig,
+    public DeathSoundCosmeticCategory(MsgConfig<Msg> msgConfig,
             ItemData icon, List<Cosmetic> premiumCosmetics) {
         super(msgConfig, icon, premiumCosmetics);
     }

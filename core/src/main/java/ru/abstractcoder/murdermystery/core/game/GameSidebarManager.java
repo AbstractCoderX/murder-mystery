@@ -6,7 +6,7 @@ import ru.abstractcoder.benioapi.board.SidebarService;
 import ru.abstractcoder.benioapi.board.sidebar.SidebarTemplate;
 import ru.abstractcoder.benioapi.board.text.updater.PlaceholderTextUpdater;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
 import javax.inject.Inject;
@@ -18,7 +18,7 @@ public class GameSidebarManager {
 
     @Inject
     public GameSidebarManager(SidebarService sidebarService, GameEngine gameEngine,
-            MsgConfig<Messages> msgConfig) {
+            MsgConfig<Msg> msgConfig) {
         this.sidebarService = sidebarService;
 
         sidebarTemplate = gameEngine.settings().getSidebarTemplate()
@@ -26,7 +26,7 @@ public class GameSidebarManager {
                         .prepare(GamePlayer.class, gameEngine.getPlayerResolver()::resolve)
                         .add("{role}", GamePlayer.class, gamePlayer -> {
                             if (gamePlayer == null) {
-                                return msgConfig.get(Messages.misc__spectator).asSingleLine();
+                                return msgConfig.get(Msg.misc__spectator).asSingleLine();
                             }
                             if (!gamePlayer.isRoleShowed()) {
                                 return "?";
@@ -38,7 +38,7 @@ public class GameSidebarManager {
                                 .getSurvivors().size()
                         )
                         .add("{detective_state}", () -> msgConfig
-                                .get(Messages.lifeState(gameEngine.getPlayerResolver().getDetective() != null))
+                                .get(Msg.lifeState(gameEngine.getPlayerResolver().getDetective() != null))
                                 .asSingleLine()
                         )
                         .add("{time}", gameEngine.getGameTime()::getFormattedTimeLeft)

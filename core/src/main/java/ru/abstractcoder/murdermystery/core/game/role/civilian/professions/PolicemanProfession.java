@@ -1,7 +1,7 @@
 package ru.abstractcoder.murdermystery.core.game.role.civilian.professions;
 
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.CivilianLogic;
@@ -11,7 +11,7 @@ import ru.abstractcoder.murdermystery.core.game.role.profession.template.Profess
 
 public class PolicemanProfession extends AbstractProfession {
 
-    public PolicemanProfession(ProfessionTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public PolicemanProfession(ProfessionTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -27,7 +27,7 @@ public class PolicemanProfession extends AbstractProfession {
 
     private static class Logic extends CivilianLogic {
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

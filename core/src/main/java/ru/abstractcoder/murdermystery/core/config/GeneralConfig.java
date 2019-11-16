@@ -17,6 +17,7 @@ import ru.abstractcoder.murdermystery.core.game.setting.RewardSettings;
 import ru.abstractcoder.murdermystery.core.lobby.settings.MiscSettings;
 import ru.abstractcoder.murdermystery.core.lobby.settings.StartingSettings;
 import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItemResolver;
+import ru.abstractcoder.murdermystery.core.rating.RatingRankResolver;
 
 public interface GeneralConfig extends BenioConfig {
 
@@ -114,6 +115,7 @@ public interface GeneralConfig extends BenioConfig {
         private final ProfessionTemplateResolver professionTemplateResolver;
         private final CivilianSkinPool civilianSkinPool;
         private final CosmeticCategoryResolver cosmeticCategoryResolver;
+        private final RatingRankResolver ratingRankResolver;
 
         @JsonCreator
         public Game(
@@ -125,7 +127,8 @@ public interface GeneralConfig extends BenioConfig {
                 @JsonProperty("roleClassTemplates") RoleClassTemplateResolver roleClassTemplateResolver,
                 @JsonProperty("professionTemplates") ProfessionTemplateResolver professionTemplateResolver,
                 @JsonProperty("civilianSkins") CivilianSkinPool civilianSkinPool,
-                @JsonProperty("cosmeticCategories") CosmeticCategoryResolver cosmeticCategoryResolver) {
+                @JsonProperty("cosmeticCategories") CosmeticCategoryResolver cosmeticCategoryResolver,
+                @JsonProperty("ranks") RatingRankResolver ratingRankResolver) {
             this.world = world;
             this.generalSettings = generalSettings;
             this.sidebarTemplate = sidebarTemplate;
@@ -135,6 +138,7 @@ public interface GeneralConfig extends BenioConfig {
             this.professionTemplateResolver = professionTemplateResolver;
             this.civilianSkinPool = civilianSkinPool;
             this.cosmeticCategoryResolver = cosmeticCategoryResolver;
+            this.ratingRankResolver = ratingRankResolver;
         }
 
         public World getWorld() {
@@ -171,6 +175,10 @@ public interface GeneralConfig extends BenioConfig {
 
         public CosmeticCategoryResolver getCosmeticCategoryResolver() {
             return cosmeticCategoryResolver;
+        }
+
+        public RatingRankResolver getRatingRankResolver() {
+            return ratingRankResolver;
         }
 
     }

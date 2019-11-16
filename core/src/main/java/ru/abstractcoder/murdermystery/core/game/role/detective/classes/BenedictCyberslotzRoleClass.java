@@ -1,7 +1,7 @@
 package ru.abstractcoder.murdermystery.core.game.role.detective.classes;
 
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -12,7 +12,7 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 
 public class BenedictCyberslotzRoleClass extends DetectiveRoleClass {
 
-    public BenedictCyberslotzRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public BenedictCyberslotzRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -23,7 +23,7 @@ public class BenedictCyberslotzRoleClass extends DetectiveRoleClass {
 
     private static class Logic extends DetectiveLogic {
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

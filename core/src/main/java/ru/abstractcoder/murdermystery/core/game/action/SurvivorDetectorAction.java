@@ -11,7 +11,7 @@ import ru.abstractcoder.benioapi.util.listener.QuickEvent;
 import ru.abstractcoder.benioapi.util.listener.QuickListener;
 import ru.abstractcoder.benioapi.util.ticking.Ticking;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.event.GamePlayerDeathEvent;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
@@ -32,13 +32,13 @@ public class SurvivorDetectorAction implements GameAction {
     private boolean executed = false;
 
     @Inject
-    public SurvivorDetectorAction(Plugin plugin, MsgConfig<Messages> msgConfig, TickingService tickingService,
+    public SurvivorDetectorAction(Plugin plugin, MsgConfig<Msg> msgConfig, TickingService tickingService,
             GamePlayerResolver playerResolver) {
         this.tickingService = tickingService;
         this.playerResolver = playerResolver;
         compassItem = ItemBuilder.fromMaterial(Material.COMPASS)
                 .withItemMeta()
-                .setName(msgConfig.get(Messages.misc__survivor_detector_compass).asSingleLine())
+                .setName(msgConfig.get(Msg.misc__survivor_detector_compass).asSingleLine())
                 .and().build();
 
         QuickListener.create()

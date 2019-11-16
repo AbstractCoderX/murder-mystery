@@ -3,7 +3,7 @@ package ru.abstractcoder.murdermystery.core.config;
 import ru.abstractcoder.benioapi.config.msg.MsgKey;
 import ru.abstractcoder.benioapi.config.msg.MsgProperties;
 
-public enum Messages implements MsgKey {
+public enum Msg implements MsgKey {
 
     general__you_leave_arena("&cВы покинули арену"),
 //    general__leaved,
@@ -43,6 +43,15 @@ public enum Messages implements MsgKey {
     game__role_selecting_animation("&fВыбор роли: &a{random_role}"),
     game__role_animation_end("&cВы {role}"),
     game__kill_player("Ты {action} игрока {victim}"),
+
+    game__win_title("&aПобеда"),
+    game__lose_title("&cПоражение"),
+    game__murder_win_subtitle("&fВсе жители мертвы"),
+    game__murder_lose_subtitle("&fВас поймали"),
+    game__survivors_win_subtitle("&fУбийца обезврежен"),
+    game__survivors_lose_subtitle("&fУбийца на свободе"),
+    game__,
+    game__,
 //    game__,
 
     misc__alive("Жив"),
@@ -59,11 +68,11 @@ public enum Messages implements MsgKey {
 
     private final MsgProperties properties;
 
-    Messages(MsgProperties properties) {
+    Msg(MsgProperties properties) {
         this.properties = properties;
     }
 
-    Messages(String... lines) {
+    Msg(String... lines) {
         this(MsgProperties.create(lines));
     }
 
@@ -72,7 +81,7 @@ public enum Messages implements MsgKey {
         return properties;
     }
 
-    public static Messages lifeState(boolean alive) {
+    public static Msg lifeState(boolean alive) {
         return alive ? misc__alive : misc__dead;
     }
 

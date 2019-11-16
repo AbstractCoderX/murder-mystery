@@ -9,7 +9,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
 import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItem;
 
@@ -18,10 +18,10 @@ import javax.inject.Inject;
 public class LobbyListener extends AbstractBukkitListener {
 
     private final LobbyEngine lobbyEngine;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
 
     @Inject
-    public LobbyListener(Plugin plugin, LobbyEngine lobbyEngine, MsgConfig<Messages> msgConfig) {
+    public LobbyListener(Plugin plugin, LobbyEngine lobbyEngine, MsgConfig<Msg> msgConfig) {
         super(plugin);
         this.lobbyEngine = lobbyEngine;
         this.msgConfig = msgConfig;
@@ -57,7 +57,7 @@ public class LobbyListener extends AbstractBukkitListener {
         player.teleport(lobbyEngine.settings().getSpawnLocation());
 
         lobbyEngine.loadPlayer(player).thenAccept(lobbyPlayer -> {
-            msgConfig.get(Messages.general__joined_broadcast,
+            msgConfig.get(Msg.general__joined_broadcast,
                     player.getName(),
                     lobbyEngine.getPlayerCount(),
                     lobbyEngine.getArena().getMaxPlayers()

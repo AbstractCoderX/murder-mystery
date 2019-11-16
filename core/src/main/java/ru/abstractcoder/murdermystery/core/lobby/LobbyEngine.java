@@ -10,7 +10,7 @@ import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayerService;
@@ -28,7 +28,7 @@ public class LobbyEngine {
     private final Arena arena;
     private final LobbySidebarManager lobbySidebarManager;
     private final SlotBarItemProcessor slotBarItemProcessor;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
     private final LobbyPlayerService lobbyPlayerService;
 
     private final Map<Player, LobbyPlayer> waitingPlayerMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class LobbyEngine {
 
     @Inject
     public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbySidebarManager lobbySidebarManager,
-            MsgConfig<Messages> msgConfig, LobbyPlayerService lobbyPlayerService,
+            MsgConfig<Msg> msgConfig, LobbyPlayerService lobbyPlayerService,
             LobbyTicking lobbyTicking, TickingService tickingService) {
         this.settings = generalConfig.lobby();
         this.arena = arena;
@@ -50,7 +50,7 @@ public class LobbyEngine {
 
         lobbySidebarManager.init(this);
         bossBar = Bukkit.createBossBar(
-                msgConfig.get(Messages.lobby__waiting_bossbar).asSingleLine(),
+                msgConfig.get(Msg.lobby__waiting_bossbar).asSingleLine(),
                 BarColor.RED,
                 BarStyle.SOLID
         );
@@ -132,7 +132,7 @@ public class LobbyEngine {
 
         if (playerCount == arena.getMinPlayers() - 1) {
             secondsLeft = -1;
-            bossBar.setTitle(msgConfig.get(Messages.lobby__waiting_bossbar).asSingleLine());
+            bossBar.setTitle(msgConfig.get(Msg.lobby__waiting_bossbar).asSingleLine());
         }
     }
 

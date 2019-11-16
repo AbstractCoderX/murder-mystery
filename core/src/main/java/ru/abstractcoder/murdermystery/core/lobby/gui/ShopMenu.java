@@ -15,7 +15,7 @@ import ru.abstractcoder.benioapi.gui.template.loader.SingleMenuLoader;
 import ru.abstractcoder.benioapi.gui.template.session.SingleMenuSession;
 import ru.abstractcoder.murdermystery.core.caze.CaseRepository;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
@@ -26,13 +26,13 @@ import javax.inject.Named;
 public class ShopMenu {
 
     private final MenuApi menuApi;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
     private final EconomyService economyService;
     private MenuTemplate<LobbyPlayer, SingleMenuSession<LobbyPlayer>> template;
 
     @Inject
     public ShopMenu(MenuApi menuApi, @Named("gui") HoconConfig guiConfig, ObjectMapper objectMapper,
-            GeneralConfig generalConfig, MsgConfig<Messages> msgConfig, EconomyService economyService,
+            GeneralConfig generalConfig, MsgConfig<Msg> msgConfig, EconomyService economyService,
             CaseRepository caseRepository) {
         this.menuApi = menuApi;
         this.msgConfig = msgConfig;
@@ -58,9 +58,9 @@ public class ShopMenu {
                                     }
 
                                     String name = click.getIssuer().getName();
-                                    caseRepository.giveCase(name, "murdermystery", 1);
+                                    caseRepository.giveMurderCase(name, 1);
 
-                                    click.tempItemSession(msgConfig.get(Messages.gui__cosmetic_case_succ_purchased))
+                                    click.tempItemSession(msgConfig.get(Msg.gui__cosmetic_case_succ_purchased))
                                             .material(Material.GREEN_STAINED_GLASS_PANE)
                                             .start();
                                 })
@@ -79,14 +79,14 @@ public class ShopMenu {
                                 .onClick(click -> {
                                     LobbyPlayer player = click.getIssuer();
                                     if (player.isRoleClassPurchased(tmplt)) {
-                                        click.tempErrorSession(msgConfig.get(Messages.gui__class_already_purchased))
+                                        click.tempErrorSession(msgConfig.get(Msg.gui__class_already_purchased))
                                                 .start();
 
                                         return;
                                     }
 
                                     if (checkAndWidthrowBalance(click, tmplt.getPrice())) {
-                                        click.tempItemSession(msgConfig.get(Messages.gui__class_succ_purchased))
+                                        click.tempItemSession(msgConfig.get(Msg.gui__class_succ_purchased))
                                                 .material(Material.GREEN_STAINED_GLASS_PANE)
                                                 .start();
                                     }
@@ -103,7 +103,7 @@ public class ShopMenu {
         LobbyPlayer player = click.getIssuer();
         int balance = economyService.getCachedBalance(player);
         if (balance < amount) {
-            click.tempErrorSession(msgConfig.get(Messages.general__not_enough_coins))
+            click.tempErrorSession(msgConfig.get(Msg.general__not_enough_coins))
                     .start();
             return false;
         }

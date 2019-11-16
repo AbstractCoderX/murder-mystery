@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemData;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.cosmetic.CosmeticCategory;
 import ru.abstractcoder.murdermystery.core.cosmetic.PremiumCosmetic;
@@ -19,13 +19,13 @@ import java.util.Objects;
 public abstract class AbstractCosmeticCategory implements CosmeticCategory {
 
     @JacksonInject
-    protected final MsgConfig<Messages> msgConfig;
+    protected final MsgConfig<Msg> msgConfig;
 
     private final ItemData icon;
     protected final Cosmetic defaultCosmetic;
     private final Map<String, PremiumCosmetic> premiumCosmeticMap;
 
-    protected AbstractCosmeticCategory(MsgConfig<Messages> msgConfig,
+    protected AbstractCosmeticCategory(MsgConfig<Msg> msgConfig,
             ItemData icon, List<? extends PremiumCosmetic> premiumCosmetics) {
         this.msgConfig = msgConfig;
         this.icon = icon;

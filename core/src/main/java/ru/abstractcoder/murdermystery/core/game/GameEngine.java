@@ -2,13 +2,17 @@ package ru.abstractcoder.murdermystery.core.game;
 
 import com.google.common.base.Preconditions;
 import dagger.Reusable;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.BoardApi;
 import ru.abstractcoder.benioapi.board.SidebarService;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
+import ru.abstractcoder.murdermystery.core.caze.CaseRepository;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
+import ru.abstractcoder.murdermystery.core.cosmetic.responsible.VictoryResponsible;
 import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.game.bow.BowDropProcessor;
@@ -21,6 +25,8 @@ import ru.abstractcoder.murdermystery.core.game.player.PlayerFactory;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClassFactory;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
+import ru.abstractcoder.murdermystery.core.game.side.GameSide;
+import ru.abstractcoder.murdermystery.core.game.side.GameSideService;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
 import ru.abstractcoder.murdermystery.core.game.time.GameTime;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
@@ -57,7 +63,11 @@ public class GameEngine {
 
     private final ProfessionResolver professionResolver;
     private final RoleResolver roleResolver;
+    private final GameSideService gameSideService;
+    private final CaseRepository caseRepository;
     private final Plugin plugin;
+
+    private GameTicking gameTicking = new GameTicking(this);
 
     @Inject
     public GameEngine(Arena arena, GeneralConfig generalConfig, GameActionService gameActionService,
@@ -68,7 +78,8 @@ public class GameEngine {
             GamePlayerResolver playerResolver, RoleResolver roleResolver, Plugin plugin,
             BowDropProcessor bowDropProcessor, ProfessionResolver professionResolver,
             RoleClassFactory roleClassFactory, PlayerController playerController,
-            BoardApi boardApi, SidebarService sidebarService) {
+            BoardApi boardApi, SidebarService sidebarService,
+            GameSideService gameSideService, CaseRepository caseRepository) {
         this.arena = arena;
         this.playerFactory = playerFactory;
         this.economyService = economyService;
@@ -89,12 +100,16 @@ public class GameEngine {
         this.playerController = playerController;
         this.boardApi = boardApi;
         this.sidebarService = sidebarService;
+        this.gameSideService = gameSideService;
+        this.caseRepository = caseRepository;
         gameTime = new GameTime(settings.general().getGameDuration());
 
         professionResolver.init(this);
         roleClassFactory.init(this);
 
         state = GameState.WAITING;
+
+        tickingService.register(gameTicking);
     }
 
     public GameState getState() {
@@ -178,7 +193,60 @@ public class GameEngine {
         gameActionService.handleStarting();
     }
 
-    public void endGame() {
+    public void endGame(GameSide winnedSide, @Nullable GamePlayer endInitiator) {
+        tickingService.unregister(gameTicking);
+
+        GameSide losedSide = winnedSide.getOppositeSide();
+
+        var winnedRatings = gameSideService.getRatings(winnedSide);
+        var losedRatings = gameSideService.getRatings(losedSide);
+
+        var winnedPlayers = gameSideService.getPlayers(winnedSide);
+        var losedPlayers = gameSideService.getPlayers(losedSide);
+
+        var aliveWinnedPlayers = gameSideService.getAlivePlayers(winnedSide);
+        var aliveLosedPlayers = gameSideService.getAlivePlayers(losedSide);
+
+        double wAverageRating = gameSideService.getAverageRating(winnedSide);
+        double lAverageRating = gameSideService.getAverageRating(losedSide);
+
+        winnedRatings.forEach(rating -> {
+            int currentRating = rating.value();
+
+            if (currentRating <= 500) {
+                rating.incrementBy(25);
+            } else {
+                int amount = Math.min(5 - ((currentRating - 500) / 1000), 1);
+                rating.incrementBy(amount);
+            }
+
+            if (wAverageRating < lAverageRating) {
+                rating.incrementBy(5);
+            }
+        });
+
+        losedRatings.forEach(rating -> {
+            int currentRating = rating.value();
+
+            if (currentRating >= 100) {
+                int amount = Math.min(1 + ((currentRating - 100) / 100), 25);
+                rating.decrementBy(amount);
+            }
+
+            if (wAverageRating < lAverageRating) {
+                rating.decrementBy(5);
+            }
+        });
+
+        aliveWinnedPlayers.forEach(gamePlayer -> gamePlayer.cosmetics(VictoryResponsible.class)
+                .forEach(resp -> resp.onVictory(gamePlayer))
+        );
+
+        if (endInitiator != null) {
+            caseRepository.giveMurderCase(endInitiator.getName(), 1);
+        }
+
+        scheduler.runSyncLater(4 * 20, () -> Bukkit.getServer().shutdown());
         //TODO
     }
 
@@ -200,11 +268,6 @@ public class GameEngine {
 
     public SidebarService getSidebarService() {
         return sidebarService;
-    }
-
-    public enum WinningSide {
-        MURDER,
-        SURVIVERS
     }
 
 }

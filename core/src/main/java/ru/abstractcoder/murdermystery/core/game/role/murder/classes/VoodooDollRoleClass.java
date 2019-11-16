@@ -7,7 +7,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
@@ -28,7 +28,7 @@ public class VoodooDollRoleClass extends MurderRoleClass {
     private static final ItemStack VOODOO_SKULL = new ItemStack(Material.SKELETON_SKULL);
     private static final ItemStack WOODEN_SWORD = new ItemStack(Material.WOODEN_SWORD);
 
-    public VoodooDollRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    public VoodooDollRoleClass(RoleClassTemplate template, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(template, gameEngine, msgConfig);
     }
 
@@ -44,7 +44,7 @@ public class VoodooDollRoleClass extends MurderRoleClass {
         private SpectatingPlayer killedPlayer;
         private Npc npc;
 
-        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+        private Logic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
             super(gamePlayer, gameEngine, msgConfig);
         }
 

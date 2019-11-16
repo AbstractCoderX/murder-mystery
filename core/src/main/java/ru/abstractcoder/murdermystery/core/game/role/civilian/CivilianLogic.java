@@ -6,7 +6,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemUtils;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
@@ -19,7 +19,7 @@ public class CivilianLogic extends SurvivorLogic {
 
     private int goldPickupedAmount = 0;
 
-    protected CivilianLogic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Messages> msgConfig) {
+    protected CivilianLogic(GamePlayer gamePlayer, GameEngine gameEngine, MsgConfig<Msg> msgConfig) {
         super(gamePlayer, gameEngine, msgConfig);
     }
 

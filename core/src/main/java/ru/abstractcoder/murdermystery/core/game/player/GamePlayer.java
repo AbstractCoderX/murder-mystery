@@ -9,7 +9,7 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
-import ru.abstractcoder.murdermystery.core.rating.StatisticRating;
+import ru.abstractcoder.murdermystery.core.rating.Rating;
 import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable {
 
     private final PlayerStatistic statistic;
-    private final StatisticRating rating;
+    private final Rating rating;
     private final Collection<Cosmetic> cosmetics;
     private GameRole role;
     private SkinContainer skinContainer;
@@ -42,18 +42,16 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     private Sidebar cachedSidebar;
 
     public GamePlayer(Player player, GameRole role, PlayerStatistic statistic,
-            StatisticRating rating, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
+            Rating rating, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
         super(player);
 
         this.role = role;
         getRoleLogic().load();
 
+        this.statistic = statistic;
         this.rating = rating;
-        rating.init(this);
-
         this.skinContainer = skinContainer;
         this.cosmetics = cosmetics;
-        this.statistic = statistic;
     }
 
     public static GamePlayer fromSpectatingPlayer(SpectatingPlayer sp, GameRole role) {
@@ -95,7 +93,7 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
         return statistic;
     }
 
-    public StatisticRating getRating() {
+    public Rating getRating() {
         return rating;
     }
 

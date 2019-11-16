@@ -3,7 +3,7 @@ package ru.abstractcoder.murdermystery.core.game.action;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.timer.DefinedTimerBuilderFactory;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
@@ -17,7 +17,7 @@ public class RoleSelectingAnimationAction implements GameAction {
 
     private static final Random random = new Random();
 
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
     private final DefinedTimerBuilderFactory definedTimerBuilderFactory;
     private final GamePlayerResolver playerResolver;
 
@@ -26,7 +26,7 @@ public class RoleSelectingAnimationAction implements GameAction {
     @Inject
     public RoleSelectingAnimationAction(
             GeneralConfig generalConfig,
-            MsgConfig<Messages> msgConfig, DefinedTimerBuilderFactory definedTimerBuilderFactory, GamePlayerResolver playerResolver) {
+            MsgConfig<Msg> msgConfig, DefinedTimerBuilderFactory definedTimerBuilderFactory, GamePlayerResolver playerResolver) {
         this.msgConfig = msgConfig;
         this.definedTimerBuilderFactory = definedTimerBuilderFactory;
         this.playerResolver = playerResolver;
@@ -46,12 +46,12 @@ public class RoleSelectingAnimationAction implements GameAction {
                 .setPeriodTicks(3)
                 .setAction(() -> playerResolver.getAll().forEach(gamePlayer -> {
                     String roleName = animationRoleNames.get(random.nextInt(animationRoleNames.size()));
-                    msgConfig.get(Messages.game__role_selecting_animation, roleName).sendActionBar(gamePlayer);
+                    msgConfig.get(Msg.game__role_selecting_animation, roleName).sendActionBar(gamePlayer);
                 }))
                 .setLastAction(() -> {
                     playerResolver.getAll().forEach(gamePlayer -> {
                         gamePlayer.setRoleShowed(true);
-                        msgConfig.get(Messages.game__role_animation_end, gamePlayer.getRole().getDisplayName())
+                        msgConfig.get(Msg.game__role_animation_end, gamePlayer.getRole().getDisplayName())
                                 .sendTitle(gamePlayer);
                     });
                 });

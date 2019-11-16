@@ -82,7 +82,6 @@ public class ComputingRoleBalancer {
             playerDeque.remove(selectedPlayer);
         });
 
-        RoleTemplate civilanTemplate = roleTemplateResolver.getByType(GameRole.Type.CIVILIAN);
         for (Profession.Type type : Profession.Type.VALUES) {
             LobbyPlayer lobbyPlayer = playerDeque.remove();
 

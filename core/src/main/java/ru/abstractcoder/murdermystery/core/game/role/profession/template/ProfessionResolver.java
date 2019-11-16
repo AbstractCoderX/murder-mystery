@@ -2,7 +2,7 @@ package ru.abstractcoder.murdermystery.core.game.role.profession.template;
 
 import dagger.Reusable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.professions.DefaultProfession;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.professions.DoctorProfession;
@@ -19,10 +19,10 @@ import java.util.Map;
 public class ProfessionResolver {
 
     private final Map<Type, Profession> professionMap;
-    private final MsgConfig<Messages> msgConfig;
+    private final MsgConfig<Msg> msgConfig;
 
     @Inject
-    public ProfessionResolver(MsgConfig<Messages> msgConfig) {
+    public ProfessionResolver(MsgConfig<Msg> msgConfig) {
         this.msgConfig = msgConfig;
         professionMap = new EnumMap<>(Type.class);
     }

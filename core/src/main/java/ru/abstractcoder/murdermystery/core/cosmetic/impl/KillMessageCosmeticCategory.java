@@ -3,7 +3,7 @@ package ru.abstractcoder.murdermystery.core.cosmetic.impl;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemData;
-import ru.abstractcoder.murdermystery.core.config.Messages;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.KillResponsible;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class KillMessageCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
-    public KillMessageCosmeticCategory(MsgConfig<Messages> msgConfig,
+    public KillMessageCosmeticCategory(MsgConfig<Msg> msgConfig,
             ItemData icon, List<Cosmetic> premiumCosmetics) {
         super(msgConfig, icon, premiumCosmetics);
     }
@@ -38,7 +38,7 @@ public class KillMessageCosmeticCategory extends AbstractCosmeticCategory {
 
         @Override
         public void onKill(GamePlayer killer, GamePlayer victim) {
-            msgConfig.get(Messages.game__kill_player, action, victim.getName()).send(killer);
+            msgConfig.get(Msg.game__kill_player, action, victim.getName()).send(killer);
         }
 
     }
