@@ -87,12 +87,12 @@ public class CosmeticSelectingMenu {
                                                     .toItemBuilder()
                                             )
                                             .when(s -> cosmetic.isAvailableFor(s.getOwner())
-                                                    && !s.getOwner()
+                                                    && !s.getOwner().data()
                                                     .isCosmeticSelected(s.getSelectedCategory(), cosmetic)
                                             )
                                             .then(ItemBuilder::buildMenuIcon)
                                             .when(s -> cosmetic.isAvailableFor(s.getOwner())
-                                                    && s.getOwner()
+                                                    && s.getOwner().data()
                                                     .isCosmeticSelected(s.getSelectedCategory(), cosmetic)
                                             )
                                             .then(itemBuilder -> itemBuilder
@@ -113,10 +113,10 @@ public class CosmeticSelectingMenu {
                                         }
 
                                         CosmeticCategory selectedCategory = session.getSelectedCategory();
-                                        if (player.isCosmeticSelected(selectedCategory, cosmetic)) {
-                                            player.unselectCosmetic(selectedCategory);
+                                        if (player.data().isCosmeticSelected(selectedCategory, cosmetic)) {
+                                            player.data().unselectCosmetic(selectedCategory);
                                         } else {
-                                            player.selectedCosmetic(selectedCategory, cosmetic);
+                                            player.data().selectedCosmetic(selectedCategory, cosmetic);
                                         }
 
                                         session.updateCache();

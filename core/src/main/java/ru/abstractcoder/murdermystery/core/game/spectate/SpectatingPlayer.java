@@ -3,12 +3,12 @@ package ru.abstractcoder.murdermystery.core.game.spectate;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
+import ru.abstractcoder.murdermystery.core.data.PlayerData;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.rating.Rating;
-import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
 import java.util.Collection;
@@ -17,7 +17,7 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
 
     //TODO redundant field
     private final GameRole cachedRole;
-    private final PlayerStatistic cachedStatistic;
+    private final PlayerData cachedData;
     private final Rating cachedRating;
     private final SkinContainer cachedSkinContainer;
     private final Collection<Cosmetic> cachedCosmetics;
@@ -28,7 +28,7 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
             Location deathLocation, @Nullable Corpse corpse) {
         super(gamePlayer.getHandle());
         cachedRole = gamePlayer.getRole();
-        cachedStatistic = gamePlayer.getStatistic();
+        cachedData = gamePlayer.data();
         cachedRating = gamePlayer.getRating();
         cachedSkinContainer = gamePlayer.getSkinContainer();
         cachedCosmetics = gamePlayer.getCosmetics();
@@ -64,12 +64,12 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
         return cachedCosmetics;
     }
 
-    public PlayerStatistic getCachedStatistic() {
-        return cachedStatistic;
-    }
-
     public Rating getCachedRating() {
         return cachedRating;
+    }
+
+    public PlayerData getCachedData() {
+        return cachedData;
     }
 
 }

@@ -36,4 +36,16 @@ public class PurchasedRoleClassesRepository {
         }, username.toLowerCase());
     }
 
+    public CompletableFuture<Void> save(String name, Set<RoleClass.Type> purchasedRoleClasses) {
+        //language=MySQL
+        String sql = "insert into purchased_role_classes values (?, ?, ?)";
+
+        String nameLower = name.toLowerCase();
+        Object[][] params = purchasedRoleClasses.stream()
+                .map(type -> new Object[]{nameLower, type.getRoleType(), type})
+                .toArray(Object[][]::new);
+
+        return queryFactory.completableQuery().executeBatch(sql, params);
+    }
+
 }

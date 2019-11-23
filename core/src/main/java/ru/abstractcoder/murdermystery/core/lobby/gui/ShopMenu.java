@@ -78,7 +78,7 @@ public class ShopMenu {
                                 )
                                 .onClick(click -> {
                                     LobbyPlayer player = click.getIssuer();
-                                    if (player.isRoleClassPurchased(tmplt)) {
+                                    if (player.data().isRoleClassPurchased(tmplt)) {
                                         click.tempErrorSession(msgConfig.get(Msg.gui__class_already_purchased))
                                                 .start();
 

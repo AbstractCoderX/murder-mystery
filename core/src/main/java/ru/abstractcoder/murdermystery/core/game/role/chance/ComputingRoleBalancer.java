@@ -3,6 +3,7 @@ package ru.abstractcoder.murdermystery.core.game.role.chance;
 import ru.abstractcoder.benioapi.util.probable.AbstractProbable;
 import ru.abstractcoder.benioapi.util.probable.Probability;
 import ru.abstractcoder.benioapi.util.probable.ProbableList;
+import ru.abstractcoder.murdermystery.core.data.ClassedRoleData;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
@@ -70,7 +71,7 @@ public class ComputingRoleBalancer {
 
             LobbyPlayer selectedPlayer = playerProbables.getRandomly().getLobbyPlayer();
 
-            LobbyPlayer.ClassedRoleData classedRoleData = selectedPlayer.getClassedRoleData(type);
+            ClassedRoleData classedRoleData = selectedPlayer.getClassedRoleData(type);
             RoleClass.Type classType = classedRoleData.isClassTypeSelected()
                                        ? classedRoleData.getSelectedClassType()
                                        : roleClassTemplateResolver.getDefaultTemplate(type).getType();

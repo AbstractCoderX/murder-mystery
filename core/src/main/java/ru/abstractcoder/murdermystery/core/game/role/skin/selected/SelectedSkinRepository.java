@@ -45,4 +45,23 @@ public class SelectedSkinRepository {
         }, name.toLowerCase());
     }
 
+    public CompletableFuture<Void> save(String name, Map<Type, Skin> selectedSkinMap) {
+        //language=MySQL
+        String sql = "insert into selected_skins values (?, ?, ?, ?)";
+
+        String nameLower = name.toLowerCase();
+        Object[][] params = selectedSkinMap.entrySet().stream()
+                .map(entry -> {
+                    Type componentType = entry.getKey();
+                    Skin skin = entry.getValue();
+
+                    return new Object[]{nameLower, componentType.getRoleType(), componentType,
+                            skin.data().asStringKey()
+                    };
+                })
+                .toArray(Object[][]::new);
+
+        return queryFactory.completableQuery().executeBatch(sql, params);
+    }
+
 }

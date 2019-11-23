@@ -106,7 +106,7 @@ public class CharacterSelectingMenu {
                                             return;
                                         }
                                         if (roleType.isClassed()) {
-                                            click.getIssuer().getClassedRoleData(roleType)
+                                            click.getIssuer().data().getClassedRoleData(roleType)
                                                     .setSelectedClassType((RoleClass.Type) template.getType());
                                         }
                                         click.getSession().setSelectedTemplate(template);
@@ -146,7 +146,7 @@ public class CharacterSelectingMenu {
                                     }
 
                                     RoleComponent.Type componentType = click.getSession().getSelectedTemplate().getType();
-                                    click.getIssuer().setSelectedSkin(componentType, data.getSkin());
+                                    click.getIssuer().data().setSelectedSkin(componentType, data.getSkin());
                                 })
                         )));
 

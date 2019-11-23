@@ -33,11 +33,11 @@ public class PlayerFactory {
     public GamePlayer createPlayer(LobbyPlayer lobbyPlayer) {
         var skinContainer = skinContainerFactory.createFor(lobbyPlayer);
         var selectedCosmetics = cosmeticService.getSelectedCosmetics(lobbyPlayer);
-        var statistic = lobbyPlayer.getStatistic();
+        var statistic = lobbyPlayer.data().getStatistic();
         var rating = ratingFactory.create(statistic);
 
         return new GamePlayer(lobbyPlayer.getPlayer(), lobbyPlayer.getBalancedRole(),
-                statistic, rating, skinContainer, selectedCosmetics);
+                lobbyPlayer.data(), rating, skinContainer, selectedCosmetics);
     }
 
     public GamePlayer revivePlayer(SpectatingPlayer sp) {

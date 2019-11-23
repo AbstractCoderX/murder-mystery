@@ -37,4 +37,21 @@ public class SelectedCosmeticRepository {
         }, name.toLowerCase());
     }
 
+    public CompletableFuture<Void> save(String name, Map<CosmeticCategory.Type, String> selectedCosmeticMap) {
+        //language=MySQL
+        String sql = "insert into selected_cosmetics values (?, ?, ?)";
+
+        String nameLower = name.toLowerCase();
+        Object[][] params = selectedCosmeticMap.entrySet().stream()
+                .map(entry -> {
+                    CosmeticCategory.Type category = entry.getKey();
+                    String cosmeticKey = entry.getValue();
+
+                    return new Object[]{nameLower, category, cosmeticKey};
+                })
+                .toArray(Object[][]::new);
+
+        return queryFactory.completableQuery().executeBatch(sql, params);
+    }
+
 }

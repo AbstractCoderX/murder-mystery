@@ -13,7 +13,7 @@ import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
-import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayerService;
+import ru.abstractcoder.murdermystery.core.lobby.player.PlayerDataService;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class LobbyEngine {
     private final LobbySidebarManager lobbySidebarManager;
     private final SlotBarItemProcessor slotBarItemProcessor;
     private final MsgConfig<Msg> msgConfig;
-    private final LobbyPlayerService lobbyPlayerService;
+    private final PlayerDataService playerDataService;
 
     private final Map<Player, LobbyPlayer> waitingPlayerMap = new HashMap<>();
     private final BossBar bossBar;
@@ -39,13 +39,13 @@ public class LobbyEngine {
 
     @Inject
     public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbySidebarManager lobbySidebarManager,
-            MsgConfig<Msg> msgConfig, LobbyPlayerService lobbyPlayerService,
+            MsgConfig<Msg> msgConfig, PlayerDataService playerDataService,
             LobbyTicking lobbyTicking, TickingService tickingService) {
         this.settings = generalConfig.lobby();
         this.arena = arena;
         this.lobbySidebarManager = lobbySidebarManager;
         this.msgConfig = msgConfig;
-        this.lobbyPlayerService = lobbyPlayerService;
+        this.playerDataService = playerDataService;
         slotBarItemProcessor = new SlotBarItemProcessor(settings.getSlotBarItemResolver());
 
         lobbySidebarManager.init(this);
@@ -108,7 +108,8 @@ public class LobbyEngine {
         bossBar.addPlayer(player);
         checkIncrementedPlayerCount();
 
-        return lobbyPlayerService.loadAsync(player);
+        return playerDataService.loadPlayerData(player)
+                .thenApply(data -> new LobbyPlayer(player, data));
     }
 
     private void checkIncrementedPlayerCount() {

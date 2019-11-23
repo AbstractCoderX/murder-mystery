@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
+import ru.abstractcoder.murdermystery.core.data.PlayerData;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 
 public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable {
 
-    private final PlayerStatistic statistic;
+    private final PlayerData data;
     private final Rating rating;
     private final Collection<Cosmetic> cosmetics;
     private GameRole role;
@@ -41,14 +42,14 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     @Nullable
     private Sidebar cachedSidebar;
 
-    public GamePlayer(Player player, GameRole role, PlayerStatistic statistic,
-            Rating rating, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
+    public GamePlayer(Player player, GameRole role,
+            PlayerData data, Rating rating, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
         super(player);
 
         this.role = role;
+        this.data = data;
         getRoleLogic().load();
 
-        this.statistic = statistic;
         this.rating = rating;
         this.skinContainer = skinContainer;
         this.cosmetics = cosmetics;
@@ -58,7 +59,7 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
         return new GamePlayer(
                 sp.getHandle(),
                 role,
-                sp.getCachedStatistic(),
+                sp.getCachedData(),
                 sp.getCachedRating(),
                 sp.getCachedSkinContainer(),
                 sp.getCachedCosmetics()
@@ -90,7 +91,7 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     }
 
     public PlayerStatistic getStatistic() {
-        return statistic;
+        return data.getStatistic();
     }
 
     public Rating getRating() {
@@ -183,6 +184,10 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
 
     public void decrementMurderProtectionPoints() {
         murderProtectionPoints--;
+    }
+
+    public PlayerData data() {
+        return data;
     }
 
 }
