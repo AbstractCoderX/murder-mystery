@@ -4,15 +4,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 
 import javax.inject.Inject;
 
-public class CommonListener extends AbstractBukkitListener {
+public class CommonListener implements BukkitListener {
 
     @Inject
-    public CommonListener(Plugin plugin) {
-        super(plugin);
+    public CommonListener() {
     }
 
     @EventHandler(priority = EventPriority.HIGH)

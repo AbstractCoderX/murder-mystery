@@ -19,6 +19,6 @@ public interface RoleLogic {
 
     void death();
 
-    void onGoldPickup(int amount);
+    void pickupGolds(int amount);
 
 }

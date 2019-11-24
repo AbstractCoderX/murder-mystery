@@ -8,17 +8,14 @@ import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
-import ru.abstractcoder.murdermystery.core.rating.Rating;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
 import java.util.Collection;
 
 public class SpectatingPlayer extends AbstractWrappedPlayer {
 
-    //TODO redundant field
-    private final GameRole cachedRole;
+    private final GameRole cachedRole; //TODO remove redundant field
     private final PlayerData cachedData;
-    private final Rating cachedRating;
     private final SkinContainer cachedSkinContainer;
     private final Collection<Cosmetic> cachedCosmetics;
     private final Location deathLocation;
@@ -29,7 +26,6 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
         super(gamePlayer.getHandle());
         cachedRole = gamePlayer.getRole();
         cachedData = gamePlayer.data();
-        cachedRating = gamePlayer.getRating();
         cachedSkinContainer = gamePlayer.getSkinContainer();
         cachedCosmetics = gamePlayer.getCosmetics();
         this.deathLocation = deathLocation;
@@ -62,10 +58,6 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
 
     public Collection<Cosmetic> getCachedCosmetics() {
         return cachedCosmetics;
-    }
-
-    public Rating getCachedRating() {
-        return cachedRating;
     }
 
     public PlayerData getCachedData() {

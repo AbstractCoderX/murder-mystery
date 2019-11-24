@@ -63,7 +63,7 @@ public class DoctorProfession extends AbstractProfession {
             SpectatingPlayer sp = playerController.removeSpectating(corpse.getPlayerId());
             if (sp != null) {
                 corpse.remove();
-                GamePlayer gp = gameEngine.getPlayerFactory().revivePlayer(sp);
+                GamePlayer gp = gameEngine.getPlayerService().revivePlayer(sp);
                 //TODO maybe send msg to gp
                 if (!reviveCooldown.initialize()) {
                     reviveCooldown.get().redefine();

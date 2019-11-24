@@ -31,7 +31,7 @@ public class SkinService {
     }
 
     public Skin getSelectedSkin(LobbyPlayer player, RoleComponent.Type componentType) {
-        return player.getSelectedSkin(componentType, defaultSkinMap.get(componentType));
+        return player.data().getSelectedSkin(componentType, defaultSkinMap.get(componentType));
     }
 
 }

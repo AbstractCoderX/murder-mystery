@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
+import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.item.ItemUtils;
 import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
@@ -15,7 +16,10 @@ import ru.abstractcoder.murdermystery.core.game.role.logic.SurvivorLogic;
 
 public class CivilianLogic extends SurvivorLogic {
 
-    private static final ItemStack BOW = new ItemStack(Material.BOW, 1, Material.BOW.getMaxDurability());
+    private static final ItemStack BOW = ItemBuilder.fromMaterial(Material.BOW)
+            .withItemMeta()
+            .setDamage(Material.BOW.getMaxDurability())
+            .build();
 
     private int goldPickupedAmount = 0;
 
@@ -35,8 +39,8 @@ public class CivilianLogic extends SurvivorLogic {
     }
 
     @Override
-    public void onGoldPickup(int amount) {
-        super.onGoldPickup(amount);
+    public void pickupGolds(int amount) {
+        super.pickupGolds(amount);
 
         int newAmount = goldPickupedAmount + amount;
         if (newAmount >= this.getBowGoldPeriod()) {

@@ -9,6 +9,7 @@ import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.PurchasableRoleClassTemplate;
 import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
+import ru.abstractcoder.murdermystery.core.rating.Rating;
 import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ public class PlayerData {
     private Map<GameRole.Type, ClassedRoleData> classedRoleDataMap;
     private Map<RoleComponent.Type, Skin> selectedSkinMap;
     private PlayerStatistic statistic;
+    private Rating rating;
     private Set<RoleClass.Type> purchasedRoleClasses;
     private Map<CosmeticCategory.Type, String> selectedCosmeticMap;
 
@@ -44,13 +46,21 @@ public class PlayerData {
         this.statistic = statistic;
     }
 
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
     public ClassedRoleData getClassedRoleData(GameRole.Type type) {
         Preconditions.checkArgument(type.isClassed(), "role type must be classed");
         return classedRoleDataMap.computeIfAbsent(type, (__) -> new ClassedRoleData());
     }
 
-    public PlayerStatistic getStatistic() {
+    public PlayerStatistic statistic() {
         return statistic;
+    }
+
+    public Rating rating() {
+        return rating;
     }
 
     public Skin getSelectedSkin(RoleComponent.Type componentType, Skin defaultSkin) {

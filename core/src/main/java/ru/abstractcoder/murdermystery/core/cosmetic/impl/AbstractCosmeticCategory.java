@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.cosmetic.impl;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -21,17 +22,18 @@ public abstract class AbstractCosmeticCategory implements CosmeticCategory {
     @JacksonInject
     protected final MsgConfig<Msg> msgConfig;
 
-    private final ItemData icon;
     protected final Cosmetic defaultCosmetic;
     private final Map<String, PremiumCosmetic> premiumCosmeticMap;
 
     protected AbstractCosmeticCategory(MsgConfig<Msg> msgConfig,
-            ItemData icon, List<? extends PremiumCosmetic> premiumCosmetics) {
+            List<? extends AbstractPremiumCosmetic> premiumCosmetics) {
         this.msgConfig = msgConfig;
-        this.icon = icon;
 
         premiumCosmeticMap = Maps.newHashMapWithExpectedSize(premiumCosmetics.size());
-        premiumCosmetics.forEach(c -> premiumCosmeticMap.put(c.getId(), c));
+        premiumCosmetics.forEach(cosmetic -> {
+            cosmetic.setCategory(this);
+            premiumCosmeticMap.put(cosmetic.getId(), cosmetic);
+        });
 
         defaultCosmetic = new DefaultCosmetic(createDefaultLogic());
     }
@@ -48,11 +50,6 @@ public abstract class AbstractCosmeticCategory implements CosmeticCategory {
 
     public Collection<PremiumCosmetic> getPremiusCosmetics() {
         return premiumCosmeticMap.values();
-    }
-
-    @Override
-    public ItemData getIcon() {
-        return icon;
     }
 
     @Override
@@ -76,10 +73,11 @@ public abstract class AbstractCosmeticCategory implements CosmeticCategory {
         return Objects.hash(this.getType());
     }
 
-    protected abstract class AbstractCosmetic implements Cosmetic {
+    protected abstract static class AbstractCosmetic implements Cosmetic {
 
         @Nullable
         private final Logic logic;
+        private  CosmeticCategory category;
 
         protected AbstractCosmetic(@Nullable Logic logic) {
             this.logic = logic;
@@ -87,7 +85,12 @@ public abstract class AbstractCosmeticCategory implements CosmeticCategory {
 
         @Override
         public CosmeticCategory getCategory() {
-            return AbstractCosmeticCategory.this;
+            Preconditions.checkState(category != null, "Category not initialized yet!");
+            return category;
+        }
+
+        public void setCategory(CosmeticCategory category) {
+            this.category = category;
         }
 
         @Override
@@ -95,7 +98,6 @@ public abstract class AbstractCosmeticCategory implements CosmeticCategory {
         public Logic getLogic() {
             return logic;
         }
-
 
         @Override
         public boolean equals(Object obj) {
@@ -114,7 +116,7 @@ public abstract class AbstractCosmeticCategory implements CosmeticCategory {
 
     }
 
-    protected abstract class AbstractPremiumCosmetic extends AbstractCosmetic implements PremiumCosmetic {
+    protected abstract static class AbstractPremiumCosmetic extends AbstractCosmetic implements PremiumCosmetic {
 
         public static final String AVAILABILITY_PERMISSION_PARENT_NODE = "MurderMystery.cosmetic";
 

@@ -9,19 +9,21 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.BoardApi;
 import ru.abstractcoder.benioapi.board.SidebarService;
+import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.caze.CaseRepository;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.VictoryResponsible;
+import ru.abstractcoder.murdermystery.core.data.PlayerDataService;
 import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.game.bow.BowDropProcessor;
 import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
-import ru.abstractcoder.murdermystery.core.game.npc.CitizensNpcService;
+import ru.abstractcoder.murdermystery.core.game.npc.NpcService;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
+import ru.abstractcoder.murdermystery.core.game.player.GamePlayerService;
 import ru.abstractcoder.murdermystery.core.game.player.PlayerController;
-import ru.abstractcoder.murdermystery.core.game.player.PlayerFactory;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClassFactory;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
@@ -30,12 +32,14 @@ import ru.abstractcoder.murdermystery.core.game.side.GameSideService;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
 import ru.abstractcoder.murdermystery.core.game.time.GameTime;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
+import ru.abstractcoder.murdermystery.core.rating.Rating;
 import ru.abstractcoder.murdermystery.core.scheduler.Scheduler;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.CompletableFuture;
 
 @Reusable
 public class GameEngine {
@@ -44,14 +48,14 @@ public class GameEngine {
     private final GameTime gameTime;
     private final Arena arena;
     private final GeneralConfig.Game settings;
-    private final PlayerFactory playerFactory;
+    private final GamePlayerService playerService;
     private final EconomyService economyService;
     private final GoldManager goldManager;
     private final GameActionService gameActionService;
     private final Scheduler scheduler;
     private final TickingService tickingService;
     private final CorpseService corpseService;
-    private final CitizensNpcService npcService;
+    private final NpcService npcService;
 
     private final SkinContainableResolver skinContainableResolver;
     private final GamePlayerResolver playerResolver;
@@ -66,22 +70,24 @@ public class GameEngine {
     private final GameSideService gameSideService;
     private final CaseRepository caseRepository;
     private final Plugin plugin;
+    private final PlayerDataService playerDataService;
 
     private GameTicking gameTicking = new GameTicking(this);
 
     @Inject
     public GameEngine(Arena arena, GeneralConfig generalConfig, GameActionService gameActionService,
-            PlayerFactory playerFactory,
+            GamePlayerService playerService,
             EconomyService economyService, GoldManager goldManager,
             Scheduler scheduler, TickingService tickingService, CorpseService corpseService,
-            CitizensNpcService npcService, SkinContainableResolver skinContainableResolver,
+            NpcService npcService, SkinContainableResolver skinContainableResolver,
             GamePlayerResolver playerResolver, RoleResolver roleResolver, Plugin plugin,
             BowDropProcessor bowDropProcessor, ProfessionResolver professionResolver,
             RoleClassFactory roleClassFactory, PlayerController playerController,
             BoardApi boardApi, SidebarService sidebarService,
-            GameSideService gameSideService, CaseRepository caseRepository) {
+            GameSideService gameSideService, CaseRepository caseRepository,
+            PlayerDataService playerDataService) {
         this.arena = arena;
-        this.playerFactory = playerFactory;
+        this.playerService = playerService;
         this.economyService = economyService;
         this.goldManager = goldManager;
         this.tickingService = tickingService;
@@ -95,13 +101,14 @@ public class GameEngine {
         this.bowDropProcessor = bowDropProcessor;
         this.professionResolver = professionResolver;
         this.gameActionService = gameActionService;
-
-        settings = generalConfig.game();
         this.playerController = playerController;
         this.boardApi = boardApi;
         this.sidebarService = sidebarService;
         this.gameSideService = gameSideService;
         this.caseRepository = caseRepository;
+        this.playerDataService = playerDataService;
+
+        settings = generalConfig.game();
         gameTime = new GameTime(settings.general().getGameDuration());
 
         professionResolver.init(this);
@@ -152,7 +159,7 @@ public class GameEngine {
         return corpseService;
     }
 
-    public CitizensNpcService getNpcService() {
+    public NpcService getNpcService() {
         return npcService;
     }
 
@@ -160,8 +167,8 @@ public class GameEngine {
         return scheduler;
     }
 
-    public PlayerFactory getPlayerFactory() {
-        return playerFactory;
+    public GamePlayerService getPlayerService() {
+        return playerService;
     }
 
     public ProfessionResolver getProfessionResolver() {
@@ -180,7 +187,7 @@ public class GameEngine {
             Player player = lobbyPlayer.getPlayer();
             player.teleport(spawnPointIterator.next());
 
-            GamePlayer gamePlayer = playerFactory.createPlayer(lobbyPlayer);
+            GamePlayer gamePlayer = playerService.createPlayer(lobbyPlayer);
 
             String skinName = gamePlayer.getSkinContainer().getRealSkin().data().getName();
             player.setDisplayName(skinName);
@@ -198,8 +205,8 @@ public class GameEngine {
 
         GameSide losedSide = winnedSide.getOppositeSide();
 
-        var winnedRatings = gameSideService.getRatings(winnedSide);
-        var losedRatings = gameSideService.getRatings(losedSide);
+        var winnedDatas = gameSideService.getDatas(winnedSide);
+        var losedDatas = gameSideService.getDatas(losedSide);
 
         var winnedPlayers = gameSideService.getPlayers(winnedSide);
         var losedPlayers = gameSideService.getPlayers(losedSide);
@@ -210,7 +217,8 @@ public class GameEngine {
         double wAverageRating = gameSideService.getAverageRating(winnedSide);
         double lAverageRating = gameSideService.getAverageRating(losedSide);
 
-        winnedRatings.forEach(rating -> {
+        winnedDatas.forEach(data -> {
+            Rating rating = data.rating();
             int currentRating = rating.value();
 
             if (currentRating <= 500) {
@@ -223,9 +231,12 @@ public class GameEngine {
             if (wAverageRating < lAverageRating) {
                 rating.incrementBy(5);
             }
+
+            data.statistic().incrementWins();
         });
 
-        losedRatings.forEach(rating -> {
+        losedDatas.forEach(data -> {
+            Rating rating = data.rating();
             int currentRating = rating.value();
 
             if (currentRating >= 100) {
@@ -236,6 +247,8 @@ public class GameEngine {
             if (wAverageRating < lAverageRating) {
                 rating.decrementBy(5);
             }
+
+            data.statistic().incrementDefeats();
         });
 
         aliveWinnedPlayers.forEach(gamePlayer -> gamePlayer.cosmetics(VictoryResponsible.class)
@@ -246,7 +259,15 @@ public class GameEngine {
             caseRepository.giveMurderCase(endInitiator.getName(), 1);
         }
 
-        scheduler.runSyncLater(4 * 20, () -> Bukkit.getServer().shutdown());
+        CompletableFuture<Void> future = playerDataService.saveAll();
+        scheduler.runSyncLater(4 * 20, (UncheckedRunnable) () -> {
+            try {
+                future.get(); //wait saving if not done yet
+            } finally {
+                Bukkit.getServer().shutdown();
+            }
+        });
+
         //TODO
     }
 

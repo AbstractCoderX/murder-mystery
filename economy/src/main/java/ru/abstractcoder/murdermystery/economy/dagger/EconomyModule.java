@@ -11,9 +11,9 @@ import ru.abstractcoder.murdermystery.economy.MysqlEconomyRepository;
 public interface EconomyModule {
 
     @Binds
-    EconomyRepository economyRepository(MysqlEconomyRepository mer);
+    EconomyRepository economyRepository(MysqlEconomyRepository __);
 
     @Binds
-    EconomyService economyService(CachingEconomyService ces);
+    EconomyService economyService(CachingEconomyService __);
 
 }

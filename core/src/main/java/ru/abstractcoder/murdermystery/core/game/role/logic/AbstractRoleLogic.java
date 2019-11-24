@@ -30,6 +30,8 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
 
     @Override
     public void kill(GamePlayer victim, DeathState deathState) {
+        gamePlayer.data().statistic().incrementKills();
+
         gamePlayer.cosmetics(KillResponsible.class)
                 .forEach(resp -> resp.onKill(gamePlayer, victim));
 
@@ -40,12 +42,14 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
     }
 
     @Override
-    public void kill(GamePlayer victim) {
+    public final void kill(GamePlayer victim) {
         kill(victim, new DeathState(victim.getHandle().getLocation()));
     }
 
     @Override
     public void death(@Nullable GamePlayer killer, DeathState deathState) {
+        gamePlayer.data().statistic().incrementDeaths();
+
         PlayerController playerController = gameEngine.getPlayerController();
         SpectatingPlayer spectatingPlayer = playerController.makeSpectating(gamePlayer, deathState.isNeedCorpse());
         deathState.setSpectatingPlayer(spectatingPlayer);
@@ -63,13 +67,14 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
     }
 
     @Override
-    public void death() {
+    public final void death() {
         death(null, new DeathState(gamePlayer.getHandle().getLocation()));
     }
 
     @Override
-    public void onGoldPickup(int amount) {
+    public void pickupGolds(int amount) {
         gameEngine.getGoldManager().giveGold(gamePlayer, amount);
+        gamePlayer.data().statistic().incrementGoldsPickedUpBy(amount);
     }
 
     @Override

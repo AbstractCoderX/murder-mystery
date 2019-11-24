@@ -2,6 +2,7 @@ package ru.abstractcoder.murdermystery.core.game.skin;
 
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mojang.authlib.properties.Property;
 import ru.abstractcoder.benioapi.util.Lazy;
 import ru.abstractcoder.murdermystery.core.game.skin.data.SkinData;
@@ -11,9 +12,12 @@ public class Skin {
 
     private final String texture;
     private final String signature;
-    private SkinData data;
 
+    @JsonIgnore
+    private SkinData data;
+    @JsonIgnore
     private final Lazy<Property> property;
+    @JsonIgnore
     private final Lazy<WrappedSignedProperty> wrappedProperty;
 
     @JsonCreator

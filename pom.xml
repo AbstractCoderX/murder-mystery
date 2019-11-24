@@ -24,6 +24,7 @@
         <bukkit.version>1.14.4-R0.1-SNAPSHOT</bukkit.version>
         <nms.version>1_14_R1</nms.version>
         <dagger.version>2.24</dagger.version>
+        <plugin-annotations.version>1.2.2-SNAPSHOT</plugin-annotations.version>
     </properties>
 
     <repositories>
@@ -40,6 +41,11 @@
         <repository>
             <id>filoghost-repo</id>
             <url>https://ci.filoghost.me/plugin/repository/everything/</url>
+        </repository>
+
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
     </repositories>
 
@@ -94,15 +100,15 @@
 
             <dependency>
                 <groupId>com.comphenix.protocol</groupId>
-                <artifactId>ProtocolLib-API</artifactId>
-                <version>4.4.0</version>
+                <artifactId>ProtocolLib</artifactId>
+                <version>4.5.0-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.spigotmc</groupId>
                 <artifactId>plugin-annotations</artifactId>
-                <version>1.2.2-SNAPSHOT</version>
+                <version>${plugin-annotations.version}</version>
                 <scope>provided</scope>
                 <exclusions>
                     <exclusion>
@@ -161,6 +167,11 @@
                                 <artifactId>dagger-compiler</artifactId>
                                 <version>${dagger.version}</version>
                             </path>
+                            <path>
+                                <groupId>org.spigotmc</groupId>
+                                <artifactId>plugin-annotations</artifactId>
+                                <version>${plugin-annotations.version}</version>
+                            </path>
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
@@ -168,7 +179,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.2.1</version>
                     <executions>
                         <execution>
                             <phase>package</phase>

@@ -9,35 +9,30 @@ import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainerFactory;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
-import ru.abstractcoder.murdermystery.core.rating.RatingFactory;
 
 import javax.inject.Inject;
 
 @Reusable
-public class PlayerFactory {
+public class GamePlayerService {
 
     private final SkinContainerFactory skinContainerFactory;
     private final RoleResolver roleResolver;
     private final CosmeticService cosmeticService;
-    private final RatingFactory ratingFactory;
 
     @Inject
-    public PlayerFactory(SkinContainerFactory skinContainerFactory, RoleResolver roleResolver,
-            CosmeticService cosmeticService, RatingFactory ratingFactory) {
+    public GamePlayerService(SkinContainerFactory skinContainerFactory, RoleResolver roleResolver,
+            CosmeticService cosmeticService) {
         this.skinContainerFactory = skinContainerFactory;
         this.roleResolver = roleResolver;
         this.cosmeticService = cosmeticService;
-        this.ratingFactory = ratingFactory;
     }
 
     public GamePlayer createPlayer(LobbyPlayer lobbyPlayer) {
         var skinContainer = skinContainerFactory.createFor(lobbyPlayer);
         var selectedCosmetics = cosmeticService.getSelectedCosmetics(lobbyPlayer);
-        var statistic = lobbyPlayer.data().getStatistic();
-        var rating = ratingFactory.create(statistic);
 
         return new GamePlayer(lobbyPlayer.getPlayer(), lobbyPlayer.getBalancedRole(),
-                lobbyPlayer.data(), rating, skinContainer, selectedCosmetics);
+                lobbyPlayer.data(), skinContainer, selectedCosmetics);
     }
 
     public GamePlayer revivePlayer(SpectatingPlayer sp) {

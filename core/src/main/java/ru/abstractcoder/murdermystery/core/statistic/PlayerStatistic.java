@@ -37,8 +37,8 @@ public class PlayerStatistic {
         deaths++;
     }
 
-    public void incrementGoldsPickedUp() {
-        goldsPickedUp++;
+    public void incrementGoldsPickedUpBy(int amount) {
+        goldsPickedUp += amount;
     }
 
     public void incrementRating(int amount) {

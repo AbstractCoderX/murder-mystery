@@ -6,14 +6,12 @@ import dagger.Reusable;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.game.arena.ArenaLoader;
 
-import java.io.IOException;
-
 @Module
 public class EngineModule {
 
     @Provides
     @Reusable
-    public Arena arena(ArenaLoader arenaLoader) throws IOException {
+    public Arena arena(ArenaLoader arenaLoader) {
         return arenaLoader.load();
     }
 

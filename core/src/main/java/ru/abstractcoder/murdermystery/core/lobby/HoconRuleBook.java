@@ -11,6 +11,7 @@ import ru.abstractcoder.benioapi.nms.wrapped.CraftPlayer;
 import ru.abstractcoder.benioapi.util.ColorUtils;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.List;
 
 @Reusable
@@ -19,7 +20,7 @@ public class HoconRuleBook implements RuleBook {
     private final ItemStack bookItem;
 
     @Inject
-    public HoconRuleBook(HoconConfig bookConfig) {
+    public HoconRuleBook(@Named("ruleBook") HoconConfig bookConfig) {
         List<String> pages = bookConfig.getHandle().getStringList("pages");
         pages.replaceAll(s -> s.replace("\r", ""));
         bookItem = ItemBuilder.fromMaterial(Material.WRITTEN_BOOK)

@@ -1,8 +1,8 @@
 package ru.abstractcoder.murdermystery.core.cosmetic.service;
 
 import dagger.Reusable;
+import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
-import ru.abstractcoder.murdermystery.core.cosmetic.resolver.CosmeticCategoryResolver;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import javax.inject.Inject;
@@ -12,16 +12,17 @@ import java.util.stream.Collectors;
 @Reusable
 public class CosmeticService {
 
-    private final CosmeticCategoryResolver categoryResolver;
+    private final GeneralConfig generalConfig;
 
     @Inject
-    public CosmeticService(CosmeticCategoryResolver categoryResolver) {
-        this.categoryResolver = categoryResolver;
+    public CosmeticService(GeneralConfig generalConfig) {
+        this.generalConfig = generalConfig;
     }
 
     public Collection<Cosmetic> getSelectedCosmetics(LobbyPlayer player) {
-        return categoryResolver.getCategories().stream()
-                .map(category -> category.getCosmeticById(player.getSelectedCosmeticId(category)))
+        return generalConfig.game().getCosmeticCategoryResolver().getCategories()
+                .stream()
+                .map(category -> category.getCosmeticById(player.data().getSelectedCosmeticId(category)))
                 .collect(Collectors.toList());
     }
 

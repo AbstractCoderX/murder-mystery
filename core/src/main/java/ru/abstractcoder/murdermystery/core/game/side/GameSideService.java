@@ -5,6 +5,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import dagger.Reusable;
 import org.bukkit.entity.Player;
+import ru.abstractcoder.murdermystery.core.data.PlayerData;
+import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.player.PlayerController;
@@ -22,7 +24,7 @@ public class GameSideService {
     private final GamePlayerResolver playerResolver;
     private final PlayerController playerController;
 
-    private final ListMultimap<GameSide, Rating> ratingMap = Multimaps.newListMultimap(
+    private final ListMultimap<GameSide, PlayerData> playerDataMap = Multimaps.newListMultimap(
             Maps.newEnumMap(GameSide.class),
             ArrayList::new
     );
@@ -33,21 +35,24 @@ public class GameSideService {
     );
 
     @Inject
-    public GameSideService(GamePlayerResolver playerResolver, PlayerController playerController) {
+    public GameSideService(GamePlayerResolver playerResolver, PlayerController playerController,
+            GameActionService gameActionService) {
         this.playerResolver = playerResolver;
         this.playerController = playerController;
 
-        ratingMap.put(GameSide.MURDER, playerResolver.getMurder().getRating());
-        ratingMap.putAll(GameSide.SURVIVORS, playerResolver.getSurvivors().stream()
-                .map(GamePlayer::getRating)
-                .collect(Collectors.toList())
-        );
+        gameActionService.addStartingAction(() -> {
+            playerDataMap.put(GameSide.MURDER, playerResolver.getMurder().data());
+            playerDataMap.putAll(GameSide.SURVIVORS, playerResolver.getSurvivors().stream()
+                    .map(GamePlayer::data)
+                    .collect(Collectors.toList())
+            );
 
-        playerMap.put(GameSide.MURDER, playerResolver.getMurder().getHandle());
-        playerMap.putAll(GameSide.SURVIVORS, playerResolver.getSurvivors().stream()
-                .map(GamePlayer::getHandle)
-                .collect(Collectors.toList())
-        );
+            playerMap.put(GameSide.MURDER, playerResolver.getMurder().getHandle());
+            playerMap.putAll(GameSide.SURVIVORS, playerResolver.getSurvivors().stream()
+                    .map(GamePlayer::getHandle)
+                    .collect(Collectors.toList())
+            );
+        });
     }
 
     public Collection<GamePlayer> getAlivePlayers(GameSide gameSide) {
@@ -63,8 +68,8 @@ public class GameSideService {
         return playerMap.get(gameSide);
     }
 
-    public Collection<Rating> getRatings(GameSide gameSide) {
-        return ratingMap.get(gameSide);
+    public Collection<PlayerData> getDatas(GameSide gameSide) {
+        return playerDataMap.get(gameSide);
     }
 
     //    public Collection<SpectatingPlayer> getSpectatingPlayers(GameSide gameSide) {
@@ -79,7 +84,8 @@ public class GameSideService {
     //    }
 
     public double getAverageRating(GameSide gameSide) {
-        return ratingMap.get(gameSide).stream()
+        return playerDataMap.get(gameSide).stream()
+                .map(PlayerData::rating)
                 .mapToInt(Rating::value)
                 .average().orElseThrow(IllegalAccessError::new);
     }

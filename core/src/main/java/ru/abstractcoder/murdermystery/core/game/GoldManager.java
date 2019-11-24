@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game;
 
+import dagger.Reusable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import ru.abstractcoder.benioapi.item.ItemUtils;
@@ -8,11 +9,15 @@ import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
+import javax.inject.Inject;
+
+@Reusable
 public class GoldManager {
 
     private final EconomyService economyService;
     private final GeneralConfig generalConfig;
 
+    @Inject
     public GoldManager(EconomyService economyService, GeneralConfig generalConfig) {
         this.economyService = economyService;
         this.generalConfig = generalConfig;

@@ -11,14 +11,12 @@ import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Msg;
+import ru.abstractcoder.murdermystery.core.data.PlayerDataService;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
-import ru.abstractcoder.murdermystery.core.lobby.player.PlayerDataService;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayerResolver;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Reusable
@@ -31,21 +29,24 @@ public class LobbyEngine {
     private final MsgConfig<Msg> msgConfig;
     private final PlayerDataService playerDataService;
 
-    private final Map<Player, LobbyPlayer> waitingPlayerMap = new HashMap<>();
+    private final LobbyPlayerResolver playerResolver;
     private final BossBar bossBar;
     private int secondsLeft = -1;
     private boolean isActive = true;
     private UncheckedRunnable shutdownAction;
 
     @Inject
-    public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbySidebarManager lobbySidebarManager,
+    public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbyPlayerResolver playerResolver,
+            LobbySidebarManager lobbySidebarManager,
             MsgConfig<Msg> msgConfig, PlayerDataService playerDataService,
             LobbyTicking lobbyTicking, TickingService tickingService) {
-        this.settings = generalConfig.lobby();
         this.arena = arena;
+        this.playerResolver = playerResolver;
         this.lobbySidebarManager = lobbySidebarManager;
         this.msgConfig = msgConfig;
         this.playerDataService = playerDataService;
+
+        settings = generalConfig.lobby();
         slotBarItemProcessor = new SlotBarItemProcessor(settings.getSlotBarItemResolver());
 
         lobbySidebarManager.init(this);
@@ -86,20 +87,12 @@ public class LobbyEngine {
         return --secondsLeft;
     }
 
-    public Collection<LobbyPlayer> getPlayers() {
-        return waitingPlayerMap.values();
-    }
-
-    public int getPlayerCount() {
-        return waitingPlayerMap.size();
-    }
-
-    public LobbyPlayer getPlayer(Player player) {
-        return waitingPlayerMap.get(player);
+    public LobbyPlayerResolver getPlayerResolver() {
+        return playerResolver;
     }
 
     public CompletableFuture<LobbyPlayer> loadPlayer(Player player) {
-        if (waitingPlayerMap.containsKey(player)) {
+        if (playerResolver.hasPlayer(player)) {
             throw new IllegalArgumentException(String.format("Player %s already loaded", player.getName()));
         }
 
@@ -113,7 +106,7 @@ public class LobbyEngine {
     }
 
     private void checkIncrementedPlayerCount() {
-        int playerCount = getPlayerCount();
+        int playerCount = playerResolver.getPlayerCount();
 
         if (playerCount == arena.getMinPlayers()) {
             secondsLeft = settings.starting().getMinCountStartTime();
@@ -123,13 +116,13 @@ public class LobbyEngine {
     }
 
     public void unloadPlayer(Player player) {
-        if (waitingPlayerMap.remove(player) != null) {
+        if (playerResolver.remove(player)) {
             checkDecrementedPlayerCount();
         }
     }
 
     private void checkDecrementedPlayerCount() {
-        int playerCount = getPlayerCount();
+        int playerCount = playerResolver.getPlayerCount();
 
         if (playerCount == arena.getMinPlayers() - 1) {
             secondsLeft = -1;

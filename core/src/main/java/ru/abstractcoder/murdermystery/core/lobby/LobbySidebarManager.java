@@ -10,6 +10,7 @@ import ru.abstractcoder.benioapi.board.text.updater.PlaceholderTextUpdater;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.util.temporal.SimpleTemporal;
 import ru.abstractcoder.murdermystery.core.config.Msg;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.economy.EconomyService;
 
 import javax.inject.Inject;
@@ -34,18 +35,11 @@ public class LobbySidebarManager {
     public void init(LobbyEngine lobbyEngine) {
         sidebarTemplate = lobbyEngine.settings().getSidebarTemplate()
                 .withLineUpdater(new PlaceholderTextUpdater()
-                        .add("{desired_role}", player -> lobbyEngine.getPlayer(player)
-                                .getPreferredRole().getName()
-                        )
-                        .add("{wins}", player -> lobbyEngine.getPlayer(player)
-                                .getStatistic().getWins()
-                        )
-                        .add("{defeats}", player -> lobbyEngine.getPlayer(player)
-                                .getStatistic().getDefeats()
-                        )
-                        .add("{rating}", player -> lobbyEngine.getPlayer(player)
-                                .getStatistic().getRating()
-                        )
+                        .prepare(LobbyPlayer.class, lobbyEngine.getPlayerResolver()::resolve)
+                        .add("{desired_role}", LobbyPlayer.class, p -> p.getPreferredRole().getName())
+                        .add("{wins}", LobbyPlayer.class, p -> p.getStatistic().getWins())
+                        .add("{defeats}", LobbyPlayer.class, p -> p.getStatistic().getDefeats())
+                        .add("{rating}", LobbyPlayer.class, p -> p.getStatistic().getRating())
                         .add("{lobby_state}", () -> {
                             if (lobbyEngine.isStarting()) {
                                 String formattedTimeLeft = SimpleTemporal.of(lobbyEngine.getSecondsLeft(),
@@ -55,7 +49,7 @@ public class LobbySidebarManager {
                                 return msgConfig.get(Msg.lobby__waiting_sidebar_state).asSingleLine();
                             }
                         })
-                        .add("{player_count}", lobbyEngine::getPlayerCount)
+                        .add("{player_count}", lobbyEngine.getPlayerResolver()::getPlayerCount)
                         .add("{money}", economyService::getCachedBalance)
                 );
     }

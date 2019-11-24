@@ -10,12 +10,13 @@ import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableRe
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @Reusable
-public class CitizensNpcService {
+public class CitizensNpcService implements NpcService {
 
     private final NPCRegistry npcRegistry;
     private final SkinContainableResolver skinContainableResolver;
@@ -28,6 +29,7 @@ public class CitizensNpcService {
         this.skinContainableResolver = skinContainableResolver;
     }
 
+    @Override
     public Npc spawnNpc(Location location, SkinContainer skinContainer) {
         NPC npc = npcRegistry.createNPC(EntityType.PLAYER, " ");
         Npc wrappedNpc = new Npc(npc, skinContainer, location);
@@ -38,13 +40,20 @@ public class CitizensNpcService {
         return wrappedNpc;
     }
 
+    @Override
     public BeniOptional<Npc> getNpc(UUID uniqueId) {
         return BeniOptional.ofNullable(npcMap.get(uniqueId));
     }
 
+    @Override
     public void removeNpc(Npc npc) {
         npcMap.remove(npc.getUniqueId());
         npc.destroy();
+    }
+
+    @Override
+    public Collection<Npc> getAll() {
+        return npcMap.values();
     }
 
 }

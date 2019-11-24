@@ -19,9 +19,8 @@ public class SkinData {
 
     private final String name;
     private final List<String> proofs;
-
-    @JsonIgnore
     private final Skin skin;
+
     @JsonIgnore
     private final Lazy<ItemStack> skullItem;
 

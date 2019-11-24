@@ -118,7 +118,7 @@ public class ElTermuRoleClass extends DetectiveRoleClass {
 
             gameEngine.getNpcService().removeNpc(npc);
             cameraStands.forEach(Entity::remove);
-            damager.getRoleLogic().kill(murder);
+            damager.getRoleLogic().kill(damager);
         }
 
     }

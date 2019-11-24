@@ -54,7 +54,7 @@ public class CharacterSelectingMenu {
             GeneralConfig generalConfig, SkinnableTemplateRepository skinnableTemplateRepository) {
         this.menuApi = menuApi;
         guiConfig.addOnReloadAction(() -> {
-            Config config = guiConfig.getHandle().getConfig("skinSelecting");
+            Config config = guiConfig.getHandle().getConfig("characterSelecting");
             PaginatedMenuLoader<LobbyPlayer, Session> loader = new HoconPaginatedMenuLoader<>(config, objectMapper);
             var templateBuilder = menuApi
                     .getTemplateBuilder()

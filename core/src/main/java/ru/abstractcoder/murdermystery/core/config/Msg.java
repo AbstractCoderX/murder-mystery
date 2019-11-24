@@ -39,7 +39,6 @@ public enum Msg implements MsgKey {
     game__doctor_spectator_leaved("&cЭтот игрок уже вышел из игры"),
     game__prostitute_sex_cooldown("&fСекс будет доступен через &a{time}"),
     game__prostitute_role_info("&fВо время бурного секса вы порвали целку и узнали роль этого игрока: &e{role}"),
-    game__,
     game__role_selecting_animation("&fВыбор роли: &a{random_role}"),
     game__role_animation_end("&cВы {role}"),
     game__kill_player("Ты {action} игрока {victim}"),
@@ -50,8 +49,8 @@ public enum Msg implements MsgKey {
     game__murder_lose_subtitle("&fВас поймали"),
     game__survivors_win_subtitle("&fУбийца обезврежен"),
     game__survivors_lose_subtitle("&fУбийца на свободе"),
-    game__,
-    game__,
+//    game__,
+//    game__,
 //    game__,
 
     misc__alive("Жив"),
@@ -65,6 +64,8 @@ public enum Msg implements MsgKey {
     gui__class_already_purchased("&cЭтот класс уже куплен"),
     gui__class_succ_purchased("&aВы успешно купили этот класс"),
     gui__cosmetic_case_succ_purchased("&aВы успешно купили кейс с косметикой!"),
+
+    ;
 
     private final MsgProperties properties;
 

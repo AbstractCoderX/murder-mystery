@@ -11,7 +11,6 @@ import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 import ru.abstractcoder.murdermystery.core.rating.Rating;
-import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
 import java.util.Collection;
@@ -21,7 +20,6 @@ import java.util.stream.Stream;
 public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable {
 
     private final PlayerData data;
-    private final Rating rating;
     private final Collection<Cosmetic> cosmetics;
     private GameRole role;
     private SkinContainer skinContainer;
@@ -43,14 +41,13 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     private Sidebar cachedSidebar;
 
     public GamePlayer(Player player, GameRole role,
-            PlayerData data, Rating rating, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
+            PlayerData data, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
         super(player);
 
         this.role = role;
         this.data = data;
         getRoleLogic().load();
 
-        this.rating = rating;
         this.skinContainer = skinContainer;
         this.cosmetics = cosmetics;
     }
@@ -60,7 +57,6 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
                 sp.getHandle(),
                 role,
                 sp.getCachedData(),
-                sp.getCachedRating(),
                 sp.getCachedSkinContainer(),
                 sp.getCachedCosmetics()
         );
@@ -90,12 +86,8 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
         this.skinContainer = skinContainer;
     }
 
-    public PlayerStatistic getStatistic() {
-        return data.getStatistic();
-    }
-
     public Rating getRating() {
-        return rating;
+        return data.rating();
     }
 
     public boolean isRoleShowed() {

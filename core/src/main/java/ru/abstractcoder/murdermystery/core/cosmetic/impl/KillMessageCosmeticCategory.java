@@ -13,8 +13,8 @@ public class KillMessageCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
     public KillMessageCosmeticCategory(MsgConfig<Msg> msgConfig,
-            ItemData icon, List<Cosmetic> premiumCosmetics) {
-        super(msgConfig, icon, premiumCosmetics);
+            List<Cosmetic> premiumCosmetics) {
+        super(msgConfig, premiumCosmetics);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class KillMessageCosmeticCategory extends AbstractCosmeticCategory {
 
     }
 
-    private class Cosmetic extends AbstractPremiumCosmetic {
+    private static class Cosmetic extends AbstractPremiumCosmetic {
 
         @JsonCreator
         public Cosmetic(String id, ItemData icon, KillMessageCosmeticCategory.Logic logic) {

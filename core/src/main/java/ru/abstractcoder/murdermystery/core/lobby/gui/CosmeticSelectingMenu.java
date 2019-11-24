@@ -48,7 +48,7 @@ public class CosmeticSelectingMenu {
                 for (var category : generalConfig.game().getCosmeticCategoryResolver().getCategories()) {
                     char guiChar = category.getType().getGuiChar();
                     loader.setItem(guiChar, (slot, itemData) -> MenuItemFactory.create(builder -> builder
-                            .cachedIcon(itemData.impose(category.getIcon()).toMenuIcon(slot))
+                            .cachedIcon(itemData.toMenuIcon(slot))
                             .onClick(click -> {
                                 click.getSession().setSelectedCategory(category);
                                 click.getSession().updateCache();

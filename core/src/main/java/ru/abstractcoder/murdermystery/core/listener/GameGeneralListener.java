@@ -16,7 +16,6 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import ru.abstractcoder.murdermystery.core.game.misc.VendingMachine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
@@ -27,15 +26,15 @@ import javax.inject.Inject;
 import java.util.Objects;
 import java.util.Set;
 
-public class GameGeneralListener extends AbstractBukkitListener {
+public class GameGeneralListener implements BukkitListener {
 
     private final GamePlayerResolver playerResolver;
     private final PlayerController playerController;
     private final VendingMachine vendingMachine;
 
     @Inject
-    public GameGeneralListener(Plugin plugin, GamePlayerResolver playerResolver, PlayerController playerController, VendingMachine vendingMachine) {
-        super(plugin);
+    public GameGeneralListener(GamePlayerResolver playerResolver,
+            PlayerController playerController, VendingMachine vendingMachine) {
         this.playerResolver = playerResolver;
         this.playerController = playerController;
         this.vendingMachine = vendingMachine;

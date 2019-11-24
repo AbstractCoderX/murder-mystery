@@ -15,10 +15,10 @@ public class GameGeneralSettings {
 
     public GameGeneralSettings(
             @JsonProperty("gameDuration") String gameDuration,
-            int goldDroppingPeriod,
+            @JsonProperty("goldDroppingPeriod") String goldDroppingPeriod,
             @JsonProperty("goldItem") ItemData goldItemData) {
         this.gameDuration = parseSeconds(gameDuration);
-        this.goldDroppingPeriod = goldDroppingPeriod;
+        this.goldDroppingPeriod = parseSeconds(goldDroppingPeriod);
         this.goldItemData = goldItemData;
     }
 

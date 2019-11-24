@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.role.chance;
 
+import dagger.Reusable;
 import ru.abstractcoder.benioapi.util.probable.AbstractProbable;
 import ru.abstractcoder.benioapi.util.probable.Probability;
 import ru.abstractcoder.benioapi.util.probable.ProbableList;
@@ -12,15 +13,17 @@ import ru.abstractcoder.murdermystery.core.game.role.RoleTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClass;
 import ru.abstractcoder.murdermystery.core.game.role.classed.template.RoleClassTemplateResolver;
 import ru.abstractcoder.murdermystery.core.game.role.profession.Profession;
-import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayerResolver;
 
+import javax.inject.Inject;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+@Reusable
 public class ComputingRoleBalancer {
 
-    private final LobbyEngine lobbyEngine;
+    private final LobbyPlayerResolver playerResolver;
     private final RoleTemplateResolver roleTemplateResolver;
     private final RoleClassTemplateResolver roleClassTemplateResolver;
     private final RoleResolver roleResolver;
@@ -28,27 +31,28 @@ public class ComputingRoleBalancer {
     private double onePartChance;
     private double commonChance = 1.0;
 
-    public ComputingRoleBalancer(LobbyEngine lobbyEngine, GameEngine gameEngine) {
-        this.lobbyEngine = lobbyEngine;
+    @Inject
+    public ComputingRoleBalancer(LobbyPlayerResolver playerResolver, GameEngine gameEngine) {
+        this.playerResolver = playerResolver;
         this.roleTemplateResolver = gameEngine.settings().getRoleTemplateResolver();
         this.roleClassTemplateResolver = gameEngine.settings().getRoleClassTemplateResolver();
         this.roleResolver = gameEngine.getRoleResolver();
     }
 
     public void recompute() {
-        onePartChance = 1.0 / lobbyEngine.getPlayerCount();
+        onePartChance = 1.0 / playerResolver.getPlayerCount();
 
         commonChance = 1.0;
         roleTemplateResolver.getAll().stream()
                 .filter(RoleTemplate::isExtraPointable)
-                .forEach(roleTemplate -> lobbyEngine.getPlayers().forEach(lobbyPlayer -> {
-                    int chancePoints = lobbyPlayer.getClassedRoleData(roleTemplate.getType()).getChancePoints();
+                .forEach(roleTemplate -> playerResolver.getPlayers().forEach(lobbyPlayer -> {
+                    int chancePoints = lobbyPlayer.data().getClassedRoleData(roleTemplate.getType()).getChancePoints();
                     commonChance += probabilityFromPoints(chancePoints);
                 }));
     }
 
     public double getRoleChance(LobbyPlayer lobbyPlayer, GameRole.Type roleType) {
-        int roleChancePoints = lobbyPlayer.getClassedRoleData(roleType).getChancePoints();
+        int roleChancePoints = lobbyPlayer.data().getClassedRoleData(roleType).getChancePoints();
         double probability = onePartChance + probabilityFromPoints(roleChancePoints);
         return probability / commonChance;
     }
@@ -59,11 +63,11 @@ public class ComputingRoleBalancer {
 
     public void applyRoles() {
         this.recompute();
-        Deque<LobbyPlayer> playerDeque = new ArrayDeque<>(lobbyEngine.getPlayers());
+        Deque<LobbyPlayer> playerDeque = new ArrayDeque<>(playerResolver.getPlayers());
 
         GameRole.Type.CLASSED_TYPES.forEach(type -> {
             ProbableList<PlayerProbable> playerProbables = new ProbableList<>();
-            lobbyEngine.getPlayers().forEach(lobbyPlayer -> {
+            playerResolver.getPlayers().forEach(lobbyPlayer -> {
                 Probability probability = Probability.fromValue(getRoleChance(lobbyPlayer, type));
                 PlayerProbable playerProbable = new PlayerProbable(lobbyPlayer, probability);
                 playerProbables.add(playerProbable);
@@ -71,7 +75,7 @@ public class ComputingRoleBalancer {
 
             LobbyPlayer selectedPlayer = playerProbables.getRandomly().getLobbyPlayer();
 
-            ClassedRoleData classedRoleData = selectedPlayer.getClassedRoleData(type);
+            ClassedRoleData classedRoleData = selectedPlayer.data().getClassedRoleData(type);
             RoleClass.Type classType = classedRoleData.isClassTypeSelected()
                                        ? classedRoleData.getSelectedClassType()
                                        : roleClassTemplateResolver.getDefaultTemplate(type).getType();

@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.dagger.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.typesafe.config.Config;
 import dagger.Module;
 import dagger.Provides;
@@ -12,6 +13,8 @@ import ru.abstractcoder.benioapi.database.DataSourceOwner;
 import ru.abstractcoder.benioapi.jackson.BenioAdaptedObjectMapperService;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Msg;
+import ru.abstractcoder.murdermystery.core.game.role.skin.SimpleSkinResolver;
+import ru.abstractcoder.murdermystery.core.game.role.skin.SkinResolver;
 
 import javax.inject.Named;
 import java.nio.file.Path;
@@ -23,7 +26,10 @@ public class ConfigModule {
     @Provides
     @Reusable
     public ObjectMapper objectMapper(BenioAdaptedObjectMapperService objectMapperService) {
-        return objectMapperService.createAdaptedObjectMapper();
+        return objectMapperService.createAdaptedObjectMapper()
+                .registerModule(new SimpleModule("murder type bindings module")
+                        .addAbstractTypeMapping(SkinResolver.class, SimpleSkinResolver.class)
+                );
     }
 
     @Provides

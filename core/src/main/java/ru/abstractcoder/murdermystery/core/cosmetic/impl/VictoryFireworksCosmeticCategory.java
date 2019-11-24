@@ -17,8 +17,8 @@ public class VictoryFireworksCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
     public VictoryFireworksCosmeticCategory(MsgConfig<Msg> msgConfig,
-            ItemData icon, List<Cosmetic> premiumCosmetics) {
-        super(msgConfig, icon, premiumCosmetics);
+            List<Cosmetic> premiumCosmetics) {
+        super(msgConfig, premiumCosmetics);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class VictoryFireworksCosmeticCategory extends AbstractCosmeticCategory {
 
     }
 
-    private class Cosmetic extends AbstractPremiumCosmetic {
+    private static class Cosmetic extends AbstractPremiumCosmetic {
 
         @JsonCreator
         public Cosmetic(String id, ItemData icon, VictoryFireworksCosmeticCategory.Logic logic) {

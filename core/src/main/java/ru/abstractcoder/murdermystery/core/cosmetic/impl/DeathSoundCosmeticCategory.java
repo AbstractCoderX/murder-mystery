@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.cosmetic.impl;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemData;
 import ru.abstractcoder.benioapi.util.misc.BenioSound;
@@ -15,8 +16,8 @@ public class DeathSoundCosmeticCategory extends AbstractCosmeticCategory {
 
     @JsonCreator
     public DeathSoundCosmeticCategory(MsgConfig<Msg> msgConfig,
-            ItemData icon, List<Cosmetic> premiumCosmetics) {
-        super(msgConfig, icon, premiumCosmetics);
+            @JsonProperty("cosmetics") List<Cosmetic> premiumCosmetics) {
+        super(msgConfig, premiumCosmetics);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class DeathSoundCosmeticCategory extends AbstractCosmeticCategory {
 
     }
 
-    private class Cosmetic extends AbstractPremiumCosmetic {
+    private static class Cosmetic extends AbstractPremiumCosmetic {
 
         @JsonCreator
         public Cosmetic(String id, ItemData icon, DeathSoundCosmeticCategory.Logic logic) {

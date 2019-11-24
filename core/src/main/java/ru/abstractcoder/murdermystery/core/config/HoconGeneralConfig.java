@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import dagger.Reusable;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.HoconConfig;
+import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.lobby.slotbar.click.StandartActionResolver;
 
 import javax.inject.Inject;
@@ -20,16 +21,17 @@ public class HoconGeneralConfig extends HoconConfig implements GeneralConfig {
 
     @Inject
     public HoconGeneralConfig(Plugin plugin, @Named("globalDir") Path dataFolder, ObjectMapper objectMapper,
-            StandartActionResolver standartActionResolver) {
+            StandartActionResolver standartActionResolver, MsgConfig<Msg> msgConfig) {
         super(plugin, dataFolder, "general", true);
         ObjectReader objectReader = objectMapper
                 .reader(new InjectableValues.Std()
                         .addValue(StandartActionResolver.class, standartActionResolver)
+                        .addValue(MsgConfig.class, msgConfig)
                 )
                 .forType(Dto.class);
 
         addOnReloadAction(() -> {
-            if (dto.mysql != null) {
+            if (dto != null && dto.mysql != null) {
                 dto.mysql.getConnectionPool().close();
             }
             dto = objectReader.readValue(handle.root().render(JSON_WRITE_DEFAULT));

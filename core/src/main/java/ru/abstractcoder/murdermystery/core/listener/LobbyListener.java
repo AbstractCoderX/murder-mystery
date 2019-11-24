@@ -3,11 +3,9 @@ package ru.abstractcoder.murdermystery.core.listener;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
@@ -15,18 +13,15 @@ import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItem;
 
 import javax.inject.Inject;
 
-public class LobbyListener extends AbstractBukkitListener {
+public class LobbyListener implements BukkitListener {
 
     private final LobbyEngine lobbyEngine;
     private final MsgConfig<Msg> msgConfig;
 
     @Inject
-    public LobbyListener(Plugin plugin, LobbyEngine lobbyEngine, MsgConfig<Msg> msgConfig) {
-        super(plugin);
+    public LobbyListener(LobbyEngine lobbyEngine, MsgConfig<Msg> msgConfig) {
         this.lobbyEngine = lobbyEngine;
         this.msgConfig = msgConfig;
-
-        lobbyEngine.addShutdownHook(() -> HandlerList.unregisterAll(this));
     }
 
     @EventHandler
@@ -59,7 +54,7 @@ public class LobbyListener extends AbstractBukkitListener {
         lobbyEngine.loadPlayer(player).thenAccept(lobbyPlayer -> {
             msgConfig.get(Msg.general__joined_broadcast,
                     player.getName(),
-                    lobbyEngine.getPlayerCount(),
+                    lobbyEngine.getPlayerResolver().getPlayerCount(),
                     lobbyEngine.getArena().getMaxPlayers()
             ).broadcastSession().broadcastChat();
         });
@@ -77,7 +72,9 @@ public class LobbyListener extends AbstractBukkitListener {
         lobbyEngine.settings().getSlotBarItemResolver()
                 .resolve(slot)
                 .map(SlotBarItem::getClickHandler)
-                .ifPresent(clickHandler -> clickHandler.handleInteract(event, lobbyEngine.getPlayer(player)))
+                .ifPresent(clickHandler -> clickHandler.handleInteract(event,
+                        lobbyEngine.getPlayerResolver().resolve(player))
+                )
                 .orElse(() -> event.setCancelled(true));
     }
 
@@ -100,11 +97,11 @@ public class LobbyListener extends AbstractBukkitListener {
         //TODO
     }
 
-//    @EventHandler
-//    public void onInventoryClick(InventoryClickEvent event) {
-//        event.getWhoClicked().sendMessage(String.valueOf(event.getSlot()));
-//        event.getWhoClicked().sendMessage(String.valueOf(event.getRawSlot()));
-//        event.getWhoClicked().getInventory().setItem(40, new ItemStack(Material.STONE));
-//    }
+    //    @EventHandler
+    //    public void onInventoryClick(InventoryClickEvent event) {
+    //        event.getWhoClicked().sendMessage(String.valueOf(event.getSlot()));
+    //        event.getWhoClicked().sendMessage(String.valueOf(event.getRawSlot()));
+    //        event.getWhoClicked().getInventory().setItem(40, new ItemStack(Material.STONE));
+    //    }
 
 }

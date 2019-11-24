@@ -1,13 +1,14 @@
 package ru.abstractcoder.murdermystery.core.game.arena;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import ru.abstractcoder.benioapi.config.HoconConfig;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.IOException;
 
 public class HoconArenaLoader implements ArenaLoader {
 
@@ -23,11 +24,16 @@ public class HoconArenaLoader implements ArenaLoader {
     }
 
     @Override
-    public Arena load() throws IOException {
-        return objectMapper
+    public Arena load() {
+        ObjectReader reader = objectMapper
                 .reader(new InjectableValues.Std().addValue("gameWorld", generalConfig.game().getWorld()))
-                .forType(ArenaImpl.class)
-                .readValue(arenaCfg.getHandle().root().render(HoconConfig.JSON_WRITE_DEFAULT));
+                .forType(ArenaImpl.class);
+
+        try {
+            return reader.readValue(arenaCfg.getHandle().root().render(HoconConfig.JSON_WRITE_DEFAULT));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unhandled exception due to reading arena config", e);
+        }
     }
 
 }

@@ -3,7 +3,6 @@ package ru.abstractcoder.murdermystery.core.cosmetic;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import ru.abstractcoder.benioapi.item.ItemData;
 import ru.abstractcoder.murdermystery.core.cosmetic.impl.DeathSoundCosmeticCategory;
 import ru.abstractcoder.murdermystery.core.cosmetic.impl.KillEffectCosmeticCategory;
 import ru.abstractcoder.murdermystery.core.cosmetic.impl.KillMessageCosmeticCategory;
@@ -27,8 +26,6 @@ public interface CosmeticCategory {
     Collection<PremiumCosmetic> getPremiusCosmetics();
 
     Cosmetic getCosmeticById(String id);
-
-    ItemData getIcon();
 
     enum Type {
         DEATH_SOUND('a'),

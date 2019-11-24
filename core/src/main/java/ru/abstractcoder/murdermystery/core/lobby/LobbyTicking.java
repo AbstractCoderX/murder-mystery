@@ -42,9 +42,9 @@ public class LobbyTicking implements Ticking {
 
     @Override
     public boolean doTick() {
-        if (lobbyEngine.getPlayerCount() > 1) {
+        if (lobbyEngine.getPlayerResolver().getPlayerCount() > 1) {
             roleBalancer.recompute();
-            lobbyEngine.getPlayers().forEach(lobbyPlayer -> {
+            lobbyEngine.getPlayerResolver().getPlayers().forEach(lobbyPlayer -> {
                 Function<GameRole.Type, String> chanceResolver = type -> {
                     double chancePercent = roleBalancer.getRoleChance(lobbyPlayer, type) * 100;
                     return NumberUtils.formatDouble(chancePercent, 1);
@@ -62,7 +62,7 @@ public class LobbyTicking implements Ticking {
             if (timeLeft == 0) {
                 lobbyEngine.shutdown();
                 roleBalancer.applyRoles();
-                gameEngine.startGame(lobbyEngine.getPlayers());
+                gameEngine.startGame(lobbyEngine.getPlayerResolver().getPlayers());
                 return true;
             }
             String timeLeftFormatted = SimpleTemporal.of(timeLeft, TimeUnit.SECONDS).format();

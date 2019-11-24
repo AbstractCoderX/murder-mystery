@@ -13,7 +13,7 @@ public class ProfessionTemplateResolver {
 
     private final Map<Profession.Type, ProfessionTemplate> professionTemplateMap;
 
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public ProfessionTemplateResolver(
             List<ProfessionTemplate> professionTemplates) {
         professionTemplateMap = Maps.newHashMapWithExpectedSize(professionTemplates.size());
