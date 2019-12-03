@@ -72,7 +72,7 @@ public class GameEngine {
     private final Plugin plugin;
     private final PlayerDataService playerDataService;
 
-    private GameTicking gameTicking = new GameTicking(this);
+    private GameTicking gameTicking;
 
     @Inject
     public GameEngine(Arena arena, GeneralConfig generalConfig, GameActionService gameActionService,
@@ -115,8 +115,6 @@ public class GameEngine {
         roleClassFactory.init(this);
 
         state = GameState.WAITING;
-
-        tickingService.register(gameTicking);
     }
 
     public GameState getState() {
@@ -182,6 +180,8 @@ public class GameEngine {
     public void startGame(Collection<LobbyPlayer> lobbyPlayers) {
         Preconditions.checkState(state == GameState.WAITING, "Game already started");
 
+        tickingService.register(gameTicking = new GameTicking(this));
+
         Iterator<Location> spawnPointIterator = arena.getSpawnPoints().iterator();
         lobbyPlayers.forEach(lobbyPlayer -> {
             Player player = lobbyPlayer.getPlayer();
@@ -201,6 +201,11 @@ public class GameEngine {
     }
 
     public void endGame(GameSide winnedSide, @Nullable GamePlayer endInitiator) {
+        Preconditions.checkState(state == GameState.PLAYING, "Illegal game state: %s", state);
+
+        state = GameState.ENDING;
+        gameActionService.handleEnding();
+
         tickingService.unregister(gameTicking);
 
         GameSide losedSide = winnedSide.getOppositeSide();

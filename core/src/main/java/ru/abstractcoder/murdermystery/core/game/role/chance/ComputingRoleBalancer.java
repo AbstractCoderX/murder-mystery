@@ -67,7 +67,7 @@ public class ComputingRoleBalancer {
 
         GameRole.Type.CLASSED_TYPES.forEach(type -> {
             ProbableList<PlayerProbable> playerProbables = new ProbableList<>();
-            playerResolver.getPlayers().forEach(lobbyPlayer -> {
+            playerDeque.forEach(lobbyPlayer -> {
                 Probability probability = Probability.fromValue(getRoleChance(lobbyPlayer, type));
                 PlayerProbable playerProbable = new PlayerProbable(lobbyPlayer, probability);
                 playerProbables.add(playerProbable);
@@ -88,7 +88,10 @@ public class ComputingRoleBalancer {
         });
 
         for (Profession.Type type : Profession.Type.VALUES) {
-            LobbyPlayer lobbyPlayer = playerDeque.remove();
+            LobbyPlayer lobbyPlayer = playerDeque.poll();
+            if (lobbyPlayer == null) {
+                break;
+            }
 
             GameRole gameRole = roleResolver.resolveCivilianRole(type);
             lobbyPlayer.setBalancedRole(gameRole);

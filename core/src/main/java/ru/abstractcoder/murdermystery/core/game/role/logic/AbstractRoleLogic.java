@@ -48,6 +48,7 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
 
     @Override
     public void death(@Nullable GamePlayer killer, DeathState deathState) {
+        this.unload();
         gamePlayer.data().statistic().incrementDeaths();
 
         PlayerController playerController = gameEngine.getPlayerController();
@@ -61,14 +62,19 @@ public abstract class AbstractRoleLogic implements RoleLogic, AnyOwnMoveResponsi
         if (cachedSidebar != null) {
             gameEngine.getSidebarService().setSidebar(gamePlayer.getHandle(), cachedSidebar);
         }
-
-        gamePlayer.setMuted(false);
-        gamePlayer.setUnmovedDamageEnabled(false);
     }
 
     @Override
     public final void death() {
         death(null, new DeathState(gamePlayer.getHandle().getLocation()));
+    }
+
+    @Override
+    public void leaveGame() {
+        this.unload();
+        msgConfig.get(Msg.game__player_leaved, gamePlayer.getName(), gamePlayer.getRole().getDisplayName())
+                .broadcastSession()
+                .broadcastChat();
     }
 
     @Override

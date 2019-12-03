@@ -6,6 +6,7 @@ import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.data.PlayerData;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
+import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
@@ -17,7 +18,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable {
+public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable, RoleHolder {
 
     private final PlayerData data;
     private final Collection<Cosmetic> cosmetics;
@@ -43,13 +44,13 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     public GamePlayer(Player player, GameRole role,
             PlayerData data, SkinContainer skinContainer, Collection<Cosmetic> cosmetics) {
         super(player);
-
         this.role = role;
         this.data = data;
-        getRoleLogic().load();
-
         this.skinContainer = skinContainer;
         this.cosmetics = cosmetics;
+
+        role.initLogic(this);
+        getRoleLogic().load();
     }
 
     public static GamePlayer fromSpectatingPlayer(SpectatingPlayer sp, GameRole role) {
@@ -62,6 +63,7 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
         );
     }
 
+    @Override
     public GameRole getRole() {
         return role;
     }

@@ -7,12 +7,13 @@ import ru.abstractcoder.murdermystery.core.data.PlayerData;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
+import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
 import java.util.Collection;
 
-public class SpectatingPlayer extends AbstractWrappedPlayer {
+public class SpectatingPlayer extends AbstractWrappedPlayer implements RoleHolder {
 
     private final GameRole cachedRole; //TODO remove redundant field
     private final PlayerData cachedData;
@@ -34,10 +35,6 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
 
     public boolean isOnline() {
         return handle.isOnline();
-    }
-
-    public GameRole getCachedRole() {
-        return cachedRole;
     }
 
     public SkinContainer getCachedSkinContainer() {
@@ -62,6 +59,11 @@ public class SpectatingPlayer extends AbstractWrappedPlayer {
 
     public PlayerData getCachedData() {
         return cachedData;
+    }
+
+    @Override
+    public GameRole getRole() {
+        return cachedRole;
     }
 
 }

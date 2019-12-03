@@ -1,6 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.skin.container;
 
-import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
+import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.game.skin.view.SingleSkinView;
 import ru.abstractcoder.murdermystery.core.game.skin.view.SkinView;
@@ -17,11 +17,11 @@ public class SkinContainer {
         this.skinView = skinView;
     }
 
-    public Skin getSkinFor(GamePlayer gamePlayer) {
+    public Skin getSkinFor(RoleHolder player) {
         if (isDisplayRealSkin()) {
             return realSkin;
         }
-        return skinView.getSkinFor(gamePlayer);
+        return skinView.getSkinFor(player);
     }
 
     public Skin getRealSkin() {

@@ -4,8 +4,6 @@ import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionTemplate;
 
-import java.util.Set;
-
 public interface Profession extends RoleComponent {
 
     @Override
@@ -17,11 +15,9 @@ public interface Profession extends RoleComponent {
         POLICEMAN,
         DOCTOR,
         PROSTITUTE,
-        DEFAULT
+        DEFAULT;
 
-        ;
-
-        public static final Set<Type> VALUES = Set.of(values());
+        public static final Type[] VALUES = values();
 
         @Override
         public GameRole.Type getRoleType() {

@@ -39,7 +39,8 @@ public class SelectedCosmeticRepository {
 
     public CompletableFuture<Void> save(String name, Map<CosmeticCategory.Type, String> selectedCosmeticMap) {
         //language=MySQL
-        String sql = "insert into selected_cosmetics values (?, ?, ?)";
+        String sql = "insert into selected_cosmetics values (?, ?, ?) on duplicate key update " +
+                "cosmetic = values(cosmetic)";
 
         String nameLower = name.toLowerCase();
         Object[][] params = selectedCosmeticMap.entrySet().stream()
@@ -47,7 +48,7 @@ public class SelectedCosmeticRepository {
                     CosmeticCategory.Type category = entry.getKey();
                     String cosmeticKey = entry.getValue();
 
-                    return new Object[]{nameLower, category, cosmeticKey};
+                    return new Object[]{nameLower, category.name(), cosmeticKey};
                 })
                 .toArray(Object[][]::new);
 

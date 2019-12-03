@@ -20,7 +20,9 @@ public enum Msg implements MsgKey {
     ),
     lobby__waiting_sidebar_state("&fОжидание игроков..."),
     lobby__starting_sidebar_state("§fСтарт: §6{time_left}"),
+    lobby__player_leaved("{player} покинул игру"),
 
+    game__already_started("&cИгра уже началась!"),
     game__murder_on_the_prow("&cУбийца вышел на охоту"),
     game__murder_get_money_for_kill("&fТы получил &a{amount} монет &fза убийство"),
     game__survivor_get_money_periodic("&fТы получил &a{amount} монет &fза {period} выживания"),
@@ -42,6 +44,7 @@ public enum Msg implements MsgKey {
     game__role_selecting_animation("&fВыбор роли: &a{random_role}"),
     game__role_animation_end("&cВы {role}"),
     game__kill_player("Ты {action} игрока {victim}"),
+    game__player_leaved("&fИгрок {player} ({role}) покинул игру"),
 
     game__win_title("&aПобеда"),
     game__lose_title("&cПоражение"),
@@ -64,6 +67,7 @@ public enum Msg implements MsgKey {
     gui__class_already_purchased("&cЭтот класс уже куплен"),
     gui__class_succ_purchased("&aВы успешно купили этот класс"),
     gui__cosmetic_case_succ_purchased("&aВы успешно купили кейс с косметикой!"),
+
 
     ;
 

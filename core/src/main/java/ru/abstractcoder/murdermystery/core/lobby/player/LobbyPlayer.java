@@ -27,6 +27,10 @@ public class LobbyPlayer extends AbstractWrappedPlayer {
         return preferredRole;
     }
 
+    public boolean isRolePreferred() {
+        return preferredRole != null;
+    }
+
     public void setPreferredRole(RoleTemplate preferredRole) {
         this.preferredRole = preferredRole;
     }

@@ -44,17 +44,21 @@ public class RoleSelectingAnimationAction implements GameAction {
         definedTimerBuilderFactory
                 .tickTimerBuilder(20)
                 .setPeriodTicks(3)
-                .setAction(() -> playerResolver.getAll().forEach(gamePlayer -> {
-                    String roleName = animationRoleNames.get(random.nextInt(animationRoleNames.size()));
-                    msgConfig.get(Msg.game__role_selecting_animation, roleName).sendActionBar(gamePlayer);
-                }))
+                .setAction(() -> {
+                    playerResolver.getAll().forEach(gamePlayer -> {
+                        String roleName = animationRoleNames.get(random.nextInt(animationRoleNames.size()));
+                        msgConfig.get(Msg.game__role_selecting_animation, roleName).sendActionBar(gamePlayer);
+                    });
+                })
                 .setLastAction(() -> {
                     playerResolver.getAll().forEach(gamePlayer -> {
+                        gamePlayer.getHandle().sendActionBar(" ");
                         gamePlayer.setRoleShowed(true);
                         msgConfig.get(Msg.game__role_animation_end, gamePlayer.getRole().getDisplayName())
                                 .sendTitle(gamePlayer);
                     });
-                });
+                })
+                .build().start();
     }
 
 }

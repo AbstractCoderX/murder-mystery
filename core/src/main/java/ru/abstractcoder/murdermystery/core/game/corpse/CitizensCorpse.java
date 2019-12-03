@@ -1,6 +1,8 @@
 package ru.abstractcoder.murdermystery.core.game.corpse;
 
 import com.comphenix.packetwrapper.AbstractPacket;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.citizensnpcs.api.npc.NPC;
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.EntityPlayer;
@@ -15,8 +17,8 @@ import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.util.SkinUtils;
 
 import java.lang.invoke.MethodHandle;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class CitizensCorpse implements Corpse {
@@ -25,8 +27,12 @@ public class CitizensCorpse implements Corpse {
     private static final MethodHandle DATAWATCHER_MAP_SETTER;
 
     static {
-        DATAWATCHER_MAP_GETTER = TrustedLookup.apply(lookup -> lookup.findGetter(DataWatcher.class, "d", Map.class));
-        DATAWATCHER_MAP_SETTER = TrustedLookup.apply(lookup -> lookup.findSetter(DataWatcher.class, "d", Map.class));
+        DATAWATCHER_MAP_GETTER = TrustedLookup.apply(lookup ->
+                lookup.findGetter(DataWatcher.class, "entries", Int2ObjectOpenHashMap.class)
+        );
+        DATAWATCHER_MAP_SETTER = TrustedLookup.apply(lookup ->
+                lookup.findSetter(DataWatcher.class, "entries", Int2ObjectOpenHashMap.class)
+        );
     }
 
     private final Plugin plugin;
@@ -37,19 +43,21 @@ public class CitizensCorpse implements Corpse {
     private boolean removed = false;
 
     private final AbstractPacket blockChangePacket;
-    private final AbstractPacket bedPacket;
-    private Packet<?> glowingPacket;
+    private final Packet<?> defaultMetadataPacket;
+    private Packet<?> metadataWithGlowingPacket;
+
+    private final Set<Player> glowingEnabledPlayers = new HashSet<>();
 
     private final Proof proof;
 
     public CitizensCorpse(Plugin plugin, NPC npc, UUID playerId, Skin skin,
-            AbstractPacket blockChangePacket, AbstractPacket bedPacket) {
+            AbstractPacket blockChangePacket, Packet<?> defaultMetadataPacket) {
         this.plugin = plugin;
         this.npc = npc;
         this.playerId = playerId;
         this.skin = skin;
         this.blockChangePacket = blockChangePacket;
-        this.bedPacket = bedPacket;
+        this.defaultMetadataPacket = defaultMetadataPacket;
 
         proof = new Proof(skin.data());
     }
@@ -57,11 +65,14 @@ public class CitizensCorpse implements Corpse {
     @Override
     public void sendTo(Player player) {
         blockChangePacket.sendPacket(player);
-        plugin.getServer().getScheduler()
-                .runTaskLater(plugin, () -> bedPacket.sendPacket(player), 1L);
+        //plugin.getServer().getScheduler()
+        //        .runTaskLater(plugin, () -> bedPacket.sendPacket(player), 1L);
 
-        if (glowingPacket != null) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(glowingPacket);
+        EntityPlayer receiver = ((CraftPlayer) player).getHandle();
+        if (metadataWithGlowingPacket != null && glowingEnabledPlayers.contains(player)) {
+            receiver.playerConnection.sendPacket(metadataWithGlowingPacket);
+        } else {
+            receiver.playerConnection.sendPacket(defaultMetadataPacket);
         }
     }
 
@@ -102,23 +113,23 @@ public class CitizensCorpse implements Corpse {
 
     @Override
     public void enableGlowingFor(Player player) {
-        if (glowingPacket == null) {
+        if (metadataWithGlowingPacket == null) {
             EntityPlayer entityPlayer = ((CraftPlayer) npc.getEntity()).getHandle();
 
             DataWatcher toCloneDataWatcher = entityPlayer.getDataWatcher();
             DataWatcher newDataWatcher = new DataWatcher(entityPlayer);
 
-            Map<Integer, DataWatcher.Item<?>> currentMap;
+            Int2ObjectMap<DataWatcher.Item<?>> currentMap;
             try {
                 //noinspection unchecked
-                currentMap = (Map<Integer, DataWatcher.Item<?>>) DATAWATCHER_MAP_GETTER.invoke(toCloneDataWatcher);
+                currentMap = (Int2ObjectMap<DataWatcher.Item<?>>) DATAWATCHER_MAP_GETTER.invoke(toCloneDataWatcher);
             } catch (Throwable t) {
                 throw new AssertionError(t);
             }
-            Map<Integer, DataWatcher.Item<?>> newMap = new HashMap<>();
+            Int2ObjectMap<DataWatcher.Item<?>> newMap = new Int2ObjectOpenHashMap<>();
 
-            for (Integer integer : currentMap.keySet()) {
-                newMap.put(integer, currentMap.get(integer).d());
+            for (int i : currentMap.keySet()) {
+                newMap.put(i, currentMap.get(i).d());
             }
 
             //noinspection unchecked
@@ -133,9 +144,15 @@ public class CitizensCorpse implements Corpse {
                 throw new AssertionError(t);
             }
 
-            glowingPacket = new PacketPlayOutEntityMetadata(npc.getEntity().getEntityId(), newDataWatcher, true);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(glowingPacket);
+            metadataWithGlowingPacket = new PacketPlayOutEntityMetadata(
+                    npc.getEntity().getEntityId(),
+                    newDataWatcher,
+                    true
+            );
         }
+
+        glowingEnabledPlayers.add(player);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(metadataWithGlowingPacket);
     }
 
     @Override

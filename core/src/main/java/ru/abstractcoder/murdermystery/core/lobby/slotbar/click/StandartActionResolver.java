@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.lobby.slotbar.click;
 
+import dagger.Reusable;
 import org.jetbrains.annotations.NotNull;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
@@ -8,6 +9,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Reusable
 public class StandartActionResolver {
 
     private final Map<StandartClickAction, Consumer<LobbyPlayer>> actionConsumerMap;

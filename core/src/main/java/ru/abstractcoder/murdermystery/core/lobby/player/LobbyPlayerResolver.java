@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Reusable
 public class LobbyPlayerResolver {
 
-    private final Map<Player, LobbyPlayer> playerMap = new HashMap<>();
+    private final ConcurrentMap<Player, LobbyPlayer> playerMap = new ConcurrentHashMap<>();
 
     @Inject
     public LobbyPlayerResolver() {

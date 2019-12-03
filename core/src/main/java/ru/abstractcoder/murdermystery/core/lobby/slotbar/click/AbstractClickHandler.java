@@ -26,8 +26,8 @@ public abstract class AbstractClickHandler implements ClickHandler {
     @Override
     public void handleInteract(PlayerInteractEvent event, LobbyPlayer player) {
         if (allowedActions.contains(event.getAction())) {
-            onClick(player);
             event.setUseItemInHand(Event.Result.DENY);
+            onClick(player);
         }
     }
 

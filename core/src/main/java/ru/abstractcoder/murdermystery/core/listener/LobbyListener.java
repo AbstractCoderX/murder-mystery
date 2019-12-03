@@ -62,7 +62,11 @@ public class LobbyListener implements BukkitListener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        lobbyEngine.unloadPlayer(event.getPlayer());
+        Player player = event.getPlayer();
+        lobbyEngine.unloadPlayer(player);
+        msgConfig.get(Msg.lobby__player_leaved, player.getName())
+                .broadcastSession()
+                .broadcastChat();
     }
 
     @EventHandler

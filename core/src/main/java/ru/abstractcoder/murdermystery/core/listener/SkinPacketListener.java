@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
+import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 
 import javax.inject.Inject;
@@ -32,20 +33,41 @@ public class SkinPacketListener extends AbstractPacketListener {
                     @Override
                     public void onPacketSending(PacketEvent event) {
                         Player player = event.getPlayer();
-                        GamePlayer gamePlayer = gameEngine.getPlayerResolver().resolve(player);
+
+                        RoleHolder roleHolder;
+                        {
+                            GamePlayer gamePlayer = gameEngine.getPlayerResolver().resolve(player);
+                            if (gamePlayer != null) {
+                                roleHolder = gamePlayer;
+                            } else {
+                                roleHolder = gameEngine.getPlayerController().getSpectatingSafe(player)
+                                        .orThrow(() -> new IllegalStateException(String.format(
+                                                "Player %s not gaming and not spectating", player.getName()
+                                        )));
+                            }
+                        }
 
                         WrapperPlayServerPlayerInfo packet = new WrapperPlayServerPlayerInfo(event.getPacket());
+                        System.out.println(String.format("=====Start handling player info packet with action %s =====", packet.getAction()));
                         packet.getData().forEach(data -> {
                             Multimap<String, WrappedSignedProperty> properties = data.getProfile().getProperties();
+                            System.out.println("=========================================================");
+                            System.out.println("data before: " + data);
+                            System.out.println("properties before: " + properties);
 
                             gameEngine.getSkinContainableResolver().getById(data.getProfile().getUUID())
                                     .map(SkinContainable::getSkinContainer)
-                                    .map(skinContainer -> skinContainer.getSkinFor(gamePlayer))
+                                    .map(skinContainer -> skinContainer.getSkinFor(roleHolder))
                                     .ifPresent(skin -> {
                                         properties.clear();
                                         properties.put("textures", skin.getWrappedProperty());
                                     });
+
+                            System.out.println("properties after: " + properties);
+                            System.out.println("data after: " + data);
+                            System.out.println("=========================================================");
                         });
+                        System.out.println("====End handling player info packet=====");
                     }
                 }
         };

@@ -94,7 +94,7 @@ public class GamePlayerResolver {
     }
 
     public void loadMurder(GamePlayer gamePlayer) {
-        checkPlayer(gamePlayer, GameRole.Type.MURDER);
+        checkRole(gamePlayer, GameRole.Type.MURDER);
 
         put(gamePlayer);
         this.murder = gamePlayer;
@@ -105,7 +105,7 @@ public class GamePlayerResolver {
     }
 
     public void loadDetective(GamePlayer gamePlayer) {
-        checkPlayer(gamePlayer, GameRole.Type.DETECTIVE);
+        checkRole(gamePlayer, GameRole.Type.DETECTIVE);
 
         put(gamePlayer);
         survivors.add(gamePlayer);
@@ -119,9 +119,14 @@ public class GamePlayerResolver {
             return;
         }
 
-        checkPlayer(gamePlayer, GameRole.Type.DETECTIVE);
+        checkRole(gamePlayer, GameRole.Type.DETECTIVE);
 
         this.detective = gamePlayer;
+    }
+
+    public void removeMurder() {
+        gamePlayerMap.remove(murder.getUniqueId());
+        setMurderAlive(false);
     }
 
     public Collection<GamePlayer> getAll() {
@@ -133,11 +138,11 @@ public class GamePlayerResolver {
     }
 
     public Collection<GamePlayer> getCivilians() {
-        return civilians;
+            return civilians;
     }
 
     public void loadCivilian(GamePlayer gamePlayer) {
-        checkPlayer(gamePlayer, GameRole.Type.CIVILIAN);
+        checkRole(gamePlayer, GameRole.Type.CIVILIAN);
 
         put(gamePlayer);
         civilians.add(gamePlayer);
@@ -145,7 +150,7 @@ public class GamePlayerResolver {
     }
 
     public void removeCivilian(GamePlayer gamePlayer) {
-        checkPlayer(gamePlayer, GameRole.Type.CIVILIAN);
+        checkRole(gamePlayer, GameRole.Type.CIVILIAN);
 
         gamePlayerMap.remove(gamePlayer.getHandle().getUniqueId());
         civilians.remove(gamePlayer);
@@ -162,7 +167,7 @@ public class GamePlayerResolver {
         skinContainableResolver.add(gamePlayer);
     }
 
-    private void checkPlayer(GamePlayer gamePlayer, GameRole.Type expectedType) {
+    private void checkRole(GamePlayer gamePlayer, GameRole.Type expectedType) {
         Preconditions.checkArgument(gamePlayer.getRole().getType() == expectedType,
                 "Expected role type %s, but got %s",
                 expectedType,

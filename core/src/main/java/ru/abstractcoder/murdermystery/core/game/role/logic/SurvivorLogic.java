@@ -29,16 +29,24 @@ public abstract class SurvivorLogic extends AbstractRoleLogic {
     @Override
     public void death(@Nullable GamePlayer killer, DeathState deathState) {
         super.death(killer, deathState);
+        checkDecrementedSurvivorCount();
+    }
 
-        // check if last survivor died
-        if (gameEngine.getPlayerResolver().getSurvivors().size() == 1) {
-            gameEngine.endGame(GameSide.MURDER, gameEngine.getPlayerResolver().getMurder());
-        }
+    @Override
+    public void leaveGame() {
+        super.leaveGame();
+        checkDecrementedSurvivorCount();
     }
 
     @Override
     public final GameSide getGameSide() {
         return GameSide.SURVIVORS;
+    }
+
+    private void checkDecrementedSurvivorCount() {
+        if (gameEngine.getPlayerResolver().getSurvivors().size() == 0) {
+            gameEngine.endGame(GameSide.MURDER, gameEngine.getPlayerResolver().getMurder());
+        }
     }
 
 }

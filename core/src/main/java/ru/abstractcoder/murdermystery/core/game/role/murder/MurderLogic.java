@@ -10,7 +10,6 @@ import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
 import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
-import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
 import ru.abstractcoder.murdermystery.core.game.role.civilian.CivilianRole;
 import ru.abstractcoder.murdermystery.core.game.role.logic.AbstractRoleLogic;
@@ -30,6 +29,11 @@ public abstract class MurderLogic extends AbstractRoleLogic {
     @Override
     public void load() {
         gameEngine.getPlayerResolver().loadMurder(gamePlayer);
+    }
+
+    @Override
+    public void unload() {
+        gameEngine.getPlayerResolver().removeMurder();
     }
 
     @Override
@@ -57,7 +61,7 @@ public abstract class MurderLogic extends AbstractRoleLogic {
         gameEngine.getEconomyService().incrementBalanceAsync(gamePlayer, murderKillMoney);
         msgConfig.get(Msg.game__murder_get_money_for_kill, murderKillMoney).send(gamePlayer);
 
-        GamePlayerResolver playerResolver = gameEngine.getPlayerResolver();
+        var playerResolver = gameEngine.getPlayerResolver();
         playerResolver.getSurvivors().forEach(gamePlayer -> {
             Player player = gamePlayer.getHandle();
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
@@ -68,6 +72,7 @@ public abstract class MurderLogic extends AbstractRoleLogic {
                 CivilianRole role = (CivilianRole) gamePlayer.getRole();
                 if (role.getProfession().getType() == Profession.Type.POLICEMAN) {
                     gamePlayer.setRole(gameEngine.getRoleResolver().getDefaultClassedRole(GameRole.Type.DETECTIVE));
+                    playerResolver.setDetective(gamePlayer);
                     //TODO new detective msg
                     return true;
                 }
@@ -82,9 +87,14 @@ public abstract class MurderLogic extends AbstractRoleLogic {
 
     @Override
     public void death(@Nullable GamePlayer killer, DeathState deathState) {
-        var playerResolver = gameEngine.getPlayerResolver();
-        playerResolver.setMurderAlive(false);
+        super.death(killer, deathState);
         gameEngine.endGame(GameSide.SURVIVORS, killer);
+    }
+
+    @Override
+    public void leaveGame() {
+        super.leaveGame();
+        gameEngine.endGame(GameSide.SURVIVORS, null);
     }
 
 }

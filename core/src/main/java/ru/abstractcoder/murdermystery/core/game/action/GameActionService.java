@@ -11,6 +11,7 @@ public class GameActionService {
 
     private final Int2ObjectMap<GameAction> gameActionMap = new Int2ObjectOpenHashMap<>();
     private GameAction startingAction;
+    private GameAction endingAction;
 
     @Inject
     public GameActionService() {
@@ -21,6 +22,14 @@ public class GameActionService {
             startingAction = action;
         } else {
             startingAction = startingAction.andThen(action);
+        }
+    }
+
+    public void addEndingAction(GameAction action) {
+        if (endingAction == null) {
+            endingAction = action;
+        } else {
+            endingAction = endingAction.andThen(action);
         }
     }
 
@@ -38,6 +47,12 @@ public class GameActionService {
         GameAction gameAction = gameActionMap.get(newTime);
         if (gameAction != null) {
             gameAction.execute();
+        }
+    }
+
+    public void handleEnding() {
+        if (endingAction != null) {
+            endingAction.execute();
         }
     }
 

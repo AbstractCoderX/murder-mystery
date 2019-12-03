@@ -6,6 +6,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
@@ -13,6 +14,7 @@ import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.data.PlayerDataService;
 import ru.abstractcoder.murdermystery.core.game.arena.Arena;
+import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayerResolver;
 
@@ -23,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 public class LobbyEngine {
 
     private final GeneralConfig.Lobby settings;
+    private final Plugin plugin;
     private final Arena arena;
     private final LobbySidebarManager lobbySidebarManager;
     private final SlotBarItemProcessor slotBarItemProcessor;
@@ -39,7 +42,7 @@ public class LobbyEngine {
     public LobbyEngine(GeneralConfig generalConfig, Arena arena, LobbyPlayerResolver playerResolver,
             LobbySidebarManager lobbySidebarManager,
             MsgConfig<Msg> msgConfig, PlayerDataService playerDataService,
-            LobbyTicking lobbyTicking, TickingService tickingService) {
+            LobbyTicking lobbyTicking, TickingService tickingService, Plugin plugin) {
         this.arena = arena;
         this.playerResolver = playerResolver;
         this.lobbySidebarManager = lobbySidebarManager;
@@ -47,6 +50,7 @@ public class LobbyEngine {
         this.playerDataService = playerDataService;
 
         settings = generalConfig.lobby();
+        this.plugin = plugin;
         slotBarItemProcessor = new SlotBarItemProcessor(settings.getSlotBarItemResolver());
 
         lobbySidebarManager.init(this);
@@ -70,9 +74,11 @@ public class LobbyEngine {
 
     public void shutdown() {
         isActive = false;
+        bossBar.removeAll();
         lobbySidebarManager.unshowForAll();
         slotBarItemProcessor.clearAll();
         shutdownAction.run();
+        playerResolver.getPlayers().forEach(player -> player.getHandle().sendTitle(SharedConstants.EMPTY_TITLE));
     }
 
     public GeneralConfig.Lobby settings() {
@@ -96,13 +102,21 @@ public class LobbyEngine {
             throw new IllegalArgumentException(String.format("Player %s already loaded", player.getName()));
         }
 
-        lobbySidebarManager.showSidebar(player);
-        slotBarItemProcessor.populatePlayerInventory(player);
-        bossBar.addPlayer(player);
-        checkIncrementedPlayerCount();
-
         return playerDataService.loadPlayerData(player)
-                .thenApply(data -> new LobbyPlayer(player, data));
+                .thenApply(data -> {
+                    LobbyPlayer lobbyPlayer = new LobbyPlayer(player, data);
+
+                    playerResolver.add(lobbyPlayer);
+                    checkIncrementedPlayerCount();
+
+                    plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        lobbySidebarManager.showSidebar(player);
+                        slotBarItemProcessor.populatePlayerInventory(player);
+                        bossBar.addPlayer(player);
+                    });
+
+                    return lobbyPlayer;
+                });
     }
 
     private void checkIncrementedPlayerCount() {

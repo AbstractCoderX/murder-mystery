@@ -3,13 +3,11 @@ package ru.abstractcoder.murdermystery.core.game.role.civilian;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.item.ItemBuilder;
 import ru.abstractcoder.benioapi.item.ItemUtils;
 import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
-import ru.abstractcoder.murdermystery.core.game.misc.DeathState;
 import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.logic.SurvivorLogic;
@@ -33,8 +31,7 @@ public class CivilianLogic extends SurvivorLogic {
     }
 
     @Override
-    public void death(@Nullable GamePlayer killer, DeathState deathState) {
-        super.death(killer, deathState);
+    public void unload() {
         gameEngine.getPlayerResolver().removeCivilian(gamePlayer);
     }
 

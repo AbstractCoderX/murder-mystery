@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -53,6 +54,7 @@ public class HoconGeneralConfig extends HoconConfig implements GeneralConfig {
         return dto.game;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static final class Dto {
 
         private final Mysql mysql;

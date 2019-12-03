@@ -42,7 +42,7 @@ public class PurchasedRoleClassesRepository {
 
         String nameLower = name.toLowerCase();
         Object[][] params = purchasedRoleClasses.stream()
-                .map(type -> new Object[]{nameLower, type.getRoleType(), type})
+                .map(type -> new Object[]{nameLower, type.getRoleType().name(), type.name()})
                 .toArray(Object[][]::new);
 
         return queryFactory.completableQuery().executeBatch(sql, params);

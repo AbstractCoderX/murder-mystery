@@ -48,6 +48,7 @@ public class ListenerRegistrationProcessBootstrap {
 
         for (MurderListener listener : gameListeners) {
             gameActionService.addStartingAction(() -> listener.register(plugin));
+            gameActionService.addEndingAction(listener::unregister);
         }
     }
 

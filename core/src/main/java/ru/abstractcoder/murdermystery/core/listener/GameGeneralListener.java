@@ -1,5 +1,6 @@
 package ru.abstractcoder.murdermystery.core.listener;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -15,12 +16,16 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ru.abstractcoder.benioapi.config.msg.MsgConfig;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.game.misc.VendingMachine;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayerResolver;
 import ru.abstractcoder.murdermystery.core.game.player.PlayerController;
+import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -31,13 +36,30 @@ public class GameGeneralListener implements BukkitListener {
     private final GamePlayerResolver playerResolver;
     private final PlayerController playerController;
     private final VendingMachine vendingMachine;
+    private final MsgConfig<Msg> msgConfig;
 
     @Inject
     public GameGeneralListener(GamePlayerResolver playerResolver,
-            PlayerController playerController, VendingMachine vendingMachine) {
+            PlayerController playerController, VendingMachine vendingMachine,
+            MsgConfig<Msg> msgConfig) {
         this.playerResolver = playerResolver;
         this.playerController = playerController;
         this.vendingMachine = vendingMachine;
+        this.msgConfig = msgConfig;
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        GamePlayer gamePlayer = playerResolver.resolve(player);
+        if (gamePlayer != null) {
+            gamePlayer.getRoleLogic().leaveGame();
+            return;
+        }
+
+        SpectatingPlayer sp = playerController.removeSpectating(player);
+        Preconditions.checkState(sp != null,
+                "Not spectating or gaming player %s", player.getName());
     }
 
     @EventHandler(ignoreCancelled = true)

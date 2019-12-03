@@ -1,6 +1,7 @@
 package ru.abstractcoder.murdermystery.core.game.corpse;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
@@ -12,16 +13,15 @@ import java.util.stream.Stream;
 
 public interface CorpseService {
 
-    Corpse spawnCorpse(UUID playerId, Skin skin, Location location);
+    Corpse spawnCorpse(Player player, Skin skin, Location location);
 
     default Corpse spawnCorpse(GamePlayer player, Location location) {
-        return spawnCorpse(player.getHandle().getUniqueId(), player.getSkinContainer().getRealSkin(), location);
+        return spawnCorpse(player.getHandle(), player.getSkinContainer().getRealSkin(), location);
     }
 
     default Corpse spawnCorpse(SpectatingPlayer player, Location location) {
-        UUID playerId = player.getHandle().getUniqueId();
         Skin realSkin = player.getCachedSkinContainer().getRealSkin();
-        Corpse corpse = spawnCorpse(playerId, realSkin, location);
+        Corpse corpse = spawnCorpse(player.getHandle(), realSkin, location);
         player.setCorpse(corpse);
         return corpse;
     }

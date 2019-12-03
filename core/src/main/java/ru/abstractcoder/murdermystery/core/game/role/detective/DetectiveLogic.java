@@ -22,14 +22,28 @@ public class DetectiveLogic extends SurvivorLogic {
     }
 
     @Override
-    public void death(@Nullable GamePlayer killer, DeathState deathState) {
+    public void unload() {
         gameEngine.getPlayerResolver().setDetective(null);
+    }
+
+    @Override
+    public void death(@Nullable GamePlayer killer, DeathState deathState) {
         if (killer == null || killer.getRole().getType() != GameRole.Type.MURDER) {
-            Location location = gameEngine.getArena().getRandomSpawnPoint();
-            gameEngine.getBowDropProcessor().dropBow(location);
+            dropBowRandomly();
         }
 
         super.death(killer, deathState);
+    }
+
+    @Override
+    public void leaveGame() {
+        super.leaveGame();
+        dropBowRandomly();
+    }
+
+    private void dropBowRandomly() {
+        Location location = gameEngine.getArena().getRandomSpawnPoint();
+        gameEngine.getBowDropProcessor().dropBow(location);
     }
 
 }

@@ -24,7 +24,7 @@ public class MysqlClassedRoleDataRepository implements ClassedRoleDataRepository
     @Override
     public CompletableFuture<Map<GameRole.Type, ClassedRoleData>> load(String name) {
         //language=MySQL
-        String sql = "select chance_points from classed_role_player_data where username = ?";
+        String sql = "select role, chance_points, selected_class from classed_role_player_data where username = ?";
         return queryFactory.completableQuery().query(sql, rs -> {
             Map<GameRole.Type, ClassedRoleData> result = new EnumMap<>(GameRole.Type.class);
             while (rs.next()) {
@@ -43,7 +43,8 @@ public class MysqlClassedRoleDataRepository implements ClassedRoleDataRepository
     @Override
     public CompletableFuture<Void> save(String name, Map<GameRole.Type, ClassedRoleData> classedRoleDataMap) {
         //language=MySQL
-        String sql = "insert into classed_role_player_data values (?, ?, ?, ?)";
+        String sql = "insert into classed_role_player_data values (?, ?, ?, ?) on duplicate key update " +
+                "chance_points = values(chance_points), selected_class = values(selected_class)";
 
         String nameLower = name.toLowerCase();
         Object[][] params = classedRoleDataMap.entrySet().stream()
@@ -52,7 +53,7 @@ public class MysqlClassedRoleDataRepository implements ClassedRoleDataRepository
                     ClassedRoleData data = entry.getValue();
 
                     return new Object[]{
-                            nameLower, type,
+                            nameLower, type.name(),
                             data.getChancePoints(), data.getSelectedClassType()
                     };
                 })

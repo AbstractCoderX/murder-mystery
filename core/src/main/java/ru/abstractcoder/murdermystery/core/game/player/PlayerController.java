@@ -4,6 +4,7 @@ import dagger.Reusable;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class PlayerController {
 
     private final CorpseService corpseService;
+
     private final Map<UUID, SpectatingPlayer> spectatingPlayerMap = new HashMap<>();
 
     @Inject
@@ -46,12 +48,19 @@ public class PlayerController {
         return BeniOptional.ofNullable(spectatingPlayerMap.get(playerId));
     }
 
+    @Nullable
     public SpectatingPlayer getSpectating(Player player) {
         return spectatingPlayerMap.get(player.getUniqueId());
     }
 
+    @Nullable
     public SpectatingPlayer removeSpectating(UUID uuid) {
         return spectatingPlayerMap.remove(uuid);
+    }
+
+    @Nullable
+    public SpectatingPlayer removeSpectating(Player player) {
+        return removeSpectating(player.getUniqueId());
     }
 
     public boolean isSpectator(Player player) {
@@ -60,6 +69,10 @@ public class PlayerController {
 
     public Collection<SpectatingPlayer> getAllSpectators() {
         return spectatingPlayerMap.values();
+    }
+
+    public BeniOptional<SpectatingPlayer> getSpectatingSafe(Player player) {
+        return getSpectatingSafe(player.getUniqueId());
     }
 
 }

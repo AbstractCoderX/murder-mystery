@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 @Reusable
 public class GameSideService {
@@ -41,17 +40,11 @@ public class GameSideService {
         this.playerController = playerController;
 
         gameActionService.addStartingAction(() -> {
-            playerDataMap.put(GameSide.MURDER, playerResolver.getMurder().data());
-            playerDataMap.putAll(GameSide.SURVIVORS, playerResolver.getSurvivors().stream()
-                    .map(GamePlayer::data)
-                    .collect(Collectors.toList())
-            );
-
-            playerMap.put(GameSide.MURDER, playerResolver.getMurder().getHandle());
-            playerMap.putAll(GameSide.SURVIVORS, playerResolver.getSurvivors().stream()
-                    .map(GamePlayer::getHandle)
-                    .collect(Collectors.toList())
-            );
+            playerResolver.getAll().forEach(gamePlayer -> {
+                GameSide gameSide = gamePlayer.getRoleLogic().getGameSide();
+                playerMap.put(gameSide, gamePlayer.getHandle());
+                playerDataMap.put(gameSide, gamePlayer.data());
+            });
         });
     }
 

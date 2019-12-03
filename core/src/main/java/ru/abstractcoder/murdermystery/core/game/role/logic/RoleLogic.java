@@ -9,6 +9,8 @@ public interface RoleLogic {
 
     void load();
 
+    void unload();
+
     GameSide getGameSide();
 
     void kill(GamePlayer victim, DeathState deathState);
@@ -18,6 +20,8 @@ public interface RoleLogic {
     void death(@Nullable GamePlayer killer, DeathState deathState);
 
     void death();
+
+    void leaveGame();
 
     void pickupGolds(int amount);
 

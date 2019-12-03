@@ -47,7 +47,8 @@ public class SelectedSkinRepository {
 
     public CompletableFuture<Void> save(String name, Map<Type, Skin> selectedSkinMap) {
         //language=MySQL
-        String sql = "insert into selected_skins values (?, ?, ?, ?)";
+        String sql = "insert into selected_skins values (?, ?, ?, ?) on duplicate key update " +
+                "selected_skin = values(selected_skin)";
 
         String nameLower = name.toLowerCase();
         Object[][] params = selectedSkinMap.entrySet().stream()

@@ -2,6 +2,7 @@ package ru.abstractcoder.murdermystery.core.dagger.component;
 
 import dagger.Component;
 import ru.abstractcoder.benioapi.dagger.DaggerBenioModule;
+import ru.abstractcoder.murdermystery.core.bootstrap.WorldPreparingBootstrap;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.dagger.module.BindsModule;
 import ru.abstractcoder.murdermystery.core.dagger.module.ConfigModule;
@@ -31,5 +32,7 @@ public interface MurderMainComponent {
     SlotBarItemActionBootstrap slotBarItemActionBootstrap();
 
     ListenerRegistrationProcessBootstrap listenerRegistrationProcessBootstrap();
+
+    WorldPreparingBootstrap worldPreparingBootstrap();
 
 }

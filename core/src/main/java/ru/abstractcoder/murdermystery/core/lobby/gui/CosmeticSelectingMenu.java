@@ -21,6 +21,7 @@ import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Reusable
@@ -62,7 +63,7 @@ public class CosmeticSelectingMenu {
                                             .withItemMeta()
                                             .setName(" ")
                                     )
-                                    .when(session -> session.getSelectedCategory().equals(category))
+                                    .when(session -> session.isSelectedCategory(category))
                                     .then(itemBuilder -> itemBuilder
                                             .material(Material.LIME_STAINED_GLASS_PANE)
                                             .buildMenuIcon(glassSlot)
@@ -77,54 +78,59 @@ public class CosmeticSelectingMenu {
             }
 
             template = loader.load(templateBuilder)
-                    .perSessionDynamicContent(session -> session.getSelectedCategory().getPremiusCosmetics()
-                            .stream()
-                            .map(cosmetic -> MenuItemBuilder.<LobbyPlayer, Session, DynamicMenuIcon>create()
-                                    .conditionalIcon(creator -> creator
-                                            .withBaseItem(() -> loader.getDynamicItemData()
-                                                    .copy()
-                                                    .impose(cosmetic.getIconData())
-                                                    .toItemBuilder()
-                                            )
-                                            .when(s -> cosmetic.isAvailableFor(s.getOwner())
-                                                    && !s.getOwner().data()
-                                                    .isCosmeticSelected(s.getSelectedCategory(), cosmetic)
-                                            )
-                                            .then(ItemBuilder::buildMenuIcon)
-                                            .when(s -> cosmetic.isAvailableFor(s.getOwner())
-                                                    && s.getOwner().data()
-                                                    .isCosmeticSelected(s.getSelectedCategory(), cosmetic)
-                                            )
-                                            .then(itemBuilder -> itemBuilder
-                                                    .withItemMeta()
-                                                    .blankEnchantment()
-                                                    .buildMenuIcon()
-                                            )
-                                            .otherwise(ItemBuilder.fromMaterial(Material.GRAY_DYE)
-                                                    .withItemMeta()
-                                                    .setName("§cЭта косметика недоступна для Вас!")
-                                                    .buildMenuIcon()
-                                            )
-                                    )
-                                    .onClick(click -> {
-                                        LobbyPlayer player = click.getIssuer();
-                                        if (!cosmetic.isAvailableFor(player)) {
-                                            return;
-                                        }
+                    .perSessionDynamicContent(session -> {
+                        if (!session.isCategorySelected()) {
+                            return Collections.emptyList();
+                        }
 
-                                        CosmeticCategory selectedCategory = session.getSelectedCategory();
-                                        if (player.data().isCosmeticSelected(selectedCategory, cosmetic)) {
-                                            player.data().unselectCosmetic(selectedCategory);
-                                        } else {
-                                            player.data().selectedCosmetic(selectedCategory, cosmetic);
-                                        }
+                        return session.getSelectedCategory().getPremiusCosmetics()
+                                .stream()
+                                .map(cosmetic -> MenuItemBuilder.<LobbyPlayer, Session, DynamicMenuIcon>create()
+                                        .conditionalIcon(creator -> creator
+                                                .withBaseItem(() -> loader.getDynamicItemData()
+                                                        .copy()
+                                                        .impose(cosmetic.getIconData())
+                                                        .toItemBuilder()
+                                                )
+                                                .when(s -> cosmetic.isAvailableFor(s.getOwner())
+                                                        && !s.getOwner().data()
+                                                        .isCosmeticSelected(s.getSelectedCategory(), cosmetic)
+                                                )
+                                                .then(ItemBuilder::buildMenuIcon)
+                                                .when(s -> cosmetic.isAvailableFor(s.getOwner())
+                                                        && s.getOwner().data()
+                                                        .isCosmeticSelected(s.getSelectedCategory(), cosmetic)
+                                                )
+                                                .then(itemBuilder -> itemBuilder
+                                                        .withItemMeta()
+                                                        .blankEnchantment()
+                                                        .buildMenuIcon()
+                                                )
+                                                .otherwise(ItemBuilder.fromMaterial(Material.GRAY_DYE)
+                                                        .withItemMeta()
+                                                        .setName("§cЭта косметика недоступна для Вас!")
+                                                        .buildMenuIcon()
+                                                )
+                                        )
+                                        .onClick(click -> {
+                                            LobbyPlayer player = click.getIssuer();
+                                            if (!cosmetic.isAvailableFor(player)) {
+                                                return;
+                                            }
 
-                                        session.updateCache();
-                                    })
-                                    .build()
-                            )
-                            .collect(Collectors.toList())
-                    )
+                                            CosmeticCategory selectedCategory = session.getSelectedCategory();
+                                            if (player.data().isCosmeticSelected(selectedCategory, cosmetic)) {
+                                                player.data().unselectCosmetic(selectedCategory);
+                                            } else {
+                                                player.data().selectedCosmetic(selectedCategory, cosmetic);
+                                            }
+
+                                            session.updateCache();
+                                        })
+                                        .build()
+                                )
+                                .collect(Collectors.toList());
+                    })
                     .build();
         });
     }
@@ -143,6 +149,14 @@ public class CosmeticSelectingMenu {
 
         public CosmeticCategory getSelectedCategory() {
             return selectedCategory;
+        }
+
+        public boolean isCategorySelected() {
+            return selectedCategory != null;
+        }
+
+        public boolean isSelectedCategory(CosmeticCategory category) {
+            return category.equals(selectedCategory);
         }
 
         public void setSelectedCategory(CosmeticCategory selectedCategory) {
