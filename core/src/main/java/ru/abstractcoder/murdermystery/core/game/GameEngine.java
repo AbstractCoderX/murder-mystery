@@ -9,10 +9,13 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.BoardApi;
 import ru.abstractcoder.benioapi.board.SidebarService;
+import ru.abstractcoder.benioapi.config.msg.Message;
+import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.benioapi.function.UncheckedRunnable;
 import ru.abstractcoder.benioapi.util.ticking.TickingService;
 import ru.abstractcoder.murdermystery.core.caze.CaseRepository;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
+import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.cosmetic.responsible.VictoryResponsible;
 import ru.abstractcoder.murdermystery.core.data.PlayerDataService;
 import ru.abstractcoder.murdermystery.core.game.action.GameActionService;
@@ -26,6 +29,7 @@ import ru.abstractcoder.murdermystery.core.game.player.GamePlayerService;
 import ru.abstractcoder.murdermystery.core.game.player.PlayerController;
 import ru.abstractcoder.murdermystery.core.game.role.RoleResolver;
 import ru.abstractcoder.murdermystery.core.game.role.classed.RoleClassFactory;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolderResolver;
 import ru.abstractcoder.murdermystery.core.game.role.profession.template.ProfessionResolver;
 import ru.abstractcoder.murdermystery.core.game.side.GameSide;
 import ru.abstractcoder.murdermystery.core.game.side.GameSideService;
@@ -48,6 +52,7 @@ public class GameEngine {
     private final GameTime gameTime;
     private final Arena arena;
     private final GeneralConfig.Game settings;
+    private final MsgConfig<Msg> msgConfig;
     private final GamePlayerService playerService;
     private final EconomyService economyService;
     private final GoldManager goldManager;
@@ -71,6 +76,7 @@ public class GameEngine {
     private final CaseRepository caseRepository;
     private final Plugin plugin;
     private final PlayerDataService playerDataService;
+    private final RoleHolderResolver roleHolderResolver;
 
     private GameTicking gameTicking;
 
@@ -85,7 +91,8 @@ public class GameEngine {
             RoleClassFactory roleClassFactory, PlayerController playerController,
             BoardApi boardApi, SidebarService sidebarService,
             GameSideService gameSideService, CaseRepository caseRepository,
-            PlayerDataService playerDataService) {
+            PlayerDataService playerDataService, RoleHolderResolver roleHolderResolver,
+            MsgConfig<Msg> msgConfig) {
         this.arena = arena;
         this.playerService = playerService;
         this.economyService = economyService;
@@ -107,8 +114,10 @@ public class GameEngine {
         this.gameSideService = gameSideService;
         this.caseRepository = caseRepository;
         this.playerDataService = playerDataService;
+        this.roleHolderResolver = roleHolderResolver;
 
         settings = generalConfig.game();
+        this.msgConfig = msgConfig;
         gameTime = new GameTime(settings.general().getGameDuration());
 
         professionResolver.init(this);
@@ -256,24 +265,29 @@ public class GameEngine {
             data.statistic().incrementDefeats();
         });
 
-        aliveWinnedPlayers.forEach(gamePlayer -> gamePlayer.cosmetics(VictoryResponsible.class)
-                .forEach(resp -> resp.onVictory(gamePlayer))
-        );
+        aliveWinnedPlayers.forEach(gamePlayer -> {
+            gamePlayer.cosmetics(VictoryResponsible.class)
+                    .forEach(resp -> resp.onVictory(gamePlayer));
+        });
+
+        Message winnedMessage = msgConfig.get(Msg.game__win_title, winnedSide.getWinSubtitle());
+        winnedPlayers.forEach(player -> winnedMessage.sendTitle(player, 10, 6 * 20, 10));
+
+        Message losedMessage = msgConfig.get(Msg.game__lose_title, losedSide.getLoseSubtitle());
+        losedPlayers.forEach(player -> losedMessage.sendTitle(player, 10, 6 * 20, 10));
 
         if (endInitiator != null) {
             caseRepository.giveMurderCase(endInitiator.getName(), 1);
         }
 
         CompletableFuture<Void> future = playerDataService.saveAll();
-        scheduler.runSyncLater(4 * 20, (UncheckedRunnable) () -> {
+        scheduler.runSyncLater(11 * 20, (UncheckedRunnable) () -> {
             try {
                 future.get(); //wait saving if not done yet
             } finally {
                 Bukkit.getServer().shutdown();
             }
         });
-
-        //TODO
     }
 
     public BowDropProcessor getBowDropProcessor() {
@@ -294,6 +308,10 @@ public class GameEngine {
 
     public SidebarService getSidebarService() {
         return sidebarService;
+    }
+
+    public RoleHolderResolver getRoleHolderResolver() {
+        return roleHolderResolver;
     }
 
 }

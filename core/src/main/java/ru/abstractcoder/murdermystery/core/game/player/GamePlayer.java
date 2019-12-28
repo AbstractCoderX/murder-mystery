@@ -1,16 +1,17 @@
 package ru.abstractcoder.murdermystery.core.game.player;
 
+import net.minecraft.server.EntityPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.board.sidebar.Sidebar;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.data.PlayerData;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
-import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
-import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 import ru.abstractcoder.murdermystery.core.rating.Rating;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
@@ -53,16 +54,6 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
         getRoleLogic().load();
     }
 
-    public static GamePlayer fromSpectatingPlayer(SpectatingPlayer sp, GameRole role) {
-        return new GamePlayer(
-                sp.getHandle(),
-                role,
-                sp.getCachedData(),
-                sp.getCachedSkinContainer(),
-                sp.getCachedCosmetics()
-        );
-    }
-
     @Override
     public GameRole getRole() {
         return role;
@@ -76,6 +67,11 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
     @Override
     public UUID getUniqueId() {
         return handle.getUniqueId();
+    }
+
+    @Override
+    public EntityPlayer getNmsHandle() {
+        return ((CraftPlayer) handle).getHandle();
     }
 
     @Override
@@ -182,6 +178,11 @@ public class GamePlayer extends AbstractWrappedPlayer implements SkinContainable
 
     public PlayerData data() {
         return data;
+    }
+
+    @Override
+    public Player getHandle() {
+        return super.getHandle();
     }
 
 }

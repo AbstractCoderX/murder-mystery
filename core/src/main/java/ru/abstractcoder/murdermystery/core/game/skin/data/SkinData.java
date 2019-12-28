@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.benioapi.gui.template.issuer.GuiAndCommandUserMixin;
+import ru.abstractcoder.benioapi.item.ItemData;
+import ru.abstractcoder.benioapi.item.ItemDataImposible;
 import ru.abstractcoder.benioapi.item.ItemUtils;
 import ru.abstractcoder.benioapi.util.ColorUtils;
 import ru.abstractcoder.benioapi.util.Lazy;
@@ -13,7 +15,7 @@ import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import java.util.List;
 import java.util.Random;
 
-public class SkinData {
+public class SkinData implements ItemDataImposible {
 
     private static final Random random = new Random();
 
@@ -60,6 +62,13 @@ public class SkinData {
 
     public String asStringKey() {
         return "default";
+    }
+
+    @Override
+    public void imposeTo(ItemData itemData) {
+        itemData
+                .nameReplacements(s -> s.replace("{name}", name))
+                .skullOwnerReplacements(s -> s.replace("{skull}", skin.getTexture()));
     }
 
 }

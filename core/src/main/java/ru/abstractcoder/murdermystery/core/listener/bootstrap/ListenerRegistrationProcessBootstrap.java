@@ -33,7 +33,7 @@ public class ListenerRegistrationProcessBootstrap {
         lobbyListeners = new MurderListener[]{lobbyListener};
 
         gameListeners = new MurderListener[]{gameGeneralListener, roleLogicListener, corpsePacketListener,
-                skinPacketListener};
+                /*skinPacketListener*/};
     }
 
     public void boot() {

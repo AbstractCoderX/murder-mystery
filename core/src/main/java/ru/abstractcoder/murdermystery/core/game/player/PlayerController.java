@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolderResolver;
 import ru.abstractcoder.murdermystery.core.game.spectate.SpectatingPlayer;
 
 import javax.inject.Inject;
@@ -20,12 +21,14 @@ import java.util.UUID;
 public class PlayerController {
 
     private final CorpseService corpseService;
+    private final RoleHolderResolver roleHolderResolver;
 
     private final Map<UUID, SpectatingPlayer> spectatingPlayerMap = new HashMap<>();
 
     @Inject
-    public PlayerController(CorpseService corpseService) {
+    public PlayerController(CorpseService corpseService, RoleHolderResolver roleHolderResolver) {
         this.corpseService = corpseService;
+        this.roleHolderResolver = roleHolderResolver;
     }
 
     public SpectatingPlayer makeSpectating(GamePlayer gamePlayer, boolean needCorpse) {
@@ -41,6 +44,7 @@ public class PlayerController {
 
         SpectatingPlayer spectatingPlayer = new SpectatingPlayer(gamePlayer, player.getLocation(), corpse);
         spectatingPlayerMap.put(player.getUniqueId(), spectatingPlayer);
+        roleHolderResolver.put(spectatingPlayer);
         return spectatingPlayer;
     }
 
@@ -55,6 +59,7 @@ public class PlayerController {
 
     @Nullable
     public SpectatingPlayer removeSpectating(UUID uuid) {
+        roleHolderResolver.remove(uuid);
         return spectatingPlayerMap.remove(uuid);
     }
 

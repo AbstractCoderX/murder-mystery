@@ -39,6 +39,8 @@ public class MurderMysteryCorePlugin extends BenioPlugin {
         component.listenerRegistrationProcessBootstrap().boot();
         component.slotBarItemActionBootstrap().boot();
         component.worldPreparingBootstrap().boot();
+        component.npcBoardTeamBootstrap().boot();
+        component.murderMysteryCommand().register(this);
     }
 
     @Override

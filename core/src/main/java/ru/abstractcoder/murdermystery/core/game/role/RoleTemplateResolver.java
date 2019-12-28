@@ -7,10 +7,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class RoleTemplateResolver {
 
     private final Map<GameRole.Type, RoleTemplate> byCategoryMap;
+    private final List<RoleTemplate> extraPointableTemplates;
 
     @JsonCreator
     public RoleTemplateResolver(List<RoleTemplate> gameRoles) {
@@ -19,6 +21,10 @@ public class RoleTemplateResolver {
                 RoleTemplate::getType,
                 Function.identity()
         ));
+
+        extraPointableTemplates = gameRoles.stream()
+                .filter(RoleTemplate::isExtraPointable)
+                .collect(Collectors.toList());
     }
 
     public RoleTemplate getByType(GameRole.Type type) {
@@ -27,6 +33,10 @@ public class RoleTemplateResolver {
 
     public Collection<RoleTemplate> getAll() {
         return byCategoryMap.values();
+    }
+
+    public List<RoleTemplate> getExtraPointableTemplates() {
+        return extraPointableTemplates;
     }
 
 }

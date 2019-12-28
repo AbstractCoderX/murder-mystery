@@ -1,7 +1,5 @@
 package ru.abstractcoder.murdermystery.core.game.corpse;
 
-import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
-import com.comphenix.protocol.wrappers.BlockPosition;
 import dagger.Reusable;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -12,29 +10,31 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.benioapi.util.reflect.TrustedLookup;
 import ru.abstractcoder.murdermystery.core.game.corpse.bed.BedFacade;
+import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
-import ru.abstractcoder.murdermystery.core.util.SkinUtils;
+import ru.abstractcoder.murdermystery.core.scheduler.Scheduler;
 
 import javax.inject.Inject;
 import java.lang.invoke.MethodHandle;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Reusable
 public class CitizensCorpseService implements CorpseService {
 
+    private final Scheduler scheduler;
     private final NPCRegistry npcRegistry;
-    private final Plugin plugin;
     private final Map<UUID, Corpse> byCorpseIdMap = new HashMap<>();
     private final Map<UUID, Corpse> byPlayerIdMap = new HashMap<>();
 
     private static final DataWatcherObject<EntityPose> ENTITY_POSE;
-    private static final DataWatcherObject<Optional<net.minecraft.server.BlockPosition>> BED_POSITION;
 
     static {
         MethodHandle entityPoseHandle = TrustedLookup.apply(lookup ->
@@ -44,17 +44,15 @@ public class CitizensCorpseService implements CorpseService {
         try {
             //noinspection unchecked
             ENTITY_POSE = (DataWatcherObject<EntityPose>) entityPoseHandle.invoke();
-            //noinspection unchecked
-            BED_POSITION = (DataWatcherObject<Optional<net.minecraft.server.BlockPosition>>) bedPositionHandle.invoke();
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
     }
 
     @Inject
-    public CitizensCorpseService(NPCRegistry npcRegistry, Plugin plugin) {
+    public CitizensCorpseService(Scheduler scheduler, NPCRegistry npcRegistry) {
+        this.scheduler = scheduler;
         this.npcRegistry = npcRegistry;
-        this.plugin = plugin;
     }
 
     @Nullable
@@ -69,10 +67,10 @@ public class CitizensCorpseService implements CorpseService {
 
     @Override
     public Corpse spawnCorpse(Player player, Skin skin, Location location) {
-        NPC npc = npcRegistry.createNPC(EntityType.PLAYER, player.getName());
+        NPC npc = npcRegistry.createNPC(EntityType.PLAYER, SharedConstants.NPC_NAME);
         npc.getTrait(Gravity.class).gravitate(true);
 
-        SkinUtils.setSkin(npc, skin);
+        // SkinUtils.setSkin(npc, skin);
 
         BedFacade bedFacade = BedFacade.getByYaw(location.getYaw());
         Location spawnLoc = getNonClippableBlockUnderPlayer(location).or(location);
@@ -81,32 +79,34 @@ public class CitizensCorpseService implements CorpseService {
                 spawnLoc.getBlockX() + bedFacade.getAdjustX(),
                 spawnLoc.getBlockY() + 0.13,
                 spawnLoc.getBlockZ() + bedFacade.getAdjustZ());
-        BlockPosition bedPosition = new BlockPosition(adjustedSpawnLoc.getBlockX(), 0, adjustedSpawnLoc.getBlockZ());
-        var nmsBedposition = (net.minecraft.server.BlockPosition) BlockPosition.getConverter().getGeneric(bedPosition);
+        // BlockPosition bedPosition = new BlockPosition(adjustedSpawnLoc.getBlockX(), spawnLoc.getBlockY(), adjustedSpawnLoc.getBlockZ());
+        // var nmsBedposition = (net.minecraft.server.BlockPosition) BlockPosition.getConverter().getGeneric(bedPosition);
+
+        // WrapperPlayServerBlockChange blockChangePacked = new WrapperPlayServerBlockChange();
+        // blockChangePacked.setLocation(bedPosition);
+        // blockChangePacked.setBlockData(bedFacade.getBedData());
 
         npc.spawn(adjustedSpawnLoc);
-
-        WrapperPlayServerBlockChange blockChangePacked = new WrapperPlayServerBlockChange();
-        blockChangePacked.setLocation(bedPosition);
-        blockChangePacked.setBlockData(bedFacade.getBedData());
-
+        // PlayerProfile profile = Bukkit.createProfile(null, skin.data().getName());
+        // profile.getProperties().add(new ProfileProperty(skin.getProperty().getName(), skin.getProperty().getValue(), skin.getProperty().getSignature()));
+        // craftPlayer.setPlayerProfile(profile);
         EntityPlayer entityPlayer = ((CraftPlayer) npc.getEntity()).getHandle();
         DataWatcher dataWatcher = entityPlayer.getDataWatcher();
-        dataWatcher.set(BED_POSITION, Optional.of(nmsBedposition));
+        // dataWatcher.set(BED_POSITION, Optional.of(nmsBedposition));
         dataWatcher.set(ENTITY_POSE, EntityPose.SLEEPING);
+        // npc.getEntity().teleport(adjustedSpawnLoc);
 
-        PacketPlayOutEntityMetadata defaultMetadataPacket = new PacketPlayOutEntityMetadata(
-                entityPlayer.getId(),
-                dataWatcher,
-                true
-        );
+        // PacketPlayOutEntityMetadata defaultMetadataPacket = new PacketPlayOutEntityMetadata(
+        //         entityPlayer.getId(),
+        //         dataWatcher,
+        //         true
+        // );
 
         //        WrapperPlayServerBed bedPacked = new WrapperPlayServerBed();
         //        bedPacked.setLocation(bedPosition);
         //        bedPacked.setEntityID(npc.getEntity().getEntityId());
 
-        Corpse corpse = new CitizensCorpse(plugin, npc, player.getUniqueId(),
-                skin, blockChangePacked, defaultMetadataPacket);
+        Corpse corpse = new CitizensCorpse(scheduler, npc, player.getUniqueId(), skin);
         byCorpseIdMap.put(corpse.getCorpseId(), corpse);
         byPlayerIdMap.put(corpse.getPlayerId(), corpse);
 

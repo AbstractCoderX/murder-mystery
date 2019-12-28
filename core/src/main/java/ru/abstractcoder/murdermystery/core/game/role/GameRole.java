@@ -5,9 +5,6 @@ import ru.abstractcoder.murdermystery.core.game.role.component.RoleComponent;
 import ru.abstractcoder.murdermystery.core.game.role.equipper.PlayerEquipper;
 import ru.abstractcoder.murdermystery.core.game.role.logic.RoleLogic;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 public interface GameRole {
 
     Type getType();
@@ -34,8 +31,8 @@ public interface GameRole {
         private final char guiChar;
         private final boolean classed;
 
-        public static final Set<Type> CLASSED_TYPES = EnumSet.of(MURDER, DETECTIVE);
         public static final Type[] VALUES = values();
+        public static final Type[] CLASSED_TYPES = new Type[]{MURDER, DETECTIVE};
 
         Type(char guiChar, boolean classed) {
             this.guiChar = guiChar;

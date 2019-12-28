@@ -1,13 +1,14 @@
 package ru.abstractcoder.murdermystery.core.game.spectate;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.murdermystery.core.cosmetic.Cosmetic;
 import ru.abstractcoder.murdermystery.core.data.PlayerData;
 import ru.abstractcoder.murdermystery.core.game.corpse.Corpse;
 import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
-import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 import ru.abstractcoder.murdermystery.core.util.AbstractWrappedPlayer;
 
@@ -64,6 +65,11 @@ public class SpectatingPlayer extends AbstractWrappedPlayer implements RoleHolde
     @Override
     public GameRole getRole() {
         return cachedRole;
+    }
+
+    @Override
+    public Player getHandle() {
+        return super.getHandle();
     }
 
 }

@@ -37,7 +37,7 @@ public class LobbySidebarManager {
                 .withLineUpdater(new PlaceholderTextUpdater()
                         .prepare(LobbyPlayer.class, lobbyEngine.getPlayerResolver()::resolve)
                         .add("{desired_role}", LobbyPlayer.class, p ->
-                                p.isRolePreferred() ? p.getPreferredRole().getName() : "???"
+                                p.hasPreferredRole() ? p.getPreferredRole().getName() : "???"
                         )
                         .add("{wins}", LobbyPlayer.class, p -> p.getStatistic().getWins())
                         .add("{defeats}", LobbyPlayer.class, p -> p.getStatistic().getDefeats())

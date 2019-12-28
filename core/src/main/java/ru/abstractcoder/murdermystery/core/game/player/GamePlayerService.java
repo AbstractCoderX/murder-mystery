@@ -41,7 +41,9 @@ public class GamePlayerService {
         player.teleport(sp.getDeathLocation());
 
         var role = roleResolver.resolveCivilianRole(Profession.Type.DEFAULT);
-        return GamePlayer.fromSpectatingPlayer(sp, role);
+        return new GamePlayer(player, role, sp.getCachedData(),
+                sp.getCachedSkinContainer().toSimpleCivilianContainer(),
+                sp.getCachedCosmetics());
     }
 
 }

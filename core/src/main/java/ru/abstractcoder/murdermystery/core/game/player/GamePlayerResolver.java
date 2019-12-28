@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
 import ru.abstractcoder.murdermystery.core.game.role.GameRole;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolderResolver;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import java.util.*;
 public class GamePlayerResolver {
 
     private final SkinContainableResolver skinContainableResolver;
+    private final RoleHolderResolver roleHolderResolver;
 
     private final Map<UUID, GamePlayer> gamePlayerMap = new HashMap<>();
 
@@ -26,8 +28,9 @@ public class GamePlayerResolver {
     private final Collection<GamePlayer> civilians = new ArrayList<>(16);
 
     @Inject
-    public GamePlayerResolver(SkinContainableResolver skinContainableResolver) {
+    public GamePlayerResolver(SkinContainableResolver skinContainableResolver, RoleHolderResolver roleHolderResolver) {
         this.skinContainableResolver = skinContainableResolver;
+        this.roleHolderResolver = roleHolderResolver;
     }
 
     public @Nullable GamePlayer resolve(Player player) {
@@ -36,7 +39,7 @@ public class GamePlayerResolver {
 
     public @NotNull GamePlayer resolvePresent(Player player) {
         GamePlayer gamePlayer = resolve(player);
-        Preconditions.checkState(gamePlayer != null, "Unknown player: %s", player.getName());
+        Preconditions.checkState(gamePlayer != null, "Player not %s not in game", player.getName());
         return gamePlayer;
     }
 
@@ -165,6 +168,9 @@ public class GamePlayerResolver {
 
         gamePlayerMap.put(handle.getUniqueId(), gamePlayer);
         skinContainableResolver.add(gamePlayer);
+        roleHolderResolver.put(gamePlayer);
+
+        System.out.println(String.format("%s - %s", gamePlayer.getRole().getType(), gamePlayer.getRole().getClass()));
     }
 
     private void checkRole(GamePlayer gamePlayer, GameRole.Type expectedType) {

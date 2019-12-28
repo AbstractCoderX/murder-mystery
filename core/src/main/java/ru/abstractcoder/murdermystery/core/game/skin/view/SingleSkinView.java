@@ -1,6 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.skin.view;
 
-import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 
 public class SingleSkinView implements SkinView {

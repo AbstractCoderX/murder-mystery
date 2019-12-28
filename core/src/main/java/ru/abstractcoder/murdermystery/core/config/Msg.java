@@ -46,8 +46,8 @@ public enum Msg implements MsgKey {
     game__kill_player("Ты {action} игрока {victim}"),
     game__player_leaved("&fИгрок {player} ({role}) покинул игру"),
 
-    game__win_title("&aПобеда"),
-    game__lose_title("&cПоражение"),
+    game__win_title("&aПобеда", "{subtitle}"),
+    game__lose_title("&cПоражение", "{subtitle}"),
     game__murder_win_subtitle("&fВсе жители мертвы"),
     game__murder_lose_subtitle("&fВас поймали"),
     game__survivors_win_subtitle("&fУбийца обезврежен"),
@@ -68,6 +68,10 @@ public enum Msg implements MsgKey {
     gui__class_succ_purchased("&aВы успешно купили этот класс"),
     gui__cosmetic_case_succ_purchased("&aВы успешно купили кейс с косметикой!"),
 
+    chat__lobby_format("&e{rank} &f{name}&7: &f{message}"),
+    chat__game_player_format("&e{rank} &f{name}&7: &f{message}"),
+    chat__game_spectator_format("&e{rank} &f{name}&7: {message}"),
+    // chat__,
 
     ;
 

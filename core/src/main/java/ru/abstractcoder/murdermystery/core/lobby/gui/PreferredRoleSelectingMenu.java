@@ -6,7 +6,6 @@ import dagger.Reusable;
 import ru.abstractcoder.benioapi.config.HoconConfig;
 import ru.abstractcoder.benioapi.gui.template.MenuApi;
 import ru.abstractcoder.benioapi.gui.template.MenuTemplate;
-import ru.abstractcoder.benioapi.gui.template.item.FixedMenuIcon;
 import ru.abstractcoder.benioapi.gui.template.item.MenuItemFactory;
 import ru.abstractcoder.benioapi.gui.template.loader.HoconSingleMenuLoader;
 import ru.abstractcoder.benioapi.gui.template.loader.SingleMenuLoader;
@@ -36,11 +35,16 @@ public class PreferredRoleSelectingMenu {
             generalConfig.game().getRoleTemplateResolver().getAll().forEach(roleTemplate -> {
                 menuLoader.setItem(roleTemplate.getType().getGuiChar(), (slot, itemData) -> {
                     return MenuItemFactory.create(builder -> builder
-                            .cachedIcon(new FixedMenuIcon(slot, itemData.copy()
+                            .cachedIcon(itemData.copy()
                                     .impose(roleTemplate.getIcon())
-                                    .toItemStack()
-                            ))
-                            .onClick(click -> click.getIssuer().setPreferredRole(roleTemplate))
+                                    .toMenuIcon(slot)
+                            )
+                            .onClick(click -> {
+                                if (roleTemplate == click.getIssuer().getPreferredRole()) {
+                                    return;
+                                }
+                                click.getIssuer().setPreferredRole(roleTemplate);
+                            })
                     );
                 });
             });

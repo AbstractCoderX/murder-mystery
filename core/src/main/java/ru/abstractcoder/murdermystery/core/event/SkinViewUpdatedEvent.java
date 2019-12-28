@@ -2,28 +2,26 @@ package ru.abstractcoder.murdermystery.core.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
-import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
+import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 
-public class GamePlayerDeathEvent extends Event {
+public class SkinViewUpdatedEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final GamePlayer gamePlayer;
+    private final SkinContainable skinHolder;
 
-    public GamePlayerDeathEvent(GamePlayer gamePlayer) {
-        this.gamePlayer = gamePlayer;
+    public SkinViewUpdatedEvent(SkinContainable skinHolder) {
+        this.skinHolder = skinHolder;
     }
 
-    public GamePlayer getPlayer() {
-        return gamePlayer;
+    public SkinContainable getSkinHolder() {
+        return skinHolder;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

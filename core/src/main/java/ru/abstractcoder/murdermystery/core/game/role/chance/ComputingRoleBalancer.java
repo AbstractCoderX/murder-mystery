@@ -23,6 +23,7 @@ import java.util.Deque;
 @Reusable
 public class ComputingRoleBalancer {
 
+    // public static final int DEFAULT_PLAYER_POINTS = 10;
     private final LobbyPlayerResolver playerResolver;
     private final RoleTemplateResolver roleTemplateResolver;
     private final RoleClassTemplateResolver roleClassTemplateResolver;
@@ -30,6 +31,8 @@ public class ComputingRoleBalancer {
 
     private double onePartChance;
     private double commonChance = 1.0;
+
+    private int commonAdditionalPoints;
 
     @Inject
     public ComputingRoleBalancer(LobbyPlayerResolver playerResolver, GameEngine gameEngine) {
@@ -39,33 +42,65 @@ public class ComputingRoleBalancer {
         this.roleResolver = gameEngine.getRoleResolver();
     }
 
+    @Deprecated
     public void recompute() {
-        onePartChance = 1.0 / playerResolver.getPlayerCount();
+        commonAdditionalPoints = playerResolver.getPlayers().stream()
+                .flatMapToInt(lobbyPlayer -> roleTemplateResolver.getExtraPointableTemplates().stream()
+                        .map(RoleTemplate::getType)
+                        .mapToInt(lobbyPlayer::getRolePoints)
+                )
+                .sum();
+        // for (LobbyPlayer player : playerResolver.getPlayers()) {
+        //     for (RoleTemplate roleTemplate : roleTemplateResolver.getExtraPointableTemplates()) {
+        //         int rolePoints = player.getRolePoints(roleTemplate.getType());
+        //     }
+        // }
 
-        commonChance = 1.0;
-        roleTemplateResolver.getAll().stream()
-                .filter(RoleTemplate::isExtraPointable)
-                .forEach(roleTemplate -> playerResolver.getPlayers().forEach(lobbyPlayer -> {
-                    int chancePoints = lobbyPlayer.data().getClassedRoleData(roleTemplate.getType()).getChancePoints();
-                    commonChance += probabilityFromPoints(chancePoints);
-                }));
+        // onePartChance = 1.0 / playerResolver.getPlayerCount();
+        //
+        // commonChance = 1.0;
+        // roleTemplateResolver.getAll().stream()
+        //         .filter(RoleTemplate::isExtraPointable)
+        //         .forEach(roleTemplate -> playerResolver.getPlayers().forEach(lobbyPlayer -> {
+        //             int chancePoints = lobbyPlayer.data().getClassedRoleData(roleTemplate.getType()).getChancePoints();
+        //             commonChance += probabilityFromPoints(chancePoints);
+        //         }));
     }
 
     public double getRoleChance(LobbyPlayer lobbyPlayer, GameRole.Type roleType) {
-        int roleChancePoints = lobbyPlayer.data().getClassedRoleData(roleType).getChancePoints();
-        double probability = onePartChance + probabilityFromPoints(roleChancePoints);
-        return probability / commonChance;
+        // int totalDefaultPoints = playerResolver.getPlayerCount() * DEFAULT_PLAYER_POINTS;
+        // int totalAdditionalPoints = playerResolver.getPlayers().stream()
+        //         .mapToInt(lp -> lp.getRolePoints(roleType))
+        //         .sum();
+        // int totalPoints = totalDefaultPoints + totalAdditionalPoints;
+
+        // return ((double) (DEFAULT_PLAYER_POINTS + rolePoints)) / totalPoints;
+
+        int rolePoints = lobbyPlayer.getRolePoints(roleType);
+        double averageRolePoints = playerResolver.getPlayers().stream()
+                .mapToInt(lp -> lp.getRolePoints(roleType))
+                .average()
+                .orElseThrow(IllegalStateException::new);
+        double devitationFromAverage = rolePoints - averageRolePoints;
+
+        double defChance = 1.0 / playerResolver.getPlayerCount();
+
+        return defChance + (devitationFromAverage / 10);
+
+        // int roleChancePoints = lobbyPlayer.data().getClassedRoleData(roleType).getChancePoints();
+        // double probability = onePartChance + probabilityFromPoints(roleChancePoints);
+        // return probability / commonChance;
     }
 
-    private double probabilityFromPoints(int points) {
-        return (points * 2) / 100.0;
-    }
+    // private double probabilityFromPoints(int points) {
+    //     return (points * 2) / 100.0;
+    // }
 
     public void applyRoles() {
-        this.recompute();
+        // this.recompute();
         Deque<LobbyPlayer> playerDeque = new ArrayDeque<>(playerResolver.getPlayers());
 
-        GameRole.Type.CLASSED_TYPES.forEach(type -> {
+        for (var type : GameRole.Type.CLASSED_TYPES) {
             ProbableList<PlayerProbable> playerProbables = new ProbableList<>();
             playerDeque.forEach(lobbyPlayer -> {
                 Probability probability = Probability.fromValue(getRoleChance(lobbyPlayer, type));
@@ -85,7 +120,7 @@ public class ComputingRoleBalancer {
             GameRole gameRole = roleResolver.resolveClassedRole(classType, roleTemplate);
             selectedPlayer.setBalancedRole(gameRole);
             playerDeque.remove(selectedPlayer);
-        });
+        }
 
         for (Profession.Type type : Profession.Type.VALUES) {
             LobbyPlayer lobbyPlayer = playerDeque.poll();

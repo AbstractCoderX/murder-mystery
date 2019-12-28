@@ -1,6 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.corpse;
 
-import com.comphenix.packetwrapper.AbstractPacket;
+import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.citizensnpcs.api.npc.NPC;
@@ -11,10 +11,10 @@ import net.minecraft.server.PacketPlayOutEntityMetadata;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.benioapi.util.reflect.TrustedLookup;
+import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
-import ru.abstractcoder.murdermystery.core.util.SkinUtils;
+import ru.abstractcoder.murdermystery.core.scheduler.Scheduler;
 
 import java.lang.invoke.MethodHandle;
 import java.util.HashSet;
@@ -35,44 +35,40 @@ public class CitizensCorpse implements Corpse {
         );
     }
 
-    private final Plugin plugin;
+    private final Scheduler scheduler;
     private final NPC npc;
     private final UUID playerId;
     private Skin skin;
 
     private boolean removed = false;
 
-    private final AbstractPacket blockChangePacket;
-    private final Packet<?> defaultMetadataPacket;
     private Packet<?> metadataWithGlowingPacket;
 
     private final Set<Player> glowingEnabledPlayers = new HashSet<>();
 
     private final Proof proof;
 
-    public CitizensCorpse(Plugin plugin, NPC npc, UUID playerId, Skin skin,
-            AbstractPacket blockChangePacket, Packet<?> defaultMetadataPacket) {
-        this.plugin = plugin;
+    public CitizensCorpse(Scheduler scheduler, NPC npc, UUID playerId, Skin skin) {
+        this.scheduler = scheduler;
         this.npc = npc;
         this.playerId = playerId;
         this.skin = skin;
-        this.blockChangePacket = blockChangePacket;
-        this.defaultMetadataPacket = defaultMetadataPacket;
 
         proof = new Proof(skin.data());
+        setSkin(skin);
     }
 
     @Override
     public void sendTo(Player player) {
-        blockChangePacket.sendPacket(player);
+        // blockChangePacket.sendPacket(player);
         //plugin.getServer().getScheduler()
         //        .runTaskLater(plugin, () -> bedPacket.sendPacket(player), 1L);
 
-        EntityPlayer receiver = ((CraftPlayer) player).getHandle();
         if (metadataWithGlowingPacket != null && glowingEnabledPlayers.contains(player)) {
-            receiver.playerConnection.sendPacket(metadataWithGlowingPacket);
-        } else {
-            receiver.playerConnection.sendPacket(defaultMetadataPacket);
+            scheduler.runSyncLater(2L, () -> {
+                EntityPlayer receiver = ((CraftPlayer) player).getHandle();
+                receiver.playerConnection.sendPacket(metadataWithGlowingPacket);
+            });
         }
     }
 
@@ -108,7 +104,11 @@ public class CitizensCorpse implements Corpse {
     @Override
     public void setSkin(Skin skin) {
         this.skin = skin;
-        SkinUtils.setSkinAndNotify(npc, skin);
+
+        EntityPlayer entityPlayer = ((CraftPlayer) npc.getEntity()).getHandle();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), SharedConstants.NPC_NAME);
+        profile.getProperties().put("textures", skin.getProperty());
+        entityPlayer.setProfile(profile);
     }
 
     @Override

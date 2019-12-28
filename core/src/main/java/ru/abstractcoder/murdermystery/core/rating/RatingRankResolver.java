@@ -2,7 +2,8 @@ package ru.abstractcoder.murdermystery.core.rating;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
+import it.unimi.dsi.fastutil.ints.IntComparators;
 import ru.abstractcoder.murdermystery.core.rating.rank.template.RankTemplate;
 
 import java.util.List;
@@ -19,20 +20,18 @@ public class RatingRankResolver {
         byMinRating = rankTemplates.stream().collect(toCustomMapThrowing(
                 RankTemplate::getMinRating,
                 Function.identity(),
-                () -> new Int2ObjectOpenHashMap<>(rankTemplates.size())
+                () -> new Int2ObjectRBTreeMap<>(IntComparators.NATURAL_COMPARATOR)
         ));
     }
 
     public RankTemplate getTemplateByRating(int rating) {
-        RankTemplate last = null;
+        RankTemplate last;
         for (var entry : byMinRating.int2ObjectEntrySet()) {
             int rankRating = entry.getIntKey();
-            if (rating < rankRating) {
-                last = entry.getValue();
-                continue;
+            last = entry.getValue();
+            if (rating >= rankRating) {
+                return last;
             }
-
-            return last;
         }
 
         throw new IllegalStateException("No rank found for rating: " + rating);

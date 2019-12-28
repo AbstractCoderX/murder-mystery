@@ -26,7 +26,7 @@ public class PlayerStatistic {
     }
 
     public void incrementDefeats() {
-        deaths++;
+        defeats++;
     }
 
     public void incrementKills() {

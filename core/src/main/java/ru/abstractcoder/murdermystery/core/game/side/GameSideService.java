@@ -16,6 +16,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
 @Reusable
 public class GameSideService {
@@ -58,7 +60,9 @@ public class GameSideService {
     }
 
     public Collection<Player> getPlayers(GameSide gameSide) {
-        return playerMap.get(gameSide);
+        List<Player> players = playerMap.get(gameSide);
+        players.removeIf(Predicate.not(Player::isOnline));
+        return players;
     }
 
     public Collection<PlayerData> getDatas(GameSide gameSide) {

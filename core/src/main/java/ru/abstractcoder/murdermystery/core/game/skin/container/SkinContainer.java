@@ -1,6 +1,6 @@
 package ru.abstractcoder.murdermystery.core.game.skin.container;
 
-import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.Skin;
 import ru.abstractcoder.murdermystery.core.game.skin.view.SingleSkinView;
 import ru.abstractcoder.murdermystery.core.game.skin.view.SkinView;

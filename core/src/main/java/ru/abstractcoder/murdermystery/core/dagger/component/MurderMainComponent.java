@@ -3,6 +3,7 @@ package ru.abstractcoder.murdermystery.core.dagger.component;
 import dagger.Component;
 import ru.abstractcoder.benioapi.dagger.DaggerBenioModule;
 import ru.abstractcoder.murdermystery.core.bootstrap.WorldPreparingBootstrap;
+import ru.abstractcoder.murdermystery.core.command.MurderMysteryCommand;
 import ru.abstractcoder.murdermystery.core.config.GeneralConfig;
 import ru.abstractcoder.murdermystery.core.dagger.module.BindsModule;
 import ru.abstractcoder.murdermystery.core.dagger.module.ConfigModule;
@@ -10,6 +11,7 @@ import ru.abstractcoder.murdermystery.core.dagger.module.DependencyModule;
 import ru.abstractcoder.murdermystery.core.dagger.module.EngineModule;
 import ru.abstractcoder.murdermystery.core.game.bootstrap.GameActionBootstrap;
 import ru.abstractcoder.murdermystery.core.game.corpse.CorpseService;
+import ru.abstractcoder.murdermystery.core.game.npc.NpcBoardTeamBootstrap;
 import ru.abstractcoder.murdermystery.core.game.npc.NpcService;
 import ru.abstractcoder.murdermystery.core.listener.bootstrap.ListenerRegistrationProcessBootstrap;
 import ru.abstractcoder.murdermystery.core.lobby.bootstrap.SlotBarItemActionBootstrap;
@@ -34,5 +36,9 @@ public interface MurderMainComponent {
     ListenerRegistrationProcessBootstrap listenerRegistrationProcessBootstrap();
 
     WorldPreparingBootstrap worldPreparingBootstrap();
+
+    NpcBoardTeamBootstrap npcBoardTeamBootstrap();
+
+    MurderMysteryCommand murderMysteryCommand();
 
 }

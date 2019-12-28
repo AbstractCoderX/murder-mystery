@@ -61,8 +61,11 @@ public class CharacterSelectingMenu {
                     .customPaginatedTemplate(Session::new);
 
             int[] roleGlassSlots = loader.getSlots('|');
-            int[] templateSlots = loader.getSlots('x');
             int[] templateGlassSlots = loader.getSlots('/');
+
+            int[] templateSlots = loader.getSlots('x');
+            ItemData templateItemData = loader.getItemData('x');
+            loader.setHandled('x');
 
             int i = 0;
             for (GameRole.Type roleType : GameRole.Type.VALUES) {
@@ -89,7 +92,6 @@ public class CharacterSelectingMenu {
                 ));
 
                 var templateIterator = skinnableTemplateRepository.getSkinsTemplates(roleType).iterator();
-                ItemData templateItemData = loader.getItemData('x');
                 for (int j = 0; templateIterator.hasNext(); j++) {
                     RoleComponentTemplate template = templateIterator.next();
 
@@ -100,7 +102,7 @@ public class CharacterSelectingMenu {
                     templateBuilder
                             .staticItem(MenuItemFactory.create(builder -> builder
                                     .cachedIcon(new FixedMenuIcon(templateSlot, templateItemStack))
-                                    .addAvailability(session -> session.getSelectedTemplate() == template)
+                                    .addAvailability(session -> session.getSelectedRole() == roleType)
                                     .onClick(click -> {
                                         if (click.getSession().getSelectedTemplate() == template) {
                                             return;
@@ -114,7 +116,6 @@ public class CharacterSelectingMenu {
                                     })
                             ))
                             .staticItem(MenuItemFactory.create(builder -> builder
-                                    .addAvailability(session -> session.getSelectedTemplate() == template)
                                     .conditionalIcon(creator -> prepareGlassItemCreator(creator, templateGlassSlot,
                                             session -> session.getSelectedTemplate() == template
                                     ))
@@ -133,7 +134,10 @@ public class CharacterSelectingMenu {
                         skinResolver.getAllSkins().forEach(data -> result.add(MenuItemFactory.create(b -> b
                                 .conditionalIcon(creator -> creator
                                         .when(s -> data.isAvailableFor(s.getOwner()))
-                                        .then(loader.getDynamicItemData().toMenuIcon())
+                                        .then(loader.getDynamicItemData().copy()
+                                                .impose(data)
+                                                .toMenuIcon()
+                                        )
                                         .otherwise(ItemBuilder.fromMaterial(Material.GRAY_DYE)
                                                 .withItemMeta()
                                                 .setName("§cЭтот скин недоступен для Вас!")
@@ -145,7 +149,9 @@ public class CharacterSelectingMenu {
                                         return;
                                     }
 
-                                    RoleComponent.Type componentType = click.getSession().getSelectedTemplate().getType();
+                                    RoleComponent.Type componentType = click.getSession()
+                                            .getSelectedTemplate()
+                                            .getType();
                                     click.getIssuer().data().setSelectedSkin(componentType, data.getSkin());
                                 })
                         )));

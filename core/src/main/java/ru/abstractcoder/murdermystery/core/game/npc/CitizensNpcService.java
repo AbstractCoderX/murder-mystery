@@ -6,6 +6,7 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import ru.abstractcoder.benioapi.util.optional.BeniOptional;
+import ru.abstractcoder.murdermystery.core.game.misc.SharedConstants;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainableResolver;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainer;
 
@@ -31,8 +32,9 @@ public class CitizensNpcService implements NpcService {
 
     @Override
     public Npc spawnNpc(Location location, SkinContainer skinContainer) {
-        NPC npc = npcRegistry.createNPC(EntityType.PLAYER, " ");
+        NPC npc = npcRegistry.createNPC(EntityType.PLAYER, SharedConstants.NPC_NAME);
         Npc wrappedNpc = new Npc(npc, skinContainer, location);
+        wrappedNpc.notifySkinUpdated();
 
         npcMap.put(npc.getUniqueId(), wrappedNpc);
         skinContainableResolver.add(wrappedNpc);

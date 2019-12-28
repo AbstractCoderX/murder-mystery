@@ -11,12 +11,12 @@ import com.google.common.collect.Multimap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.abstractcoder.murdermystery.core.game.GameEngine;
-import ru.abstractcoder.murdermystery.core.game.player.GamePlayer;
-import ru.abstractcoder.murdermystery.core.game.role.RoleHolder;
+import ru.abstractcoder.murdermystery.core.game.role.holder.RoleHolder;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
 
 import javax.inject.Inject;
 
+//TODO delete candidate
 public class SkinPacketListener extends AbstractPacketListener {
 
     private final GameEngine gameEngine;
@@ -34,18 +34,7 @@ public class SkinPacketListener extends AbstractPacketListener {
                     public void onPacketSending(PacketEvent event) {
                         Player player = event.getPlayer();
 
-                        RoleHolder roleHolder;
-                        {
-                            GamePlayer gamePlayer = gameEngine.getPlayerResolver().resolve(player);
-                            if (gamePlayer != null) {
-                                roleHolder = gamePlayer;
-                            } else {
-                                roleHolder = gameEngine.getPlayerController().getSpectatingSafe(player)
-                                        .orThrow(() -> new IllegalStateException(String.format(
-                                                "Player %s not gaming and not spectating", player.getName()
-                                        )));
-                            }
-                        }
+                        RoleHolder roleHolder = gameEngine.getRoleHolderResolver().resolve(player.getUniqueId());
 
                         WrapperPlayServerPlayerInfo packet = new WrapperPlayServerPlayerInfo(event.getPacket());
                         System.out.println(String.format("=====Start handling player info packet with action %s =====", packet.getAction()));

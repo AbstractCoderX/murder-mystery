@@ -1,14 +1,18 @@
 package ru.abstractcoder.murdermystery.core.listener;
 
 import org.bukkit.GameMode;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
+import ru.abstractcoder.benioapi.config.msg.Message;
 import ru.abstractcoder.benioapi.config.msg.MsgConfig;
 import ru.abstractcoder.murdermystery.core.config.Msg;
 import ru.abstractcoder.murdermystery.core.lobby.LobbyEngine;
+import ru.abstractcoder.murdermystery.core.lobby.player.LobbyPlayer;
 import ru.abstractcoder.murdermystery.core.lobby.slotbar.SlotBarItem;
 
 import javax.inject.Inject;
@@ -51,10 +55,11 @@ public class LobbyListener implements BukkitListener {
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(lobbyEngine.settings().getSpawnLocation());
 
+        int playerCount = lobbyEngine.getPlayerResolver().getPlayerCount();
         lobbyEngine.loadPlayer(player).thenAccept(lobbyPlayer -> {
             msgConfig.get(Msg.general__joined_broadcast,
-                    player.getName(),
-                    lobbyEngine.getPlayerResolver().getPlayerCount(),
+                    lobbyPlayer.getName(),
+                    playerCount + 1,
                     lobbyEngine.getArena().getMaxPlayers()
             ).broadcastSession().broadcastChat();
         });
@@ -98,7 +103,22 @@ public class LobbyListener implements BukkitListener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        //TODO
+        Player player = event.getPlayer();
+        LobbyPlayer lobbyPlayer = lobbyEngine.getPlayerResolver().resolve(player);
+
+        Message message = msgConfig.get(Msg.chat__lobby_format,
+                lobbyPlayer.data().rating().getRank().getDisplayName(),
+                player.getName(),
+                event.getMessage()
+        );
+        event.setFormat(message.getJoinedLines());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof LivingEntity) {
+            event.setCancelled(true);
+        }
     }
 
     //    @EventHandler

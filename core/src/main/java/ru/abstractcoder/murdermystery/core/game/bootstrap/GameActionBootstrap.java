@@ -6,7 +6,6 @@ import ru.abstractcoder.murdermystery.core.game.action.*;
 
 import javax.inject.Inject;
 
-//TODO run this
 public class GameActionBootstrap implements GameBootstrap {
 
     private final GameSidebarManager sidebarManager;

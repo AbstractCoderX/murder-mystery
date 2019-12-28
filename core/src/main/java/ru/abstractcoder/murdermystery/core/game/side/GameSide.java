@@ -11,12 +11,12 @@ public enum GameSide {
         }
 
         @Override
-        public Msg getWinMsg() {
+        public Msg getWinSubtitle() {
             return Msg.game__murder_win_subtitle;
         }
 
         @Override
-        public Msg getLoseMsg() {
+        public Msg getLoseSubtitle() {
             return Msg.game__murder_lose_subtitle;
         }
     },
@@ -28,12 +28,12 @@ public enum GameSide {
         }
 
         @Override
-        public Msg getWinMsg() {
+        public Msg getWinSubtitle() {
             return Msg.game__survivors_win_subtitle;
         }
 
         @Override
-        public Msg getLoseMsg() {
+        public Msg getLoseSubtitle() {
             return Msg.game__survivors_lose_subtitle;
         }
     };
@@ -42,8 +42,8 @@ public enum GameSide {
 
     public abstract GameSide getOppositeSide();
 
-    public abstract Msg getWinMsg();
+    public abstract Msg getWinSubtitle();
 
-    public abstract Msg getLoseMsg();
+    public abstract Msg getLoseSubtitle();
 
 }

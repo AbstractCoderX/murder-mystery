@@ -43,7 +43,7 @@ public class LobbyTicking implements Ticking {
     @Override
     public boolean doTick() {
         if (lobbyEngine.getPlayerResolver().getPlayerCount() > 1) {
-            roleBalancer.recompute();
+            // roleBalancer.recompute();
             lobbyEngine.getPlayerResolver().getPlayers().forEach(lobbyPlayer -> {
                 Function<GameRole.Type, String> chanceResolver = type -> {
                     double chancePercent = roleBalancer.getRoleChance(lobbyPlayer, type) * 100;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public interface Mixins {
 
-    //TODO register this mixin
+    //not used
     abstract class WrappedSkinMixin {
 
         @JsonCreator

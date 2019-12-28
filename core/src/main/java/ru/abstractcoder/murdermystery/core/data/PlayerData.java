@@ -15,6 +15,7 @@ import ru.abstractcoder.murdermystery.core.statistic.PlayerStatistic;
 import java.util.Map;
 import java.util.Set;
 
+//TODO extract interface
 public class PlayerData {
 
     private final Player owner;

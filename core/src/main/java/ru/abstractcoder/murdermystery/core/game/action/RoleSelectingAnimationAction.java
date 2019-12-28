@@ -53,6 +53,7 @@ public class RoleSelectingAnimationAction implements GameAction {
                 .setLastAction(() -> {
                     playerResolver.getAll().forEach(gamePlayer -> {
                         gamePlayer.getHandle().sendActionBar(" ");
+                        gamePlayer.notifySkinUpdated();
                         gamePlayer.setRoleShowed(true);
                         msgConfig.get(Msg.game__role_animation_end, gamePlayer.getRole().getDisplayName())
                                 .sendTitle(gamePlayer);

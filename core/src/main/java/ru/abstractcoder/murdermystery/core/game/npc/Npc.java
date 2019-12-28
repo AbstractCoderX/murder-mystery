@@ -2,7 +2,9 @@ package ru.abstractcoder.murdermystery.core.game.npc;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
+import net.minecraft.server.EntityPlayer;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import ru.abstractcoder.murdermystery.core.game.skin.container.SkinContainable;
@@ -37,6 +39,11 @@ public class Npc implements SkinContainable {
     @Override
     public UUID getUniqueId() {
         return handle.getUniqueId();
+    }
+
+    @Override
+    public EntityPlayer getNmsHandle() {
+        return ((CraftPlayer) handle.getEntity()).getHandle();
     }
 
     public void teleport(Location location) {

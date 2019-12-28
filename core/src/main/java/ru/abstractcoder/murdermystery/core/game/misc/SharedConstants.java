@@ -14,4 +14,6 @@ public final class SharedConstants {
 
     public static final Title EMPTY_TITLE = Title.builder().title("").build();
 
+    public static final String NPC_NAME = "MurderNPC";
+
 }
